@@ -5,14 +5,18 @@ import org.example.alphaplanner.service.BaseService;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class TaskController {
-    private BaseService service;
+public class ProjectController {
 
-    public TaskController(BaseService service) {
+    private final BaseService service;
+
+    public ProjectController(BaseService service) {
         this.service = service;
     }
 
     private boolean isLoggenIn(HttpSession session){
         return session.getAttribute("user") !=null;
     }
+
+
+
 }
