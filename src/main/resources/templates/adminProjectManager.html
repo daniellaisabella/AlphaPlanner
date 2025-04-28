@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ProjektManagers</title>
+</head>
+<body>
+<h1>Projekt Managers</h1>
+<a th:href="@{/admin1}"> Projekt Manager</a>
+<a th:href="@{/admin2}"> Ansatte</a>
+<table>
+    <thead>
+    <tr>
+        <th>Navn</th>
+        <th>Rolle</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="projectManager : ${projectManagers}">
+        <td th:text="${projectManager.name}"></td>
+        <td th:text="${projectManager.role}"></td>
+        <td th:text="${projectManager.email}"></td>
+
+    </tr>
+    </tbody>
+</table>
+
+
+
+</body>
+</html>
