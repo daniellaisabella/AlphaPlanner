@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Error</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/buttons.css">
 </head>
+
 <body>
+<div class="topbar">
+  <div class="logo">
+    <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+  </div>
 <h2>Error Occurred</h2>
 <p th:text="${errorMessage}"></p>
 <a href="/login">Gå til log ind</a>
