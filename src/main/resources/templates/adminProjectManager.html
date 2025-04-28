@@ -3,29 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>ProjektManagers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/buttons.css">
 </head>
+
 <body>
-<h1>Projekt Managers</h1>
-<a th:href="@{/admin1}"> Projekt Manager</a>
-<a th:href="@{/admin2}"> Ansatte</a>
-<table>
-    <thead>
-    <tr>
-        <th>Navn</th>
-        <th>Rolle</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="projectManager : ${projectManagers}">
-        <td th:text="${projectManager.name}"></td>
-        <td th:text="${projectManager.role}"></td>
-        <td th:text="${projectManager.email}"></td>
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/login}" class="logout-button">Log ud</a>
+    </div>
+</div>
 
-    </tr>
-    </tbody>
-</table>
 
+<div class="space">
+    <a th:href="@{/admin1}"> Projekt Manager</a>
+    <a th:href="@{/admin2}"> Ansatte</a>
+</div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Rolle</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="projectManager : ${projectManagers}">
+            <td th:text="${projectManager.name}"></td>
+            <td th:text="${projectManager.role}"></td>
+            <td th:text="${projectManager.email}"></td>
+
+        </tr>
+        </tbody>
+    </table>
 
 
 </body>
