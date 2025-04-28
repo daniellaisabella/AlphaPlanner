@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>All task From bob</title>
+    <link th:href="@{/modal.css}" rel="stylesheet">
 </head>
 <body>
 
@@ -19,11 +20,20 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="task : ${tasks}">
+    <tr th:each="task : ${tasks}"
+        th:data-task-name="${task.taskName}"
+        th:data-task-desc="${task.taskDesc}"
+        th:data-task-deadline="${task.taskDeadline}"
+        th:data-task-status="${task.taskStatus}"
+        th:data-task-estimatedHours="${task.taskEstimatedHours}"
+        th:data-task-dedicatedHours="${task.taskDedicatedHours}"
+        onclick="openModalWithData(this)">
         <td th:text="${task.taskName}">Name</td>
         <td th:text="${task.taskDesc}">Description</td>
         <td th:text="${task.taskDeadline}">Date</td>
         <td th:text="${task.taskStatus}">Status</td>
+        <td th:text="${task.taskEstimatedHours}">Estimated Hours</td> <!-- add this! -->
+        <td th:text="${task.taskDedicatedHours}">Dedicated Hours</td>
     </tr>
     </tbody>
 </table>
@@ -31,16 +41,88 @@
 <br>
 
 <!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
-<button> Open Modal </button>
+<button data-modal-target="#modal"> Open Modal </button>
 <div class="modal" id="modal">
     <div class="modal-header">
         <div class="title">Header </div>
-        <button class="close-button">&times;</button>
+        <button data-close-button class="close-button">&times;</button>
     </div>
     <div class="modal-body">
         This is the body
     </div>
 </div>
 <div id="overlay"></div>
+
+<!-- THIS IS THE JAVASCRIPT FOT THE MODAL  -->
+
+
+<script>
+const openModalButtons = document.querySelectorAll('[data-modal-target]')
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
+
+function openModalWithData(row) {
+    // Retrieve data from the clicked row
+    const taskName = row.dataset.taskName;
+    const taskDesc = row.dataset.taskDesc;
+    const taskDeadline = row.dataset.taskDeadline;
+    const taskStatus = row.dataset.taskStatus;
+    const taskEstimatedHours = row.dataset.taskEstimatedHours;
+    const taskDedicatedHours = row.dataset.taskDedicatedHours;
+
+    // Get the modal element and overlay
+    const modal = document.getElementById('modal');
+    const overlay = document.getElementById('overlay');
+
+    // Set the modal content dynamically based on the task data
+    document.querySelector('.modal .modal-header .title').innerText = taskName;
+    document.querySelector('.modal .modal-body').innerHTML = `
+        <p><strong>Description:</strong> ${taskDesc}</p>
+        <p><strong>Deadline:</strong> ${taskDeadline}</p>
+        <p><strong>Status:</strong> ${taskStatus}</p>
+        <p><strong>Estimated Hours:</strong> ${taskEstimatedHours}</p>
+        <p><strong>Dedicated Hours:</strong> ${taskDedicatedHours}</p>
+    `;
+    console.log("Estimated Hours:", taskEstimatedHours);
+    console.log("Dedicated Hours:", taskDedicatedHours);
+    console.log("Name: ", taskName);
+    // Open the modal by adding the 'active' class
+    modal.classList.add('active');
+    overlay.classList.add('active');
+}
+
+openModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const modal = document.querySelector(button.dataset.modalTarget)
+        openModal(modal)
+    })
+})
+
+overlay.addEventListener('click', () => {
+    const modals = document.querySelectorAll('.modal.active')
+    modals.forEach(modal => {
+        closeModal(modal)
+    })
+})
+
+closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const modal = button.closest('.modal')
+        closeModal(modal)
+    })
+})
+
+function openModal(modal) {
+    if (modal == null) return
+    modal.classList.add('active')
+    overlay.classList.add('active')
+}
+
+function closeModal(modal) {
+    if (modal == null) return
+    modal.classList.remove('active')
+    overlay.classList.remove('active')
+}
+</script>
 </body>
 </html>

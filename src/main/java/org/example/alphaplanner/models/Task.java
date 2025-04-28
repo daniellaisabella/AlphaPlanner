@@ -16,8 +16,8 @@ public class Task {
         this.taskDesc = taskDesc;
         this.taskDeadline = taskDeadline;
         this.taskStatus = false;
-        this.taskDedicatedHours = 0;
-        this.taskEstimatedHours = 0;
+        this.taskDedicatedHours = 10;
+        this.taskEstimatedHours = 20;
     }
 
     public String getTaskName() {
