@@ -1,5 +1,6 @@
 package org.example.alphaplanner.service;
 
+import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,11 @@ import java.util.List;
 public class BaseService {
 
     private UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
-    public BaseService(UserRepository userRepository) {
+    public BaseService(UserRepository userRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
     }
 
     //------------ USER METHODS-----------//
@@ -35,16 +38,18 @@ public class BaseService {
         return userRepository.getUsersByRole(role);
     }
 
-    private final TaskRepository taskRepository = new TaskRepository(new JdbcTemplate());
-
-
-
 
 //----------------------Tasks and labels----------------------------------------------
 
-public List<Task> showAllTasksFromSub(int sub_id){
-    return taskRepository.showAllTasksFromSub(sub_id);
-}
+//================DELETE LATER JUST FOR TEST=====================================
+    public SubProject getSubdummy(int sub_id) {
+        return taskRepository.getSubdummy(sub_id);
+    }
+//================================================================================
+
+    public List<Task> showAllTasksFromSub(int sub_id) {
+        return taskRepository.showAllTasksFromSub(sub_id);
+    }
 
 //------------------------------------------------------------------------------------
 }

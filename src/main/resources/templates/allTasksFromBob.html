@@ -8,5 +8,39 @@
 
 <h1>Here you can see all the task from the 1 project and 1 subproject from bob</h1>
 
+<h2 th:text="'name of the sub-Project: ' + ${sub.subProjectName}"></h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.taskName}">Name</td>
+        <td th:text="${task.taskDesc}">Description</td>
+        <td th:text="${task.taskDeadline}">Date</td>
+        <td th:text="${task.taskStatus}">Status</td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
+<button> Open Modal </button>
+<div class="modal" id="modal">
+    <div class="modal-header">
+        <div class="title">Header </div>
+        <button class="close-button">&times;</button>
+    </div>
+    <div class="modal-body">
+        This is the body
+    </div>
+</div>
+<div id="overlay"></div>
 </body>
 </html>

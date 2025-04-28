@@ -33,7 +33,7 @@ public class TaskRepository {
 
 //--------------------------------TASK METHODS--------------------------------------------------------------------------
 
-//dummy method to get a subproject
+//dummy method to get a subprojec DELETE LATER===============================================================================
 
     public class SubRowMapper implements RowMapper<SubProject> {
 
@@ -48,8 +48,8 @@ public class TaskRepository {
     }
 
     public SubProject getSubdummy(int sub_id) {
-        String sql = "SELECT sP.sub_name, sP,sub_desc, sB.sub_deadLine " +
-                "FROM SubProjects sP" +
+        String sql = "SELECT sP.sub_name, sP.sub_desc, sP.sub_deadLine " +
+                "FROM SubProjects sP " +
                 "WHERE sP.sub_id = ? ";
 
         return jdbcTemplate.queryForObject(sql, subRowMapper, sub_id);
@@ -59,9 +59,9 @@ public class TaskRepository {
 
     public List<Task> showAllTasksFromSub(int sub_id) {
 
-        String sql = "SELECT t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status" +
+        String sql = "SELECT t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status " +
                 "FROM Tasks t " +
-                "JOIN SubProjects sP ON t.sub_id = sP_id" +
+                "JOIN SubProjects sP ON t.sub_id = sP.sub_id " +
                 "WHERE sP.sub_id = ?";
 
         return jdbcTemplate.query(sql, new TaskRowMapper(), sub_id);
