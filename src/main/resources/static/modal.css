@@ -58,3 +58,15 @@
     opacity: 1;
     pointer-events: all;
 }
+
+tbody tr {
+    position: relative;
+}
+
+tbody tr:hover {
+    background-color: lightgrey;
+}
+
+`tbody tr:hover::after {
+   background-color: grey;
+}

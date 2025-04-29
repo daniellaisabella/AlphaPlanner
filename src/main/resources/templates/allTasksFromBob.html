@@ -4,20 +4,30 @@
     <meta charset="UTF-8">
     <title>All task From bob</title>
     <link th:href="@{/modal.css}" rel="stylesheet">
+    <link th:href="@{/base.css}" rel="stylesheet">
 
 </head>
 <body>
 
-<h1>Test</h1>
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/login}" class="logout-button">Log ud</a>
+    </div>
+</div >
 
-<h2 th:text="'name of the sub-Project: ' + ${sub.subProjectName}"></h2>
-
-<table border="1">
+<h1 align="center" th:text="${sub.subProjectName}"></h1>
+<h2> Tasks: </h2>
+<table>
     <thead>
-    <tr>
+    <tr >
+        <th>Status</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Date</th>
+        <th>Deadline</th>
     </tr>
     </thead>
     <tbody>
@@ -25,16 +35,16 @@
         th:data-task-name="${task.taskName}"
         th:data-task-desc="${task.taskDesc}"
         th:data-task-deadline="${task.taskDeadline}"
-        th:data-task-status="${task.taskStatus}"
+        th:data-task-status="${task.taskStatus} ? 'Done' : 'Not done'"
         th:data-task-estimatedhours="${task.taskEstimatedHours}"
         th:data-task-dedicatedhours="${task.taskDedicatedHours}"
         th:data-task-labels="${task.labels != null ? #strings.arrayJoin(task.labels.toArray(), ', ') : ''}"
         th:data-task-assignees="${task.assignees != null ? #strings.arrayJoin(task.assignees.toArray(), ', ') : ''}"
         onclick="openModalWithData(this)">
+        <td th:text="${task.taskStatus} ? 'Done' : 'Not done'">Status</td>
         <td th:text="${task.taskName}">Name</td>
         <td th:text="${task.taskDesc}">Description</td>
         <td th:text="${task.taskDeadline}">Date</td>
-        <td th:text="${task.taskStatus}">Status</td>
     </tr>
     </tbody>
 </table>

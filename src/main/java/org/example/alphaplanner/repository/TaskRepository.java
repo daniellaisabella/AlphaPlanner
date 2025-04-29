@@ -89,7 +89,7 @@ public class TaskRepository {
         return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), task_id);
     }
 
-    public void createTask(int sub_id, String name, String desc, LocalDate deadline, double estimatedHours, List<Label> labels){
+    public void createTask(int sub_id, String name, String desc, LocalDate deadline, double estimatedHours, List<Integer> labels_id){
 
         // creates a new task
         Date sqlDeadline = Date.valueOf(deadline); // changes localDate to java.sql.date so it can be used in the sql entry
@@ -97,26 +97,61 @@ public class TaskRepository {
 
         jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0);
 
+        // get the task id
+        String getTaskId = "SELECT t.task_id " +
+                "FROM Tasks t " +
+                "WHERE task_name = ? AND task_desc = ?";
+        int task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
+
         // links the task with the labels (not ready yet)
+        String labelSql = "INSERT INTO tasks_labels (label_id, task_id) VALUES (?, ?)";
 
-
-    }
-
-    public void editTask(){
-
-    }
-
-    public void deleteTask(){
+        for (Integer l : labels_id){
+            jdbcTemplate.update(labelSql, l, task_id);
+        }
 
     }
 
+    public void editTask(int task_id, String name, String desc, LocalDate deadline, double estimatedHours, double dedicatedHours, boolean status){
+
+        String sql = "UPDATE Tasks " +
+                "SET task_name = ?, task_desc = ?, task_deadline = ?, task_timeEstimate = ?,  task_dedicatedHours = ?, task_status " +
+                "WHERE task_id = ? ";
+
+        jdbcTemplate.update(sql, name, desc, deadline, estimatedHours, dedicatedHours, status, task_id);
+    }
+
+    public void deleteTask(int task_id){
+
+        String sql = "DELETE FROM Tasks " +
+                "WHERE task_id = ?";
+
+        jdbcTemplate.update(sql, task_id);
+    }
 
 
-//--------------------------------------LABEL METHODS-------------------------------------------------------------------
+
+//======================================LABEL METHODS===================================================================
+
+    public List<Label> getAllLabels(){
+        String sql = "SELECT l.label_id, l.label_name " +
+                "FROM Labels l";
+
+        return jdbcTemplate.query(sql, new LabelRowMapper());
+    }
+
+    public Label getLabelById(int label_id){
+        String sql = "SELECT l.label_id, l.label_name " +
+                "FROM Labels l " +
+                "WHERE l.label_id = ? ";
+
+        return jdbcTemplate.queryForObject(sql, new LabelRowMapper(), label_id);
+    }
+//-------------------------INTERACTION BETWEEN LABELS AND TASKS---------------------------------------------------------
 
     public List<Label> getLabelsFromTask(int task_id){
 
-        String sql = "SELECT l.label_name " +
+        String sql = "SELECT l.label_id, l.label_name " +
                 "FROM Labels l " +
                 "JOIN tasks_labels tl ON l.label_id = tl.label_id " +
                 "WHERE tl.task_id = ?";
@@ -130,9 +165,26 @@ public class TaskRepository {
             result.add(l.getLabelName());
         }
         return result;
+
     }
 
-//----------------------------------ASSIGNEES METHODS-------------------------------------------------------------------
+    public void addLabelToTask(int task_id, int label_id){
+    }
+
+
+    public void removeLabelFromTask(int task_id, int label_id){
+
+    }
+//-------------------------------CRUD METHODS LABELS--------------------------------------------------------------------
+    public void createLabel(String name){
+
+    }
+
+    public void deleteLabel(String name){
+
+    }
+
+//==================================ASSIGNEES METHODS===================================================================
 
 
     public List<UserDto> getAssigneesFromTask(int task_id){
@@ -151,5 +203,20 @@ public class TaskRepository {
             result.add(u.getName());
         }
         return result;
+    }
+
+    public void addAssigneesToTask(int task_id, int user_id){
+
+        String sql = "";
+
+        jdbcTemplate.update(sql, task_id, user_id);
+    }
+
+    public void removeAssigneesFromTask(int task_id, int user_id){
+
+        String sql = "";
+
+        jdbcTemplate.update(sql, task_id, user_id);
+
     }
 }
