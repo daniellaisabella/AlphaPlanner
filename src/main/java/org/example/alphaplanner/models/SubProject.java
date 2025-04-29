@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class SubProject {
 
+
+    private int subId;
     private String subProjectName;
     private String subProjectDesc;
     private LocalDate subProjectDeadline;
@@ -12,7 +14,8 @@ public class SubProject {
     private double subEstimatedHours;
 
 
-    public SubProject(String subProjectName, String subProjectDesc, LocalDate subProjectDeadline) {
+    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline) {
+        this.subId = subId;
         this.subProjectName = subProjectName;
         this.subProjectDesc = subProjectDesc;
         this.subProjectDeadline = subProjectDeadline;
@@ -20,6 +23,14 @@ public class SubProject {
         this.subDedicatedHours = 0;
         this.subEstimatedHours = 0;
 
+    }
+
+    public int getSubId() {
+        return subId;
+    }
+
+    public void setSubId(int subId) {
+        this.subId = subId;
     }
 
     public String getSubProjectName() {
