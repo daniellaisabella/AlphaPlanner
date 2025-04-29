@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CreateUser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/buttons.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
+    </div>
+</div >
+
+<form
+        method="post"
+        th:object="${user}"
+        th:action="@{/save}"
+>
+
+
+    <br/>
+    <label class="" for="userName">Navn</label>
+    <input
+            id="userName"
+            type="text"
+            th:field="*{name}"
+            required
+    />
+    <br/>
+    <label class="" for="password">Adgangskode</label>
+    <input
+            id="password"
+            type="text"
+            th:field="*{password}"
+            required
+    />
+    <label for="role">Vælg rolle:</label>
+    <select id="role" name="role" th:field="*{role}">
+        <option value="" disabled selected>-- Vælg rolle --</option>
+        <option th:each="role : ${roles}"
+                th:value="${role}"
+                th:text="${role}">
+        </option>
+    </select>
+    <label for="skills">Vælg færdigheder:</label>
+    <select id="skills" multiple size="5" th:field="*{skills}">
+        <option th:each="skill : ${skills}"
+                th:value="${skill}"
+                th:text="${skill}">
+        </option>
+    </select>
+
+</form>
+
+</body>
+</html>

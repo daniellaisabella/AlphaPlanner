@@ -15,7 +15,7 @@
   </div>
   <div class="space">
     <a th:href="@{/profil}">Min Profil</a>
-    <a th:href="@{/login}" class="logout-button">Log ud</a>
+    <a th:href="@{/logout}" class="logout-button">Log ud</a>
   </div>
 </div >
 
@@ -30,6 +30,7 @@
     <th>Navn</th>
     <th>Rolle</th>
     <th>Email</th>
+    <th>Skills</th>
   </tr>
   </thead>
   <tbody>
@@ -38,9 +39,19 @@
     <td th:text="${employee.role}"></td>
     <td th:text="${employee.email}"></td>
 
+    <td>
+      <ul>
+        <li th:each="skill : ${employee.skills}" th:text="${skill.skillName}"></li>
+      </ul>
+    </td>
+
+
   </tr>
   </tbody>
 </table>
 
+<div>
+  <a th:href="@{/create}"> + </a>
+</div>
 </body>
 </html>
