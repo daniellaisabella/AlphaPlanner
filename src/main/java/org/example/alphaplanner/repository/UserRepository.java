@@ -1,11 +1,11 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.repository.rowmappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

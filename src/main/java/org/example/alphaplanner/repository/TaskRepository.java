@@ -1,6 +1,9 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.*;
+import org.example.alphaplanner.repository.rowmappers.LabelRowMapper;
+import org.example.alphaplanner.repository.rowmappers.TaskRowMapper;
+import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -68,7 +71,7 @@ public class TaskRepository {
         }
 
         for (Task t : tasks){
-            List<User> users = getAssigneesFromTask(t.getTaskId());
+            List<UserDto> users = getAssigneesFromTask(t.getTaskId());
             t.setAssignees(getAssigneesInString(users));
         }
 
@@ -132,19 +135,19 @@ public class TaskRepository {
 //----------------------------------ASSIGNEES METHODS-------------------------------------------------------------------
 
 
-    public List<User> getAssigneesFromTask(int task_id){
+    public List<UserDto> getAssigneesFromTask(int task_id){
         String sql = "SELECT u.user_id, u.user_name, u.role " +
                 "FROM Users u " +
                 "JOIN users_tasks uT ON u.user_id = uT.user_id " +
                 "WHERE uT.task_id = ?";
 
-        return jdbcTemplate.query(sql,new UserRowMapper(), task_id);
+        return jdbcTemplate.query(sql,new UserDtoRowMapper(), task_id);
     }
 
-    public List<String> getAssigneesInString(List<User> users){
+    public List<String> getAssigneesInString(List<UserDto> users){
         List<String> result = new ArrayList<>();
 
-        for (User u : users){
+        for (UserDto u : users){
             result.add(u.getName());
         }
         return result;

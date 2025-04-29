@@ -1,5 +1,6 @@
-package org.example.alphaplanner.models;
+package org.example.alphaplanner.repository.rowmappers;
 
+import org.example.alphaplanner.models.Label;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

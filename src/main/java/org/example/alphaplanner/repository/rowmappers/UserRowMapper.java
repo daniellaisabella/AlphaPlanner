@@ -1,4 +1,4 @@
-package org.example.alphaplanner.repository;
+package org.example.alphaplanner.repository.rowmappers;
 
 import org.example.alphaplanner.models.User;
 import org.springframework.jdbc.core.RowMapper;
