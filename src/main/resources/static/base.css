@@ -1,0 +1,84 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrer vertikalt */
+    align-items: center; /* Centrer horisontalt */
+    height: 100%;
+    max-width: 400px; /* Sætter en maksimal bredde på formularen */
+    margin: 0 auto; /* Centrer formularen horisontalt i midten */
+    padding: 20px;
+    border: none;
+    background-color: #f8f8f8; /* Lys baggrund for formularen */
+
+}
+
+.topbar {
+    justify-content: space-between; /* Fordeler logo til venstre og menu til højre */
+    background-color: #f8f8f8;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.topbar .logo img {
+    height: 55px;
+    width: 210px;
+}
+
+.space a {
+    margin-left: 40px; /*mellemrum mellem min profil og log ud*/
+}
+
+
+/*centrer indhold*/
+.container {
+    width: 80%;
+    margin: 80px;
+}
+
+/*Overskrift weight*/
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Gør alle kolonner lige brede */
+    margin-top: 20px;
+
+}
+
+th, td {
+    text-align: left;
+    padding: 10px;
+}
+
+/* Links generelt */
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    position: relative;
+}
+
+/* Rød streg under ved hover */
+a:hover::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: orangered;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+}
