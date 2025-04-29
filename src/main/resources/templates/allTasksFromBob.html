@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>All task From bob</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/buttons.css">
     <link th:href="@{/modal.css}" rel="stylesheet">
 </head>
+
 <body>
+<div class="topbar">
+    <div class="logo">
+        <a th:href="@{/index}">
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
+    </div>
+</div>
+
 
 <h1>Test</h1>
 

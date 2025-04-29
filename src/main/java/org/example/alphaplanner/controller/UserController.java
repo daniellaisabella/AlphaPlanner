@@ -53,7 +53,7 @@ public class UserController {
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return "redirect:/admin1";
         }
-        return isLoggedIn(session) ? "profile": "redirect:/login";
+        return isLoggedIn(session) ? "adminProfile" : "redirect:/login";
     }
 
     @GetMapping("/admin1")

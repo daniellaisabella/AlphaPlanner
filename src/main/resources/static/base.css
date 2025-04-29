@@ -33,9 +33,6 @@ form {
     width: 210px;
 }
 
-.space a {
-    margin-left: 40px; /*mellemrum mellem min profil og log ud*/
-}
 
 
 /*centrer indhold*/
@@ -82,6 +79,15 @@ a:hover::after {
     bottom: -2px;
     left: 0;
 }
+.space a {
+    margin-left: 40px; /*mellemrum mellem min profil og log ud*/
+}
+/*ingen hover understreg under logo*/
+.logo a:hover::after {
+    content: none;
+}
+
+
 
 /*create user grid*/
 form {
