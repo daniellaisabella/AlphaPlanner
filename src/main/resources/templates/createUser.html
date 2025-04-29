@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
 </head>
+
 <body>
 
 <div class="topbar">
@@ -17,47 +18,53 @@
         <a th:href="@{/profil}">Min Profil</a>
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
-</div >
+</div>
 
-<form
-        method="post"
-        th:object="${user}"
-        th:action="@{/save}"
->
+<div>
+    <a th:href="@{admin1}">Tilbage</a>
+</div>
+
+<form method="post" th:object="${user}" th:action="@{/save}">
+    <div class="form-row">
+        <label for="userName">Navn</label>
+        <input id="userName" type="text" th:field="*{name}" required />
+    </div>
+
+    <div class="form-row">
+        <label for="emailPrefix">E-mail</label>
+        <div class="email-wrapper">
+            <input id="emailPrefix" type="text" placeholder="f.eks. dit navn" required />
+            <span>@alpha.com</span>
+        </div>
+    </div>
+
+    <input type="hidden" id="email" name="email" th:field="*{email}" />
+
+    <div class="form-row">
+        <label for="password">Adgangskode</label>
+        <input id="password" type="password" th:field="*{password}" required />
+    </div>
+
+    <div class="form-row">
+        <label for="role">Vælg rolle:</label>
+        <select id="role" name="role" th:field="*{role}">
+            <option value="" disabled selected>-- Vælg rolle --</option>
+            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label>Vælg færdigheder:</label>
+        <div>
+            <label th:each="skill : ${skills}">
+                <input type="checkbox" th:value="${skill}" th:name="skills" th:text="${skill}" />
+                <span th:text="${skill}"></span>
+            </label>
+        </div>
+    </div>
 
 
-    <br/>
-    <label class="" for="userName">Navn</label>
-    <input
-            id="userName"
-            type="text"
-            th:field="*{name}"
-            required
-    />
-    <br/>
-    <label class="" for="password">Adgangskode</label>
-    <input
-            id="password"
-            type="text"
-            th:field="*{password}"
-            required
-    />
-    <label for="role">Vælg rolle:</label>
-    <select id="role" name="role" th:field="*{role}">
-        <option value="" disabled selected>-- Vælg rolle --</option>
-        <option th:each="role : ${roles}"
-                th:value="${role}"
-                th:text="${role}">
-        </option>
-    </select>
-    <label for="skills">Vælg færdigheder:</label>
-    <select id="skills" multiple size="5" th:field="*{skills}">
-        <option th:each="skill : ${skills}"
-                th:value="${skill}"
-                th:text="${skill}">
-        </option>
-    </select>
-
+    <button class="btn-link" type="submit">Opret bruger</button>
 </form>
 
 </body>
