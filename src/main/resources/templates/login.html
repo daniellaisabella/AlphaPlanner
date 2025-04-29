@@ -3,15 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/base.css}">
+    <link rel="stylesheet" th:href="@{/buttons.css}">
+
+
 </head>
+
 <body>
-<form
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+</div>
+<form class="form"
+
         action="/login"
         method="post"
         th:object="${userLogin}"
 >
     <p th:if="${wrongInput}" class="error">Forkert brugernavn eller adgangskode</p>
-    <p><label id="email" class="h2style">Email</label>
+    <p><label id="email" >Email</label>
         <input th:field="*{email}" name="email" type="text" autofocus></p>
 
     <p><label class="">Adgangskode</label>
