@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>All task From bob</title>
     <link th:href="@{/modal.css}" rel="stylesheet">
+
 </head>
 <body>
 
@@ -28,6 +29,7 @@
         th:data-task-estimatedhours="${task.taskEstimatedHours}"
         th:data-task-dedicatedhours="${task.taskDedicatedHours}"
         th:data-task-labels="${task.labels != null ? #strings.arrayJoin(task.labels.toArray(), ', ') : ''}"
+        th:data-task-assignees="${task.assignees != null ? #strings.arrayJoin(task.assignees.toArray(), ', ') : ''}"
         onclick="openModalWithData(this)">
         <td th:text="${task.taskName}">Name</td>
         <td th:text="${task.taskDesc}">Description</td>
@@ -69,6 +71,7 @@ function openModalWithData(row) {
     const taskEstimatedhours = row.dataset.taskEstimatedhours;
     const taskDedicatedhours = row.dataset.taskDedicatedhours;
     const taskLabels = row.dataset.taskLabels;
+    const taskAssignees = row.dataset.taskAssignees;
 
     console.log(taskLabels);
     // Get the modal element and overlay
@@ -84,6 +87,7 @@ function openModalWithData(row) {
         <p><strong>Estimated Hours: </strong> ${taskEstimatedhours}</p>
         <p><Strong>Dedicated Hours: </Strong> ${taskDedicatedhours}</p>
         <p><strong>Labels:</strong> ${taskLabels} </p>
+        <p><strong>Assignees:</strong> ${taskAssignees}</p>
 `;
 
     // Open the modal by adding the 'active' class

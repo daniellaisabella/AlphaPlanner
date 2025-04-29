@@ -14,6 +14,7 @@ public class Task {
     private double taskDedicatedHours;
     private double taskEstimatedHours;
     private List<String> labels;
+    private List<String> assignees; //might change to a list of users later
 
 
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
@@ -105,5 +106,13 @@ public class Task {
 
     public void setLabels(List<String> labels) {
         this.labels = labels;
+    }
+
+    public List<String> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(List<String> assignees) {
+        this.assignees = assignees;
     }
 }

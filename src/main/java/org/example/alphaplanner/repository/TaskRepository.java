@@ -67,6 +67,11 @@ public class TaskRepository {
             t.setLabels(getLabelsInString(labels));
         }
 
+        for (Task t : tasks){
+            List<User> users = getAssigneesFromTask(t.getTaskId());
+            t.setAssignees(getAssigneesInString(users));
+        }
+
         return tasks;
 
     }
@@ -104,7 +109,7 @@ public class TaskRepository {
 
 
 
-//--------------------------------------Label Methods-------------------------------------------------------------------
+//--------------------------------------LABEL METHODS-------------------------------------------------------------------
 
     public List<Label> getLabelsFromTask(int task_id){
 
@@ -124,4 +129,24 @@ public class TaskRepository {
         return result;
     }
 
+//----------------------------------ASSIGNEES METHODS-------------------------------------------------------------------
+
+
+    public List<User> getAssigneesFromTask(int task_id){
+        String sql = "SELECT u.user_id, u.user_name, u.role " +
+                "FROM Users u " +
+                "JOIN users_tasks uT ON u.user_id = uT.user_id " +
+                "WHERE uT.task_id = ?";
+
+        return jdbcTemplate.query(sql,new UserRowMapper(), task_id);
+    }
+
+    public List<String> getAssigneesInString(List<User> users){
+        List<String> result = new ArrayList<>();
+
+        for (User u : users){
+            result.add(u.getName());
+        }
+        return result;
+    }
 }
