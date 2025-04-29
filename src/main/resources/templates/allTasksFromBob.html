@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<h1>Here you can see all the task from the 1 project and 1 subproject from bob</h1>
+<h1>Test</h1>
 
 <h2 th:text="'name of the sub-Project: ' + ${sub.subProjectName}"></h2>
 
@@ -25,15 +25,14 @@
         th:data-task-desc="${task.taskDesc}"
         th:data-task-deadline="${task.taskDeadline}"
         th:data-task-status="${task.taskStatus}"
-        th:data-task-estimatedHours="${task.taskEstimatedHours}"
-        th:data-task-dedicatedHours="${task.taskDedicatedHours}"
+        th:data-task-estimatedhours="${task.taskEstimatedHours}"
+        th:data-task-dedicatedhours="${task.taskDedicatedHours}"
+        th:data-task-labels="${task.labels != null ? #strings.arrayJoin(task.labels.toArray(), ', ') : ''}"
         onclick="openModalWithData(this)">
         <td th:text="${task.taskName}">Name</td>
         <td th:text="${task.taskDesc}">Description</td>
         <td th:text="${task.taskDeadline}">Date</td>
         <td th:text="${task.taskStatus}">Status</td>
-        <td th:text="${task.taskEstimatedHours}">Estimated Hours</td> <!-- add this! -->
-        <td th:text="${task.taskDedicatedHours}">Dedicated Hours</td>
     </tr>
     </tbody>
 </table>
@@ -41,7 +40,6 @@
 <br>
 
 <!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
-<button data-modal-target="#modal"> Open Modal </button>
 <div class="modal" id="modal">
     <div class="modal-header">
         <div class="title">Header </div>
@@ -51,6 +49,7 @@
         This is the body
     </div>
 </div>
+
 <div id="overlay"></div>
 
 <!-- THIS IS THE JAVASCRIPT FOT THE MODAL  -->
@@ -67,9 +66,11 @@ function openModalWithData(row) {
     const taskDesc = row.dataset.taskDesc;
     const taskDeadline = row.dataset.taskDeadline;
     const taskStatus = row.dataset.taskStatus;
-    const taskEstimatedHours = row.dataset.taskEstimatedHours;
-    const taskDedicatedHours = row.dataset.taskDedicatedHours;
+    const taskEstimatedhours = row.dataset.taskEstimatedhours;
+    const taskDedicatedhours = row.dataset.taskDedicatedhours;
+    const taskLabels = row.dataset.taskLabels;
 
+    console.log(taskLabels);
     // Get the modal element and overlay
     const modal = document.getElementById('modal');
     const overlay = document.getElementById('overlay');
@@ -80,12 +81,11 @@ function openModalWithData(row) {
         <p><strong>Description:</strong> ${taskDesc}</p>
         <p><strong>Deadline:</strong> ${taskDeadline}</p>
         <p><strong>Status:</strong> ${taskStatus}</p>
-        <p><strong>Estimated Hours:</strong> ${taskEstimatedHours}</p>
-        <p><strong>Dedicated Hours:</strong> ${taskDedicatedHours}</p>
-    `;
-    console.log("Estimated Hours:", taskEstimatedHours);
-    console.log("Dedicated Hours:", taskDedicatedHours);
-    console.log("Name: ", taskName);
+        <p><strong>Estimated Hours: </strong> ${taskEstimatedhours}</p>
+        <p><Strong>Dedicated Hours: </Strong> ${taskDedicatedhours}</p>
+        <p><strong>Labels:</strong> ${taskLabels} </p>
+`;
+
     // Open the modal by adding the 'active' class
     modal.classList.add('active');
     overlay.classList.add('active');

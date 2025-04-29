@@ -1,7 +1,7 @@
 package org.example.alphaplanner.controller;
 
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.BaseService;
@@ -18,16 +18,18 @@ public class TaskController {
 
     private final BaseService service;
 
-    public TaskController(BaseService service){
+    public TaskController(BaseService service) {
         this.service = service;
     }
 
-// dummy method to get into the task of a specific subproject
+    // dummy method to get into the task of a specific subproject
     @GetMapping("/showSub")
-    public String showSub(Model model){
+    public String showSub(Model model) {
         SubProject subProject = service.getSubdummy(1);
         model.addAttribute("sub", subProject);
         List<Task> tasks = service.showAllTasksFromSub(1);
+
+
         model.addAttribute("tasks", tasks);
         return "allTasksFromBob";
     }

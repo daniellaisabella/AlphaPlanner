@@ -1,5 +1,6 @@
 package org.example.alphaplanner.service;
 
+import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.UserRepository;
@@ -49,6 +50,10 @@ public class BaseService {
 
     public List<Task> showAllTasksFromSub(int sub_id) {
         return taskRepository.showAllTasksFromSub(sub_id);
+    }
+
+    public List<Label>  getLabelsFromTask(int task_id){
+        return taskRepository.getLabelsFromTask(task_id);
     }
 
 //------------------------------------------------------------------------------------
