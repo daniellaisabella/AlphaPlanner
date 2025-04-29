@@ -5,14 +5,15 @@ body {
     padding: 0;
     color: #333;
 }
+
 form {
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centrer vertikalt */
-    align-items: center;     /* Centrer horisontalt */
+    align-items: center; /* Centrer horisontalt */
     height: 100%;
-    max-width: 400px;        /* Sætter en maksimal bredde på formularen */
-    margin: 0 auto;          /* Centrer formularen horisontalt i midten */
+    max-width: 400px; /* Sætter en maksimal bredde på formularen */
+    margin: 0 auto; /* Centrer formularen horisontalt i midten */
     padding: 20px;
     border: none;
     background-color: #f8f8f8; /* Lys baggrund for formularen */
@@ -21,7 +22,7 @@ form {
 
 .topbar {
     justify-content: space-between; /* Fordeler logo til venstre og menu til højre */
-    background-color:#f8f8f8;
+    background-color: #f8f8f8;
     padding: 15px;
     display: flex;
     align-items: center;
@@ -29,7 +30,7 @@ form {
 
 .topbar .logo img {
     height: 55px;
-    width:  210px;
+    width: 210px;
 }
 
 .space a {
@@ -42,10 +43,12 @@ form {
     width: 80%;
     margin: 80px;
 }
+
 /*Overskrift weight*/
 h1, h2, h3 {
     font-weight: 700;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -55,9 +58,10 @@ table {
 }
 
 th, td {
-     text-align: left;
-     padding: 10px;
- }
+    text-align: left;
+    padding: 10px;
+}
+
 /* Links generelt */
 a {
     display: inline-block;
