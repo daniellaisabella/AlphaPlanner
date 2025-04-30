@@ -177,7 +177,7 @@ public class UserRepository {
                 """;
 
         try {
-            jdbcTemplate.update(updateUserSql, user.getName(), user.getEmail(), user.getRole(), user.getPassword());
+            jdbcTemplate.update(updateUserSql, user.getName(), user.getEmail(), user.getRole(), user.getPassword(),user.getUserId() );
             updateSkills(user);
         }catch (DataIntegrityViolationException e){
             throw new IllegalArgumentException("Fejl ved opdatering af bruger" + e);

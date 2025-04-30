@@ -27,28 +27,33 @@
 </div>
 <form method="post" th:object="${user}" th:action="@{/update}">
     <div class="form-row">
-        <label for="name">Navn</label>
-        <input id="name" type="text" th:value="*{name} " th:field="*{name}" required/>
+        <label for="name">UserID</label>
+        <input type="text" th:field="*{userId}" />
     </div>
+
+
+    <div class="form-row">
+        <label for="name">Navn</label>
+        <input id="name" type="text" th:field="*{name}" required/>
+    </div>
+
 
     <div class="form-row">
         <label for="emailPrefix">E-mail</label>
         <div class="email-wrapper">
-            <input id="emailPrefix" type="text" th:value="${userEmail}" required/>
+            <input id="emailPrefix" name="emailPrefix" type="text" th:value="${userEmail}" required/>
             <span>@alpha.com</span>
         </div>
     </div>
 
-    <input type="hidden" id="email" name="email" th:field="*{email}"/>
-
     <div class="form-row">
         <label for="password">Adgangskode</label>
-        <input id="password" type="text" th:value="*{password}" th:field="*{password}" required/>
-    </div>
+        <input id="password" type="text" th:field="*{password}" required/>    </div>
 
     <div class="form-row">
         <label for="role">Rolle</label>
-        <select id="role" th:value="*{role}" th:field="*{role}">
+        <select id="role" th:field="*{role}">
+
             <option value="" disabled selected>-- Vælg rolle --</option>
             <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
         </select>
@@ -56,7 +61,7 @@
 
     <div class="form-row">
         <label for="skills">Færdigheder</label>
-        <select id="skills" multiple size="5" th:value="*{skills}" th:field="*{skills}">
+        <select id="skills" multiple size="5" th:field="*{skills}">
             <option th:each="skill : ${skills}" th:value="${skill}" th:text="${skill}"></option>
         </select>
     </div>
@@ -80,3 +85,5 @@
 
 </body>
 </html>
+
+

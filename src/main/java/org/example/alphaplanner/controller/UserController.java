@@ -98,7 +98,9 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute User user){
+    public String updateUser(@RequestParam String emailPrefix, @ModelAttribute User user){
+        System.out.println("Updating user: " + user);
+        user.setEmail(emailPrefix + "@alpha.com");
         service.updateUser(user);
         return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
     }
@@ -109,6 +111,17 @@ public class UserController {
         service.deleteUser(userId);
         return userRole ? "redirect:/admin2" : "redirect:/admin1";
     }
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
