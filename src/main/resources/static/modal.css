@@ -103,3 +103,11 @@ tbody tr:hover::after {
 .form-group textarea {
     flex: 1;
 }
+
+.img-edit {
+    width: 16px;   /* or smaller like 12px */
+    height: 16px;  /* or smaller like 12px */
+    object-fit: contain; /* Keeps image proportions */
+    max-height: 16px;
+    max-width: 16px;
+}
