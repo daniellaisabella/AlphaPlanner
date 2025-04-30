@@ -47,7 +47,7 @@ public class UserController {
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return "redirect:/admin1";
         }
-        if (service.getUserRole(session.getAttribute("userId")).equals("project manager")){
+        if (service.getUserRole(session.getAttribute("userId")).equals("project mana    ger")){
             return "redirect:/pm1";
         }
         return isLoggedIn(session) ? "profile": "redirect:/login";

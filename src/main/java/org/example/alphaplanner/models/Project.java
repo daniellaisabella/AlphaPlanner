@@ -3,7 +3,7 @@ package org.example.alphaplanner.models;
 import java.time.LocalDate;
 
 public class Project {
-
+    private int id;
     private String projectName;
     private String projectDesc;
     private LocalDate projectDeadline;
@@ -12,13 +12,23 @@ public class Project {
     private double estimatedHours;
 
 
-    public Project(String projectName, String projectDesc, LocalDate projectDeadline) {
+    public Project(String projectName, String projectDesc, LocalDate projectDeadline, double estimatedHours) {
         this.projectName = projectName;
         this.projectDesc = projectDesc;
         this.projectDeadline = projectDeadline;
         this.projectStatus = false;
-        this.estimatedHours = 0;
+        this.estimatedHours = estimatedHours;
         this.dedicatedHours = 0;
+    }
+    //for sql
+    public Project(int id, String projectName, String projectDesc, LocalDate projectDeadline, boolean projectStatus, double estimatedHours, double dedicatedHours) {
+        this.id = id;
+        this.projectName = projectName;
+        this.projectDesc = projectDesc;
+        this.projectDeadline = projectDeadline;
+        this.projectStatus = projectStatus;
+        this.estimatedHours = estimatedHours;
+        this.dedicatedHours = dedicatedHours;
 
     }
 
@@ -71,4 +81,11 @@ public class Project {
     }
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

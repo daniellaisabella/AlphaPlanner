@@ -24,7 +24,17 @@ public class SubProject {
         this.subEstimatedHours = 0;
 
     }
+//for sql retrieval
+    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, boolean subProjectStatus, double subEstimatedHours, double subDedicatedHours) {
+        this.subId = subId;
+        this.subProjectName = subProjectName;
+        this.subProjectDesc = subProjectDesc;
+        this.subProjectDeadline = subProjectDeadline;
+        this.subProjectStatus = subProjectStatus;
+        this.subDedicatedHours = subDedicatedHours;
+        this.subEstimatedHours = subEstimatedHours;
 
+    }
     public int getSubId() {
         return subId;
     }

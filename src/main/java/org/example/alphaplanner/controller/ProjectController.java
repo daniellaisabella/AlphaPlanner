@@ -14,10 +14,6 @@ public class ProjectController {
         this.service = service;
     }
 
-    private boolean isLoggenIn(HttpSession session){
-        return session.getAttribute("user") !=null;
-    }
-
     @GetMapping("/pm1")
     private String projectManagerPage()
     {
