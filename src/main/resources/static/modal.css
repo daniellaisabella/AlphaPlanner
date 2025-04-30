@@ -104,7 +104,7 @@ tbody tr:hover::after {
     flex: 1;
 }
 
-.img-edit {
+img.img-edit {
     width: 16px;   /* or smaller like 12px */
     height: 16px;  /* or smaller like 12px */
     object-fit: contain; /* Keeps image proportions */
