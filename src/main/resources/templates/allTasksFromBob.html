@@ -41,6 +41,7 @@
         th:data-task-estimatedhours="${task.taskEstimatedHours}"
         th:data-task-dedicatedhours="${task.taskDedicatedHours}"
         th:data-task-labels="${task.labels != null ? #strings.arrayJoin(task.labels.toArray(), ', ') : ''}"
+        th:data-all-labels="${labels != null ? #strings.arrayJoin(labels.toArray(), ', ') : ''}"
         th:data-task-assignees="${task.assignees != null ? #strings.arrayJoin(task.assignees.toArray(), ', ') : ''}"
         onclick="openModalWithData(this)">
         <td th:text="${task.taskStatus} ? 'Done' : 'Not done'">Status</td>
@@ -127,8 +128,6 @@
     <!-- Save Button (Initially Hidden) -->
     <button id="saveButton" onclick="saveChanges()" style="display: none;">Save Changes</button>
 </div>
-
-<button id="addButton" onclick="assignPerson()">Assign</button>
 `;
 
         // Open the modal by adding the 'active' class
@@ -219,6 +218,58 @@
 
     function saveAssigenees() {
 
+    }
+
+    function editLabels(){
+
+        const selectedLabels = selectedRow.dataset.taskLabels?.split(',').map(s => s.trim()) || [];
+
+        const allLabels = selectedRow.dataset.allLabels?.split(',').map(s => s.trim()) || [];
+
+        const labelCheckboxes = allLabels.map(label => {
+            const isChecked = selectedLabels.includes(label) ? 'checked' : '';
+            return `
+            <label>
+                <input type="checkbox" name="labels" id="labels" value="${label}" ${isChecked}>
+                ${label}
+            </label><br>`;
+        }).join('');
+
+        document.querySelector('.modal .modal-header .title').innerText = 'Edit Labels';
+        document.querySelector('.modal .modal-body').innerHTML = `
+        <div>
+            <div id="labelCheckboxList">
+                ${labelCheckboxes}
+            </div>
+        </div>
+    <button id="saveAssignButton" onclick="saveLabels()">Save</button>
+        `;
+    }
+
+    function saveLabels(){
+        const checkboxes = document.querySelectorAll('input[name="labels"]:checked');
+        const selectedLabels = Array.from(checkboxes).map(cb => cb.value);
+
+        const taskId = selectedRow.dataset.taskId;
+
+        const formData = new FormData();
+        formData.append("taskId", taskId);
+        selectedLabels.forEach(label => formData.append("labels", label));
+
+        fetch("/tasks/updateLabelsFromTask", {
+            method: "POST",
+            body: formData
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else if (response.ok) {
+                window.location.reload();
+            } else {
+                alert("Failed to update labels.");
+            }
+        }).catch(error => {
+            console.error("Error saving labels:", error);
+        });
     }
 
     openModalButtons.forEach(button => {

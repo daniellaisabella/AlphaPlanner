@@ -28,9 +28,10 @@ public class TaskController {
     public TaskController(BaseService service) {
         this.service = service;
     }
-//------------------------HELPER METHOD TO CHECK IF USER IS LOGGED IN------------------------------------
-    private boolean isLoggedIn(HttpSession session){
-        return session.getAttribute("userId") !=null;
+
+    //------------------------HELPER METHOD TO CHECK IF USER IS LOGGED IN------------------------------------
+    private boolean isLoggedIn(HttpSession session) {
+        return session.getAttribute("userId") != null;
     }
 
     // dummy method to get into the task of a specific subproject=============================================
@@ -39,9 +40,9 @@ public class TaskController {
         SubProject subProject = service.getSubdummy(1);
         model.addAttribute("sub", subProject);
         List<Task> tasks = service.showAllTasksFromSub(1);
-
-
         model.addAttribute("tasks", tasks);
+        List<String> labels = service.getLabelsInString(service.getAllLabels());
+        model.addAttribute("labels", labels);
         return "allTasksFromBob";
     }
 //===========================================================
@@ -53,7 +54,7 @@ public class TaskController {
         model.addAttribute("sub_id", sub_id);
         List<Label> labels = service.getAllLabels();
         model.addAttribute("labels", labels);
-        return isLoggedIn(session) ? "createTask": "redirect:/login";
+        return isLoggedIn(session) ? "createTask" : "redirect:/login";
     }
 
     @PostMapping("/saveTask")
@@ -62,7 +63,7 @@ public class TaskController {
                            String desc,
                            LocalDate deadline,
                            double estimatedHours,
-                           @RequestParam(name="labels_id", required = false)ArrayList<Integer> labels_id, HttpSession session) {
+                           @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id, HttpSession session) {
 
         System.out.println("labels_id: " + labels_id);
 
@@ -83,12 +84,25 @@ public class TaskController {
                            @RequestParam("status") boolean status,
                            @RequestParam("estimatedHours") double estimatedHours,
                            @RequestParam("dedicatedHours") double dedicatedHours,
-                           HttpSession session){
+                           HttpSession session) {
 
         System.out.println(">>> Received updateTask POST request <<<");
 
         if (isLoggedIn(session)) {
             service.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
+            return "redirect:/tasks/showSub";
+        } else {
+            return "redirect:/login";
+        }
+    }
+
+    @PostMapping("/updateLabelsFromTask")
+    public String saveLabelsFromTask(@RequestParam(name = "labels") ArrayList<String> labels,
+                                     @RequestParam(name = "taskId") int taskId,
+                                     HttpSession session) {
+        System.out.println(">>> Received updateTask POST request <<<");
+        if (isLoggedIn(session)) {
+            service.addLabelsToTask(taskId, labels);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";

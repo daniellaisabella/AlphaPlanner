@@ -155,7 +155,7 @@ public class TaskRepository {
 
 
 
-    private List<String> getLabelsInString(List<Label> labels) { // This method is only used in this repository so its mark as private
+    public List<String> getLabelsInString(List<Label> labels) { // This method is only used in this repository so its mark as private
         List<String> result = new ArrayList<>();
         for (Label l : labels) {
             result.add(l.getLabelName());
@@ -164,10 +164,20 @@ public class TaskRepository {
 
     }
 
-    public void addLabelToTask(int task_id, int label_id) {
+    public void addLabelsToTask(int task_id, List<String> labels) {
 
+        //deletes the previous labels so only the new ones exist
+        String refreshSql = "DELETE FROM tasks_labels WHERE task_id = ?";
+        jdbcTemplate.update(refreshSql, task_id);
+
+        // get label id
+        String labelIdSql = "SELECT label_id FROM Labels WHERE label_name = ?";
         String sql = "INSERT INTO tasks_labels (task_id, label_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, task_id, label_id);
+
+        for (String l : labels){
+            int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+            jdbcTemplate.update(sql, task_id, labelId);
+        }
     }
 
 

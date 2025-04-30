@@ -73,6 +73,10 @@ public class BaseService {
         return taskRepository.getAllLabels();
     }
 
+    public List<String> getLabelsInString(List<Label> labels){
+        return taskRepository.getLabelsInString(labels);
+    }
+
     public Label getLabelById(int label_id){
         return taskRepository.getLabelById(label_id);
     }
@@ -81,8 +85,8 @@ public class BaseService {
         return taskRepository.getLabelsFromTask(task_id);
     }
 
-    public void addLabelToTask(int task_id, int label_id){
-        taskRepository.addLabelToTask(task_id, label_id);
+    public void addLabelsToTask(int task_id, List<String> labels){
+        taskRepository.addLabelsToTask(task_id, labels);
     }
 
     public void removeLabelFromTask(int task_id, int label_id){
