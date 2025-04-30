@@ -27,7 +27,7 @@
     <tr >
         <th>Status</th>
         <th>Name</th>
-        <th>Description</th>
+        <th>Estimated Hours</th>
         <th>Deadline</th>
     </tr>
     </thead>
@@ -45,7 +45,7 @@
         onclick="openModalWithData(this)">
         <td th:text="${task.taskStatus} ? 'Done' : 'Not done'">Status</td>
         <td th:text="${task.taskName}">Name</td>
-        <td th:text="${task.taskDesc}">Description</td>
+        <td th:text="${task.taskEstimatedHours} + ' Hours'">Estimated Hours</td>
         <td th:text="${task.taskDeadline}">Date</td>
     </tr>
     </tbody>
@@ -59,7 +59,7 @@
 <br>
 
 <!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
-<div class="modal" id="modal">
+<div class="modal" id="base_modal">
     <div class="modal-header">
         <div class="title">Header </div>
         <button data-close-button class="close-button">&times;</button>
@@ -95,7 +95,7 @@
 
         console.log(taskLabels);
         // Get the modal element and overlay
-        const modal = document.getElementById('modal');
+        const modal = document.getElementById('base_modal');
         const overlay = document.getElementById('overlay');
 
         // Set the modal content dynamically based on the task data
@@ -106,19 +106,29 @@
     <div class="modal-description-container" id="taskDescriptionContainer">
         <p id="taskDescription">${taskDesc}</p>
     </div>
-    <p><strong>Deadline:</strong> <span id="taskDeadline"></span>${taskDeadline}</p>
-    <p><strong>Status:</strong> <span id="taskStatus"></span>${taskStatus}</p>
-    <p><strong>Estimated Hours: </strong> <span id="taskEstimatedHours"></span>${taskEstimatedhours}</p>
+    <p><strong>Deadline:</strong> <span id="taskDeadline">${taskDeadline}</span></p>
+    <p><strong>Status:</strong> <span id="taskStatus">${taskStatus}</span></p>
+    <p><strong>Estimated Hours: </strong> <span id="taskEstimatedHours">${taskEstimatedhours}</span></p>
     <p><strong>Dedicated Hours: </strong> <span id="taskDedicatedHours">${taskDedicatedhours}</span></p>
-    <p><strong>Labels:</strong> <span id="taskLabels"></span>${taskLabels}</p>
-    <p><strong>Assignees:</strong> <span id="taskAssignees"></span>${taskAssignees}</p>
+    <p>
+  <strong>Labels:</strong>
+  <span id="taskLabels">${taskLabels}</span>
+  <button id="editLabelsBtn" onclick="editLabels()" style="margin-left: 10px; display: none;">✏️</button>
+</p>
+<p>
+  <strong>Assignees:</strong>
+  <span id="taskAssignees">${taskAssignees}</span>
+  <button id="editAssigneesBtn" onclick="editAssignees()" style="margin-left: 10px; display: none;">✏️</button>
+</p>
 </div>
-
+<div>
 <button id="editButton" onclick="enableEditing()">Edit</button>
 
     <!-- Save Button (Initially Hidden) -->
     <button id="saveButton" onclick="saveChanges()" style="display: none;">Save Changes</button>
 </div>
+
+<button id="addButton" onclick="assignPerson()">Assign</button>
 `;
 
         // Open the modal by adding the 'active' class
@@ -128,14 +138,16 @@
 
     function enableEditing() {
         // Make the task information editable
-        document.querySelector('.modal .modal-body #taskDescription').innerHTML = `<textarea id="taskDescriptionInput">${document.querySelector('.modal .modal-body #taskDescription').innerText}</textarea>`;
-        document.querySelector('.modal .modal-body #taskDeadline').innerHTML = `<input type="date" id="taskDeadlineInput" value="${document.querySelector('.modal .modal-body #taskDeadline').innerText}">`;
+        document.querySelector('.modal .modal-body #taskDescription').innerHTML = `<textarea id="taskDescriptionInput" style="width: 100%; height: 170px"  ">${document.querySelector('.modal .modal-body #taskDescription').innerText}</textarea>`;
+        document.querySelector('.modal .modal-body #taskDeadline').innerHTML = `<input type="date" id="taskDeadlineInput" value="${document.querySelector('.modal .modal-body #taskDeadline').innerText}" >`;
         document.querySelector('.modal .modal-body #taskStatus').innerHTML = `<select id="taskStatusInput">
         <option value="Done">Done</option>
         <option value="Not done">Not done</option>
     </select>`;
         document.querySelector('.modal .modal-body #taskEstimatedHours').innerHTML = `<input type="number" id="taskEstimatedHoursInput" value="${document.querySelector('.modal .modal-body #taskEstimatedHours').innerText}">`;
         document.querySelector('.modal .modal-body #taskDedicatedHours').innerHTML = `<input type="number" id="taskDedicatedHoursInput" value="${document.querySelector('.modal .modal-body #taskDedicatedHours').innerText}">`;
+        document.getElementById("editLabelsBtn").style.display = "inline-block";
+        document.getElementById("editAssigneesBtn").style.display = "inline-block";
 
         // Show the Save button and hide the Edit button
         document.getElementById("editButton").style.display = "none";
@@ -187,6 +199,25 @@
             .catch(error => {
                 console.error("Error:", error);
             });
+
+    }
+
+    function editAssignees() {
+        document.querySelector('.modal .modal-header .title').innerText = 'Assign Employee';
+        document.querySelector('.modal .modal-body').innerHTML = `
+        <div>
+        <label>
+            <input type="checkbox"
+            name="assignees_id"
+                   id="assignees_id"
+            > A list of all employees from the project (Need to wait for xanders part)
+        </label>
+    </div>
+    <button id="saveAssignButton" onclick="saveAssigenees()">Save</button>
+        `;
+    }
+
+    function saveAssigenees() {
 
     }
 

@@ -56,7 +56,7 @@ CREATE TABLE Tasks (
                        task_id INT PRIMARY KEY AUTO_INCREMENT,
                        sub_id INT,
                        task_name VARCHAR(100) NOT NULL,
-                       task_desc VARCHAR(100),
+                       task_desc TEXT,
                        task_deadline DATE NOT NULL,
                        task_timeEstimate INT NOT NULL,
                        task_dedicatedHours INT DEFAULT 0,
