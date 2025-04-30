@@ -170,6 +170,17 @@ public class UserRepository {
 
 
     public void updateUser(User user) {
+        User existingUser = getUserById(user.getUserId());
+        System.out.println("Existing password: " + existingUser.getPassword());
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+
+            user.setPassword(existingUser.getPassword());
+        }
+
+        if (user.getSkills() == null || user.getSkills().isEmpty()) {
+            user.setSkills(existingUser.getSkills());
+        }
+
         String updateUserSql = """
                 UPDATE USERS
                 SET USER_NAME = ?, EMAIL = ?, ROLE = ?, PASSWORD = ?
@@ -180,7 +191,7 @@ public class UserRepository {
             jdbcTemplate.update(updateUserSql, user.getName(), user.getEmail(), user.getRole(), user.getPassword(),user.getUserId() );
             updateSkills(user);
         }catch (DataIntegrityViolationException e){
-            throw new IllegalArgumentException("Fejl ved opdatering af bruger" + e);
+            throw new IllegalArgumentException("Fejl ved opdatering af bruger" + e.getMessage());
         }
     }
 

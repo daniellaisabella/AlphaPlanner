@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
+    <link rel="stylesheet" href="/checkbox.css">
 </head>
 <body>
 
@@ -26,10 +27,9 @@
     <a th:href="@{/admin1}">Tilbage</a>
 </div>
 <form method="post" th:object="${user}" th:action="@{/update}">
-    <div class="form-row">
-        <label for="name">UserID</label>
-        <input type="text" th:field="*{userId}" />
-    </div>
+
+        <input type="hidden" th:field="*{userId}" />
+
 
 
     <div class="form-row">
@@ -48,7 +48,7 @@
 
     <div class="form-row">
         <label for="password">Adgangskode</label>
-        <input id="password" type="text" th:field="*{password}" required/>    </div>
+        <input id="password" type="password" th:field="*{password}" placeholder="••••••••" />    </div>
 
     <div class="form-row">
         <label for="role">Rolle</label>
@@ -60,11 +60,15 @@
     </div>
 
     <div class="form-row">
-        <label for="skills">Færdigheder</label>
-        <select id="skills" multiple size="5" th:field="*{skills}">
-            <option th:each="skill : ${skills}" th:value="${skill}" th:text="${skill}"></option>
-        </select>
+        <label>Færdigheder</label> <!-- fjern for="skills" her -->
+        <div class="checkbox-group">
+            <div th:each="skill : ${skills}">
+                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
+                <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
+            </div>
+        </div>
     </div>
+
 
     <div class="form-row">
 

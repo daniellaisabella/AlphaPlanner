@@ -11,7 +11,7 @@ public class User {
     private String password;
     private List<Skill> skills;
 
-    //
+
     public User(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
@@ -32,11 +32,20 @@ public class User {
     }
 
     // CONSTRUCTOR FOR
-    public User( int userId, String userName, String email, String role) {
-        this.userId = userId;
+//    public User( int userId, String userName, String email, String role) {
+//        this.userId = userId;
+//        name = userName;
+//        this.email = email;
+//        this.role = role;
+//        this.skills = new ArrayList<>();
+//    }
+
+    public User(int id, String userName, String email, String password, String role) {
+        this.userId = id;
         name = userName;
         this.email = email;
         this.role = role;
+        this.password=password;
         this.skills = new ArrayList<>();
     }
 

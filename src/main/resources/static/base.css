@@ -19,6 +19,9 @@ form {
     background-color: #f8f8f8; /* Lys baggrund for formularen */
 
 }
+input, select, textarea, button, label {
+    font-family: 'Montserrat', sans-serif;
+}
 
 .topbar {
     justify-content: space-between; /* Fordeler logo til venstre og menu til højre */

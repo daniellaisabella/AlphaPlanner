@@ -14,8 +14,10 @@ public class UserRowMapper implements RowMapper<User> {
         int id = rs.getInt("user_id");
         String userName = rs.getString("user_name");
         String email = rs.getString("email");
+        String password =rs.getString("password");
         String role = rs.getString("role");
 
-        return new User(id,userName,email,role);
+
+        return new User(id,userName,email, password, role);
     }
 }
