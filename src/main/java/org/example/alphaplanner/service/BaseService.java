@@ -27,6 +27,10 @@ public class BaseService {
         return userRepository.login(user);
     }
 
+    public User getUserById(int userId){
+        return userRepository.getUserById(userId);
+    }
+
     public int getUserId(User user) {
         return userRepository.getUserId(user);
     }
@@ -47,6 +51,7 @@ public class BaseService {
     public void saveUser(User user) {
         userRepository.saveUser(user);
     }
+
     public List<String> getRoles() {
         return userRepository.getRoles();
     }
@@ -55,6 +60,9 @@ public class BaseService {
         return userRepository.getSkills();
     }
 
+    public void deleteUser(int userId) {
+        userRepository.deleteUser(userId);
+    }
 
 
 //----------------------Tasks and labels----------------------------------------------
@@ -71,6 +79,10 @@ public class BaseService {
 
     public List<Label> getLabelsFromTask(int task_id) {
         return taskRepository.getLabelsFromTask(task_id);
+    }
+
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
     }
 
 

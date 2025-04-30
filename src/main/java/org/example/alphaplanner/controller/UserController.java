@@ -4,10 +4,7 @@ import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.service.BaseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("")
 @Controller
@@ -23,13 +20,13 @@ public class UserController {
     }
 
 
-    @GetMapping("/login")
+    @GetMapping("/")
     public String showLogin(Model model){
         model.addAttribute("userLogin",new User());
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/")
     public String login(@ModelAttribute("userLogin") User user, Model model, HttpSession session){
         if (service.login(user)){
             session.setAttribute("userId",service.getUserId(user));
@@ -45,7 +42,7 @@ public class UserController {
     public String logout(HttpSession session){
         //Invalidates session
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     @GetMapping("/profile")
@@ -53,7 +50,7 @@ public class UserController {
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return "redirect:/admin1";
         }
-        return isLoggedIn(session) ? "adminProfile" : "redirect:/login";
+        return isLoggedIn(session) ? "adminProfile" : "redirect:/logout";
     }
 
     @GetMapping("/admin1")
@@ -87,6 +84,30 @@ public class UserController {
             service.saveUser(user);
             return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
         }
+    }
+
+    @GetMapping("/edit/{userId}")
+    public String editUser(@PathVariable int userId, HttpSession session, Model model){
+        User user = service.getUserById(userId);
+        model.addAttribute("user",user);
+        model.addAttribute("roles", service.getRoles());
+        model.addAttribute("skills", service.getSkills());
+        model.addAttribute("userEmail", user.getEmail().replace("@alpha.com", ""));
+
+        return isLoggedIn(session) ? "editUser": "redirect:/logout";
+    }
+
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute User user){
+        service.updateUser(user);
+        return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
+    }
+
+    @PostMapping("/delete/{userId}")
+    public String deleteUser(@PathVariable int userId){
+        boolean userRole = service.getUserRole(userId).equals("employee");
+        service.deleteUser(userId);
+        return userRole ? "redirect:/admin2" : "redirect:/admin1";
     }
 
 }

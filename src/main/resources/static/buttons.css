@@ -28,3 +28,12 @@
 .btn-link:hover::after {
     width: 100%;
 }
+
+/* edit user button */
+.img-edit {
+    width: 20px;  /* eller en procent f.eks. 50% */
+    height: 20px;  /* automatisk højde, så det ikke bliver forvrænget */
+}
+
+
+
