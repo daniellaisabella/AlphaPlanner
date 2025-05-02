@@ -69,7 +69,7 @@ public class TaskController {
 
 
         if (isLoggedIn(session)) {
-            if (labels_id != null){
+            if (labels_id != null) {
                 labelsResult = labels_id;
             }
             service.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
@@ -106,7 +106,7 @@ public class TaskController {
         System.out.println(">>> Received updateTask POST request <<<");
         ArrayList<String> result = new ArrayList<>();
         if (isLoggedIn(session)) {
-            if (labels != null){
+            if (labels != null) {
                 result = labels;
             }
             service.addLabelsToTask(taskId, result);
@@ -117,7 +117,7 @@ public class TaskController {
     }
 
     @GetMapping("/manageLabels")
-    public String manageLabels(Model model, HttpSession session){
+    public String manageLabels(Model model, HttpSession session) {
         if (isLoggedIn(session)) {
             List<Label> labels = service.getAllLabels();
             model.addAttribute("labels", labels);
@@ -128,7 +128,7 @@ public class TaskController {
     }
 
     @PostMapping("/deleteLabel")
-    public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session){
+    public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session) {
 
         if (isLoggedIn(session)) {
             service.deleteLabel(label_id);
@@ -140,7 +140,7 @@ public class TaskController {
     }
 
     @PostMapping("/deleteTask")
-    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session){
+    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session) {
 
         if (isLoggedIn(session)) {
             service.deleteTask(task_id);
@@ -153,14 +153,16 @@ public class TaskController {
 
     @PostMapping("/createLabel")
     public String createLabel(@RequestParam(name = "labelName") String labelName,
-                              RedirectAttributes redirectAttributes,
-                              HttpSession session){
-        if(service.checkIfLabelNameExist(labelName)){
-            redirectAttributes.addFlashAttribute("NameExists", true);
-            return "redirect:/tasks/manageLabels";
+                              Model model,
+                              HttpSession session) {
+        if (service.checkIfLabelNameExist(labelName)) {
+            List<Label> labels = service.getAllLabels();
+            model.addAttribute("labels", labels);
+            model.addAttribute("nameExists", true);
+            return "manageLabels";
         }
         if (isLoggedIn(session)) {
-           service.createLabel(labelName);
+            service.createLabel(labelName);
             return "redirect:/tasks/manageLabels";
         } else {
             return "redirect:/login";

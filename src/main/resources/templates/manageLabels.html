@@ -20,6 +20,10 @@
 
 <h1>Labels: </h1>
 
+<p th:if="${nameExists}"  style="color: red;">
+     Label with that name already exists.
+<p>
+
 <table>
     <thead>
     <tr>
@@ -35,73 +39,23 @@
             <!-- Delete Button -->
             <form action="/tasks/deleteLabel" method="post">
                 <input type="hidden" name="label_id" th:value="${label.labelId}">
-                <button type="submit" class="btn-link">Slet</button>
+                <button class="btn-link" >Slet</button>
             </form>
         </td>
     </tr>
-    <tr th:if="${NameExists}">
-        <td colspan="2" style="color: red;">Label with that name already exists.</td>
-    </tr>
     <tr>
         <td>
-        <button class="btn-link" id="createLabelBtn"
-                onclick="createNewLabel()">new Label
-        </button>
+            <form action="/tasks/createLabel" method="post">
+                <Label for="labelName"></Label>
+                <input type="text" name="labelName" id="labelName" placeholder="Enter label name" required>
+                <button class="btn-link"> Save </button>
+            </form>
         </td>
     </tr>
 
     </tbody>
 </table>
 <br>
-<script>
 
-    function createNewLabel(){
-
-        const button = document.getElementById("createLabelBtn");
-        button.style.display = "none";
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "Enter label name";
-        input.id = "newLabelInput";
-        input.required = true;
-
-        const saveButton = document.createElement("button");
-        saveButton.innerText = "Save";
-        saveButton.onclick = function () {
-            const labelName = input.value.trim();
-            if (labelName) {
-               const formData = new FormData();
-               formData.append("labelName", labelName);
-
-               console.log("lable name: ", labelName);
-
-               fetch("/tasks/createLabel", {
-                   method: 'POST',
-                   body: formData
-               })
-                   .then(response => {
-                       if (response.redirected) {
-                           window.location.href = response.url;  // Follow Spring's redirect
-                       } else if (response.ok) {
-                           window.location.reload();
-                       } else {
-                           alert("Failed to update task.");
-                       }
-                   })
-                   .catch(error => {
-                       console.error("Error:", error);
-                   });
-
-            } else {
-                alert("Label name cannot be empty.");
-            }
-        };
-
-
-        button.parentNode.insertBefore(input, button.nextSibling);
-        button.parentNode.insertBefore(saveButton, input.nextSibling);
-    }
-</script>
 </body>
 </html>
