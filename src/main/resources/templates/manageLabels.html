@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Manage Labels</title>
     <link th:href="@{/base.css}" rel="stylesheet">
-    <link th:href="@{/button.css}" rel="stylesheet">
+    <link th:href="@{/buttons.css}" rel="stylesheet">
     <link th:href="@{/modal.css}" rel="stylesheet">
 </head>
 <body>
@@ -20,9 +20,7 @@
 
 <h1>Labels: </h1>
 
-<p th:if="${nameExists}"  style="color: red;">
-     Label with that name already exists.
-<p>
+
 
 <table>
     <thead>
@@ -32,6 +30,7 @@
     </tr>
     </thead>
     <tbody>
+
     <!-- Loop through the labels and display them in rows -->
     <tr th:each="label : ${labels}">
         <td th:text="${label.labelName}">Label Name</td>
@@ -43,15 +42,25 @@
             </form>
         </td>
     </tr>
+
+    <!-- i want to have this to the side instead -->
     <tr>
-        <td>
-            <form action="/tasks/createLabel" method="post">
-                <Label for="labelName"></Label>
+        <form action="/tasks/createLabel" method="post">
+            <td>
+                <strong for="labelName">create new Label</strong>
+            </td>
+            <td>
                 <input type="text" name="labelName" id="labelName" placeholder="Enter label name" required>
+            </td>
+            <td>
                 <button class="btn-link"> Save </button>
-            </form>
-        </td>
+            </td>
+        </form>
     </tr>
+
+    <p th:if="${nameExists}"  style="color: red;">
+        Label with that name already exists.</p>
+
 
     </tbody>
 </table>
