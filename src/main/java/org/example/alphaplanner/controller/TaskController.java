@@ -149,4 +149,15 @@ public class TaskController {
         }
 
     }
+
+    @PostMapping("/createLabel")
+    public String createLabel(@RequestParam(name = "labelName") String labelName,
+                              HttpSession session){
+        if (isLoggedIn(session)) {
+           service.createLabel(labelName);
+            return "redirect:/tasks/manageLabels";
+        } else {
+            return "redirect:/login";
+        }
+    }
 }
