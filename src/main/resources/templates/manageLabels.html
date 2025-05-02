@@ -39,6 +39,9 @@
             </form>
         </td>
     </tr>
+    <tr th:if="${NameExists}">
+        <td colspan="2" style="color: red;">Label with that name already exists.</td>
+    </tr>
     <tr>
         <td>
         <button class="btn-link" id="createLabelBtn"
@@ -61,6 +64,7 @@
         input.type = "text";
         input.placeholder = "Enter label name";
         input.id = "newLabelInput";
+        input.required = true;
 
         const saveButton = document.createElement("button");
         saveButton.innerText = "Save";

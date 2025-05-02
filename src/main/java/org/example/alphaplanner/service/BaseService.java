@@ -101,6 +101,10 @@ public class BaseService {
         taskRepository.deleteLabel(label_id);
     }
 
+    public boolean checkIfLabelNameExist(String name){
+        return taskRepository.checkIfLabelNameExist(name);
+    }
+
 //-------------------------------------Assignees-----------------------------------------------
 
     public List<UserDto> getAssigneesFromTask(int task_id){

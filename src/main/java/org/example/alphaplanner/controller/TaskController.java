@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -152,7 +153,12 @@ public class TaskController {
 
     @PostMapping("/createLabel")
     public String createLabel(@RequestParam(name = "labelName") String labelName,
+                              RedirectAttributes redirectAttributes,
                               HttpSession session){
+        if(service.checkIfLabelNameExist(labelName)){
+            redirectAttributes.addFlashAttribute("NameExists", true);
+            return "redirect:/tasks/manageLabels";
+        }
         if (isLoggedIn(session)) {
            service.createLabel(labelName);
             return "redirect:/tasks/manageLabels";

@@ -4,6 +4,8 @@ import org.example.alphaplanner.models.*;
 import org.example.alphaplanner.repository.rowmappers.LabelRowMapper;
 import org.example.alphaplanner.repository.rowmappers.TaskRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -32,7 +34,7 @@ public class TaskRepository {
 
 //--------------------------------TASK METHODS--------------------------------------------------------------------------
 
-//dummy method to get a subprojec DELETE LATER===============================================================================
+//dummy method to get a subproject DELETE LATER===============================================================================
 
     public class SubRowMapper implements RowMapper<SubProject> {
 
@@ -141,6 +143,18 @@ public class TaskRepository {
 
         return jdbcTemplate.queryForObject(sql, new LabelRowMapper(), label_id);
     }
+
+    //Helper method to make sure you are not using a name that already exists
+    public boolean checkIfLabelNameExist(String name){
+        String sql = "SELECT l.label_id, l.label_name " +
+                "FROM Labels l " +
+                "WHERE l.label_name = ? ";
+
+        List<Label> labels = jdbcTemplate.query(sql, new LabelRowMapper(), name);
+        return !labels.isEmpty();
+
+    }
+
 //-------------------------INTERACTION BETWEEN LABELS AND TASKS---------------------------------------------------------
 
     public List<Label> getLabelsFromTask(int task_id) {
@@ -151,6 +165,7 @@ public class TaskRepository {
                 "WHERE tl.task_id = ?";
 
         return jdbcTemplate.query(sql, new LabelRowMapper(), task_id);
+
     }
 
 
@@ -165,21 +180,26 @@ public class TaskRepository {
     }
 
     public void addLabelsToTask(int task_id, List<String> labels) {
+        try {
+            // Deletes existing labels
+            String refreshSql = "DELETE FROM tasks_labels WHERE task_id = ?";
+            jdbcTemplate.update(refreshSql, task_id);
 
-        //deletes the previous labels so only the new ones exist
-        String refreshSql = "DELETE FROM tasks_labels WHERE task_id = ?";
-        jdbcTemplate.update(refreshSql, task_id);
+            String labelIdSql = "SELECT label_id FROM Labels WHERE label_name = ?";
+            String sql = "INSERT INTO tasks_labels (task_id, label_id) VALUES (?, ?)";
 
-        // get label id
-        String labelIdSql = "SELECT label_id FROM Labels WHERE label_name = ?";
-        String sql = "INSERT INTO tasks_labels (task_id, label_id) VALUES (?, ?)";
-
-        for (String l : labels){
-            int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
-            jdbcTemplate.update(sql, task_id, labelId);
+            for (String l : labels) {
+                try {
+                    int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+                    jdbcTemplate.update(sql, task_id, labelId);
+                } catch (EmptyResultDataAccessException ex) {
+                    throw new IllegalArgumentException("Label not found: " + l);
+                }
+            }
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("Database error while adding labels to the task.", e);
         }
     }
-
 
     public void removeLabelFromTask(int task_id, int label_id) {
 
@@ -196,7 +216,7 @@ public class TaskRepository {
 
     }
 
-    // There is no need to edit the labels, if you want a different one or you dont like it, you can create/delete it
+    // There is no need to edit the labels, if you want a different one, or you do not like it, you can create/delete it
 
     public void deleteLabel(int label_id) {
 
@@ -242,4 +262,5 @@ public class TaskRepository {
         jdbcTemplate.update(sql, task_id, user_id);
 
     }
+
 }
