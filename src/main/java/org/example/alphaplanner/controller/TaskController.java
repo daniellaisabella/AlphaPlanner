@@ -1,7 +1,6 @@
 package org.example.alphaplanner.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
@@ -43,7 +42,7 @@ public class TaskController {
         model.addAttribute("tasks", tasks);
         List<String> labels = service.getLabelsInString(service.getAllLabels());
         model.addAttribute("labels", labels);
-        return "allTasksFromBob";
+        return "subProject";
     }
 //===========================================================
 
@@ -65,11 +64,14 @@ public class TaskController {
                            double estimatedHours,
                            @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id, HttpSession session) {
 
-        System.out.println("labels_id: " + labels_id);
+        List<Integer> labelsResult = new ArrayList<>();
 
 
         if (isLoggedIn(session)) {
-            service.createTask(sub_id, name, desc, deadline, estimatedHours, labels_id);
+            if (labels_id != null){
+                labelsResult = labels_id;
+            }
+            service.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
@@ -97,15 +99,54 @@ public class TaskController {
     }
 
     @PostMapping("/updateLabelsFromTask")
-    public String saveLabelsFromTask(@RequestParam(name = "labels") ArrayList<String> labels,
+    public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<String> labels,
                                      @RequestParam(name = "taskId") int taskId,
                                      HttpSession session) {
         System.out.println(">>> Received updateTask POST request <<<");
+        ArrayList<String> result = new ArrayList<>();
         if (isLoggedIn(session)) {
-            service.addLabelsToTask(taskId, labels);
+            if (labels != null){
+                result = labels;
+            }
+            service.addLabelsToTask(taskId, result);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
         }
+    }
+
+    @GetMapping("/manageLabels")
+    public String manageLabels(Model model, HttpSession session){
+        if (isLoggedIn(session)) {
+            List<Label> labels = service.getAllLabels();
+            model.addAttribute("labels", labels);
+            return "manageLabels";
+        } else {
+            return "redirect:/login";
+        }
+    }
+
+    @PostMapping("/deleteLabel")
+    public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session){
+
+        if (isLoggedIn(session)) {
+            service.deleteLabel(label_id);
+            return "redirect:/tasks/manageLabels";
+        } else {
+            return "redirect:/login";
+        }
+
+    }
+
+    @PostMapping("/deleteTask")
+    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session){
+
+        if (isLoggedIn(session)) {
+            service.deleteTask(task_id);
+            return "redirect:/tasks/showSub";
+        } else {
+            return "redirect:/login";
+        }
+
     }
 }

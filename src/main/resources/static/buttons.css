@@ -1,15 +1,35 @@
-button {
-    padding: 10px 20px;
-    background-color: #0055ff;
-    color: white;
+.btn-link {
+    background: none;
     border: none;
-    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: black;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: bold;
-    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    text-decoration: none;
+    display: inline-block;
 }
 
-/* Hover-effekt på knapper */
-button:hover {
-    background-color: #0033aa;
+.btn-link::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background-color: orangered;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.btn-link:hover::after {
+    width: 100%;
+}
+
+/* edit user button */
+img.img-edit {
+    width: 20px;  /* eller en procent f.eks. 50% */
+    height: 20px;  /* automatisk højde, så det ikke bliver forvrænget */
 }

@@ -22,7 +22,7 @@
 
 <h1 align="center" th:text="${sub.subProjectName}"></h1>
 <h2> Tasks: </h2>
-<table>
+<table class="tasks">
     <thead>
     <tr >
         <th>Status</th>
@@ -54,7 +54,7 @@
 
 <form action="/tasks/createTask" method="get">
     <input type="hidden" name="sub_id" th:value="${sub.subId}">
-    <button type="submit">Create new Task</button>
+    <button class="btn-link" type="submit">Create new Task</button>
 </form>
 
 <br>
@@ -85,14 +85,16 @@
     function openModalWithData(row) {
         selectedRow = row;
         // Retrieve data from the clicked row
+        const taskId = row.dataset.taskId;
         const taskName = row.dataset.taskName;
         const taskDesc = row.dataset.taskDesc;
         const taskDeadline = row.dataset.taskDeadline;
         const taskStatus = row.dataset.taskStatus;
         const taskEstimatedhours = row.dataset.taskEstimatedhours;
         const taskDedicatedhours = row.dataset.taskDedicatedhours;
-        const taskLabels = row.dataset.taskLabels;
+        const taskLabels = row.dataset.taskLabels?.trim();
         const taskAssignees = row.dataset.taskAssignees;
+
 
         console.log(taskLabels);
         // Get the modal element and overlay
@@ -114,27 +116,44 @@
     <p>
   <strong>Labels:</strong>
   <span id="taskLabels">${taskLabels}</span>
-  <button id="editLabelsBtn" onclick="editLabels()" >
+  <button class="btn-link" id="editLabelsBtn" onclick="editLabels()" >
         <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
     </button>
 </p>
 <p>
   <strong>Assignees:</strong>
   <span id="taskAssignees">${taskAssignees}</span>
-  <button id="editAssigneesBtn" onclick="editAssignees()" style="margin-left: 10px; display: none;">✏️</button>
+  <button class="btn-link" id="editAssigneesBtn" onclick="editAssignees()" >
+   <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
+  </button>
 </p>
 </div>
+
 <div>
-<button id="editButton" onclick="enableEditing()">Edit</button>
+
+<button class="btn-link" id="editButton" onclick="enableEditing()">Edit</button>
 
     <!-- Save Button (Initially Hidden) -->
-    <button id="saveButton" onclick="saveChanges()" style="display: none;">Save Changes</button>
+    <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Save Changes</button>
+
+<form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Are you sure you want to delete this task?');">
+<input type="hidden" name="task_id" value="${taskId}">
+<button class="btn-link" >Delete</button>
+</form>
 </div>
+<br>
 `;
 
-        // Open the modal by adding the 'active' class
-        modal.classList.add('active');
-        overlay.classList.add('active');
+        const labelSpan = document.getElementById("taskLabels");
+        if (labelSpan) {
+            labelSpan.innerHTML = taskLabels && taskLabels.length > 0
+                ? taskLabels
+                : "No labels assigned";
+
+            // Open the modal by adding the 'active' class
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        }
     }
 
     function enableEditing() {
@@ -244,8 +263,12 @@
                 ${labelCheckboxes}
             </div>
         </div>
-    <button id="saveAssignButton" onclick="saveLabels()">Save</button>
-        `;
+        <div>
+            <button id="saveAssignButton" onclick="saveLabels()">Save</button>
+                <a class="btn-link" href="/tasks/manageLabels">Manage label</a>
+        </div>
+
+`;
     }
 
     function saveLabels(){
@@ -253,10 +276,14 @@
         const selectedLabels = Array.from(checkboxes).map(cb => cb.value);
 
         const taskId = selectedRow.dataset.taskId;
-
         const formData = new FormData();
         formData.append("taskId", taskId);
-        selectedLabels.forEach(label => formData.append("labels", label));
+
+        if (selectedLabels.length === 0) {
+            formData.append("labels", ""); // Send an empty value to represent an empty array
+        } else {
+            selectedLabels.forEach(label => formData.append("labels", label));
+        }
 
         fetch("/tasks/updateLabelsFromTask", {
             method: "POST",

@@ -77,8 +77,8 @@ CREATE TABLE tasks_labels (
                               label_id INT,
                               task_id INT,
                               PRIMARY KEY (label_id, task_id),
-                              FOREIGN KEY (label_id) REFERENCES Labels(label_id),
-                              FOREIGN KEY (task_id) REFERENCES Tasks(task_id)
+                              FOREIGN KEY (label_id) REFERENCES Labels(label_id) ON DELETE CASCADE,
+                              FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
 );
 
 -- Skills
@@ -104,6 +104,6 @@ CREATE TABLE users_tasks (
                              user_id INT,
                              task_id INT,
                              PRIMARY KEY(user_id, task_id),
-                             FOREIGN KEY (user_id) REFERENCES Users(user_id),
-                             FOREIGN KEY (task_id) REFERENCES Tasks(task_id)
+                             FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+                             FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
 );
