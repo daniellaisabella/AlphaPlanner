@@ -73,7 +73,7 @@ public class BaseService {
         return taskRepository.getAllLabels();
     }
 
-    public List<String> getLabelsInString(List<Label> labels){
+    public String getLabelsInString(List<Label> labels){
         return taskRepository.getLabelsInString(labels);
     }
 
@@ -85,7 +85,7 @@ public class BaseService {
         return taskRepository.getLabelsFromTask(task_id);
     }
 
-    public void addLabelsToTask(int task_id, List<String> labels){
+    public void addLabelsToTask(int task_id, List<Integer> labels){
         taskRepository.addLabelsToTask(task_id, labels);
     }
 
@@ -111,7 +111,7 @@ public class BaseService {
         return getAssigneesFromTask(task_id);
     }
 
-    public List<String> getAssigneesInString(List<UserDto> users) {
+    public String getAssigneesInString(List<UserDto> users) {
         return taskRepository.getAssigneesInString(users);
     }
 

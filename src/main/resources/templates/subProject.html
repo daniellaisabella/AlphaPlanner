@@ -40,9 +40,9 @@
         th:data-task-status="${task.taskStatus} ? 'Done' : 'Not done'"
         th:data-task-estimatedhours="${task.taskEstimatedHours}"
         th:data-task-dedicatedhours="${task.taskDedicatedHours}"
-        th:data-task-labels="${task.labels != null ? #strings.arrayJoin(task.labels.toArray(), ', ') : ''}"
-        th:data-all-labels="${labels != null ? #strings.arrayJoin(labels.toArray(), ', ') : ''}"
-        th:data-task-assignees="${task.assignees != null ? #strings.arrayJoin(task.assignees.toArray(), ', ') : ''}"
+        th:data-all-labels="${labels}"
+        th:data-task-labels="${task.labels}"
+        th:data-task-assignees="${task.assignees}"
         onclick="openModalWithData(this)">
         <td th:text="${task.taskStatus} ? 'Done' : 'Not done'">Status</td>
         <td th:text="${task.taskName}">Name</td>
@@ -82,6 +82,7 @@
 
     let selectedRow;
 
+
     function openModalWithData(row) {
         selectedRow = row;
         // Retrieve data from the clicked row
@@ -92,7 +93,7 @@
         const taskStatus = row.dataset.taskStatus;
         const taskEstimatedhours = row.dataset.taskEstimatedhours;
         const taskDedicatedhours = row.dataset.taskDedicatedhours;
-        const taskLabels = row.dataset.taskLabels?.trim();
+        const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
         const taskAssignees = row.dataset.taskAssignees;
 
 
@@ -243,17 +244,16 @@
 
     function editLabels(){
 
-        const selectedLabels = selectedRow.dataset.taskLabels?.split(',').map(s => s.trim()) || [];
-
-        const allLabels = selectedRow.dataset.allLabels?.split(',').map(s => s.trim()) || [];
+        const selectedLabels = parseIdNameList(selectedRow.dataset.taskLabels || "");
+        const allLabels = parseIdNameList(selectedRow.dataset.allLabels || "");
 
         const labelCheckboxes = allLabels.map(label => {
-            const isChecked = selectedLabels.includes(label) ? 'checked' : '';
+            const isChecked = selectedLabels.some(sel => sel.id === label.id);
             return `
-            <label>
-                <input type="checkbox" name="labels" id="labels" value="${label}" ${isChecked}>
-                ${label}
-            </label><br>`;
+        <label>
+            <input type="checkbox" name="labels" value="${label.id}" ${isChecked ? 'checked' : ''}>
+            ${label.name}
+        </label><br>`;
         }).join('');
 
         document.querySelector('.modal .modal-header .title').innerText = 'Edit Labels';
@@ -271,34 +271,42 @@
 `;
     }
 
-    function saveLabels(){
+    function saveLabels() {
         const checkboxes = document.querySelectorAll('input[name="labels"]:checked');
-        const selectedLabels = Array.from(checkboxes).map(cb => cb.value);
+        const selectedLabelIds = Array.from(checkboxes).map(cb => cb.value);
 
-        const taskId = selectedRow.dataset.taskId;
         const formData = new FormData();
-        formData.append("taskId", taskId);
+        formData.append("taskId", selectedRow.dataset.taskId);
+        selectedLabelIds.forEach(id => formData.append("labels", id)); // send IDs
 
-        if (selectedLabels.length === 0) {
-            formData.append("labels", ""); // Send an empty value to represent an empty array
-        } else {
-            selectedLabels.forEach(label => formData.append("labels", label));
-        }
+        console.log("new tasks: ", selectedLabelIds );
 
         fetch("/tasks/updateLabelsFromTask", {
             method: "POST",
             body: formData
-        }).then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else if (response.ok) {
-                window.location.reload();
-            } else {
-                alert("Failed to update labels.");
-            }
-        }).catch(error => {
-            console.error("Error saving labels:", error);
+        })
+            .then(response => {
+                if (response.redirected) window.location.href = response.url;
+                else if (response.ok) window.location.reload();
+                else alert("Failed to update labels.");
+            })
+            .catch(console.error);
+    }
+
+    function parseIdNameList(dataString) {
+        if (!dataString) return [];
+
+        return dataString.split(',').map(item => {
+            const [id, name] = item.split(':');
+            return { id: parseInt(id), name: name };
         });
+    }
+
+    function parseLabels(labelString) {
+        return labelString.split(',').map(item => {
+            const [id, name] = item.split(':');
+            return name;  // Return just the name of the label
+        }).join(', '); // Join all names into a comma-separated string
     }
 
     openModalButtons.forEach(button => {

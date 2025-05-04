@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class TaskRepository {
@@ -172,23 +173,22 @@ public class TaskRepository {
         }
     }
 
-    public List<String> getLabelsInString(List<Label> labels) {
-        List<String> result = new ArrayList<>();
-        for (Label l : labels) {
-            result.add(l.getLabelName());
-        }
-        return result;
+    public String getLabelsInString(List<Label> labels) {
+        return labels == null ? "" :
+                labels.stream()
+                        .map(l -> l.getLabelId() + ":" + l.getLabelName())
+                        .collect(Collectors.joining(","));
     }
 
-    public void addLabelsToTask(int task_id, List<String> labels) {
+    public void addLabelsToTask(int task_id, List<Integer> labels) {
         try {
             String refreshSql = "DELETE FROM tasks_labels WHERE task_id = ?";
             jdbcTemplate.update(refreshSql, task_id);
 
-            String labelIdSql = "SELECT label_id FROM Labels WHERE label_name = ?";
+            String labelIdSql = "SELECT label_id FROM Labels WHERE label_id = ?";
             String sql = "INSERT INTO tasks_labels (task_id, label_id) VALUES (?, ?)";
 
-            for (String l : labels) {
+            for (Integer l : labels) {
                 try {
                     int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
                     jdbcTemplate.update(sql, task_id, labelId);
@@ -241,12 +241,11 @@ public class TaskRepository {
         }
     }
 
-    public List<String> getAssigneesInString(List<UserDto> users) {
-        List<String> result = new ArrayList<>();
-        for (UserDto u : users) {
-            result.add(u.getName());
-        }
-        return result;
+    public String getAssigneesInString(List<UserDto> assignees) {
+        return assignees == null ? "" :
+                assignees.stream()
+                        .map(a -> a.getId() + ":" + a.getName())
+                        .collect(Collectors.joining(","));
     }
 
     public void addAssigneesToTask(int task_id, int user_id) {

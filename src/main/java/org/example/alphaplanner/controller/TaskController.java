@@ -41,7 +41,7 @@ public class TaskController {
         model.addAttribute("sub", subProject);
         List<Task> tasks = service.showAllTasksFromSub(1);
         model.addAttribute("tasks", tasks);
-        List<String> labels = service.getLabelsInString(service.getAllLabels());
+        String labels = service.getLabelsInString(service.getAllLabels());
         model.addAttribute("labels", labels);
         return "subProject";
     }
@@ -100,11 +100,12 @@ public class TaskController {
     }
 
     @PostMapping("/updateLabelsFromTask")
-    public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<String> labels,
+    public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<Integer> labels,
                                      @RequestParam(name = "taskId") int taskId,
                                      HttpSession session) {
         System.out.println(">>> Received updateTask POST request <<<");
-        ArrayList<String> result = new ArrayList<>();
+        System.out.println("Received label IDs: " + labels);
+        ArrayList<Integer> result = new ArrayList<>();
         if (isLoggedIn(session)) {
             if (labels != null) {
                 result = labels;
