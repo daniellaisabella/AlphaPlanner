@@ -25,7 +25,7 @@ public class ProjectRepository {
 
     public void DeleteProjectSQL(int id) {
         String query = """
-                sql = "DELETE FROM PROJECTS WHERE USERNAME = ?";
+                sql = "DELETE FROM PROJECTS WHERE project_id = ?";
                 """;
         jdbcTemplate.update(query, id);
     }

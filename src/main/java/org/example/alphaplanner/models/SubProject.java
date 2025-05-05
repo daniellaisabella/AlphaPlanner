@@ -1,5 +1,7 @@
 package org.example.alphaplanner.models;
 
+import org.yaml.snakeyaml.events.Event;
+
 import java.time.LocalDate;
 
 public class SubProject {
@@ -12,9 +14,10 @@ public class SubProject {
     private Boolean subProjectStatus;
     private double subDedicatedHours;
     private double subEstimatedHours;
+    private int projectId;
 
 
-    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline) {
+    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, int projectId) {
         this.subId = subId;
         this.subProjectName = subProjectName;
         this.subProjectDesc = subProjectDesc;
@@ -22,10 +25,11 @@ public class SubProject {
         this.subProjectStatus = false;
         this.subDedicatedHours = 0;
         this.subEstimatedHours = 0;
+        this.projectId = projectId;
 
     }
 //for sql retrieval
-    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, boolean subProjectStatus, double subEstimatedHours, double subDedicatedHours) {
+    public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, boolean subProjectStatus, double subEstimatedHours, double subDedicatedHours, int projectId) {
         this.subId = subId;
         this.subProjectName = subProjectName;
         this.subProjectDesc = subProjectDesc;
@@ -33,6 +37,7 @@ public class SubProject {
         this.subProjectStatus = subProjectStatus;
         this.subDedicatedHours = subDedicatedHours;
         this.subEstimatedHours = subEstimatedHours;
+        this.projectId = projectId;
 
     }
     public int getSubId() {
@@ -91,4 +96,7 @@ public class SubProject {
         this.subEstimatedHours = subEstimatedHours;
     }
 
+    public Object getprojectID() {
+        return projectId;
+    }
 }

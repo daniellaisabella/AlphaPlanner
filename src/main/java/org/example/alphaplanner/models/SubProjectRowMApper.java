@@ -16,6 +16,7 @@ public class SubProjectRowMApper implements RowMapper<SubProject> {
         boolean projectStatus = rs.getBoolean("sub_status");
         double estimatedTime = rs.getDouble("sub_timeEstimate");
         double dedicatedTime = rs.getDouble("sub_dedicatedHours");
-        return new SubProject(subID,name, desc, deadLine, projectStatus, estimatedTime, dedicatedTime);
+        int projectID = rs.getInt("project_id");
+        return new SubProject(subID,name, desc, deadLine, projectStatus, estimatedTime, dedicatedTime, projectID);
     }
 }
