@@ -2,20 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin profil</title>
+    <title>ProjektManagers</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
 </head>
-<body>
 
+<body>
 <div class="topbar">
     <div class="logo">
         <a th:href="@{/admin1}">
             <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
         </a>
     </div>
-
+    <div class="space">
+        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/}" class="logout-button">Log ud</a>
+    </div>
+</div>
 
 </body>
 </html>
