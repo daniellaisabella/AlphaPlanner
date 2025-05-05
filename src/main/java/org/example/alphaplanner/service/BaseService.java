@@ -1,11 +1,9 @@
 package org.example.alphaplanner.service;
 
-import org.example.alphaplanner.models.Label;
-import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.models.*;
+import org.example.alphaplanner.repository.ProjectRepository;
 import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.repository.TaskRepository;
 
 import java.util.List;
@@ -13,12 +11,14 @@ import java.util.List;
 @Service
 public class BaseService {
 
+    private final ProjectRepository projectRepository;
     private UserRepository userRepository;
     private final TaskRepository taskRepository;
 
-    public BaseService(UserRepository userRepository, TaskRepository taskRepository) {
+    public BaseService(UserRepository userRepository, TaskRepository taskRepository, ProjectRepository projectRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.projectRepository = projectRepository;
     }
 
     //------------ USER METHODS-----------//
@@ -57,4 +57,9 @@ public class BaseService {
     }
 
 //------------------------------------------------------------------------------------
+//=================Projects===============================================================
+    public void addProject(Project project)
+    {
+        projectRepository.AddProjectSql(project);
+    }
 }

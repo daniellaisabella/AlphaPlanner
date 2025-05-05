@@ -10,18 +10,20 @@ public class Project {
     private Boolean projectStatus;
     private double dedicatedHours;
     private double estimatedHours;
+    private int pm_id;
 
 
-    public Project(String projectName, String projectDesc, LocalDate projectDeadline, double estimatedHours) {
+    public Project(String projectName, String projectDesc, LocalDate projectDeadline, double estimatedHours, int pm_id) {
         this.projectName = projectName;
         this.projectDesc = projectDesc;
         this.projectDeadline = projectDeadline;
         this.projectStatus = false;
         this.estimatedHours = estimatedHours;
         this.dedicatedHours = 0;
+        this.pm_id= pm_id;
     }
     //for sql
-    public Project(int id, String projectName, String projectDesc, LocalDate projectDeadline, boolean projectStatus, double estimatedHours, double dedicatedHours) {
+    public Project(int id, String projectName, String projectDesc, LocalDate projectDeadline, boolean projectStatus, double estimatedHours, double dedicatedHours, int pm_id) {
         this.id = id;
         this.projectName = projectName;
         this.projectDesc = projectDesc;
@@ -29,6 +31,7 @@ public class Project {
         this.projectStatus = projectStatus;
         this.estimatedHours = estimatedHours;
         this.dedicatedHours = dedicatedHours;
+        this.pm_id= pm_id;
 
     }
 
@@ -87,5 +90,13 @@ public class Project {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getPm_id() {
+        return pm_id;
+    }
+
+    public void setPm_id(int pm_id) {
+        this.pm_id = pm_id;
     }
 }

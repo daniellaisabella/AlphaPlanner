@@ -17,6 +17,7 @@ public class ProjectRowMapper implements RowMapper<Project> {
         boolean projectStatus = rs.getBoolean("project_status");
         double estimatedTime = rs.getDouble("timeEstimate");
         double dedicatedTime = rs.getDouble("project_dedicatedHours");
-        return new Project(id, name, desc, deadLine, projectStatus, estimatedTime, dedicatedTime);
+        int pmId = rs.getInt("pm_id");
+        return new Project(id, name, desc, deadLine, projectStatus, estimatedTime, dedicatedTime, pmId );
     }
 }
