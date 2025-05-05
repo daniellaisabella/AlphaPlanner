@@ -2,10 +2,10 @@ USE alphaSolutions;
 
 -- Users
 INSERT INTO Users (user_name, email, role, password) VALUES
-                                                         ('Alice Johnson', 'alice@alpha.com', 'admin', '123'),
-                                                         ('Bob Smith', 'bob@alpha.com', 'project manager', '123'),
-                                                         ('Charlie Lee', 'charlie@alpha.com', 'employee', '123'),
-                                                         ('Diana Kim', 'diana@alpha.com', 'employee', '123');
+                                                         ('Alice Johnson', 'alice@alpha.com', 'Admin', '123'),
+                                                         ('Bob Smith', 'bob@alpha.com', 'Project Manager', '123'),
+                                                         ('Charlie Lee', 'charlie@alpha.com', 'Employee', '123'),
+                                                         ('Diana Kim', 'diana@alpha.com', 'Employee', '123');
 
 -- Projects
 INSERT INTO Projects (pm_id, project_name, project_desc, project_deadline, project_status, project_dedicatedHours, project_timeEstimate) VALUES
