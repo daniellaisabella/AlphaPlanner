@@ -78,7 +78,7 @@ public class UserController {
     public String createUser(Model model, HttpSession session){
         model.addAttribute("user", new User());
         model.addAttribute("roles", service.getRoles());
-        model.addAttribute("skills", service.getSkills());
+        model.addAttribute("enumSkills", service.getSkills());
 
         return isLoggedIn(session) ? "createUser": "redirect:/logout";
     }
@@ -87,7 +87,7 @@ public class UserController {
     public String saveUser(@ModelAttribute User user, Model model){
         if(service.checkForDup(user.getEmail())){
             model.addAttribute("duplicate", true);
-            return "redirect:/create";
+            return "/createUser";
         }else{
             service.saveUser(user);
             return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";

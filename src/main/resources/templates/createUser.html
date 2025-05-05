@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Opret</title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
@@ -25,6 +26,7 @@
 <div>
     <a th:href="@{admin1}">Tilbage</a>
 </div>
+<p th:if="${duplicate}" class="error">Bruger med samme E-mail eksisterer allerede</p>
 <form method="post" th:object="${user}" th:action="@{/save}">
     <div class="form-row">
         <label for="name">Navn</label>
@@ -55,11 +57,15 @@
     </div>
 
     <div class="form-row">
-        <label for="skills">Færdigheder</label>
-        <select id="skills" multiple size="5" th:field="*{skills}">
-            <option th:each="skill : ${skills}" th:value="${skill}" th:text="${skill}"></option>
-        </select>
+        <label>Færdigheder</label>
+        <div class="checkbox-group">
+            <div th:each="skill : ${enumSkills}">
+                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
+                <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
+            </div>
+        </div>
     </div>
+
 
     <div class="form-row">
 

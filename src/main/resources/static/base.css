@@ -72,6 +72,7 @@ a {
     position: relative;
 }
 
+
 /* Rød streg under ved hover */
 a:hover::after {
     content: "";
