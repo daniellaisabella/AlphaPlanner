@@ -1,11 +1,8 @@
 package org.example.alphaplanner.service;
 
-import org.example.alphaplanner.models.Label;
-import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.models.*;
 import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.repository.TaskRepository;
 
 import java.util.List;

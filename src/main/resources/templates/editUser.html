@@ -60,9 +60,9 @@
     </div>
 
     <div class="form-row">
-        <label>Færdigheder</label> <!-- fjern for="skills" her -->
+        <label>Færdigheder</label>
         <div class="checkbox-group">
-            <div th:each="skill : ${skills}">
+            <div th:each="skill : ${enumSkills}">
                 <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
                 <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
             </div>

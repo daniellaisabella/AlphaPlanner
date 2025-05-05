@@ -145,7 +145,9 @@ public class UserRepository {
 
     public List<String> getSkills() {
         String sql = "SELECT skill_id, skill_name FROM Skills";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("skill_name"));
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                rs.getString("skill_name")
+        );
     }
 
     //---------------- DELETE METHOD --------------------------
@@ -171,7 +173,6 @@ public class UserRepository {
 
     public void updateUser(User user) {
         User existingUser = getUserById(user.getUserId());
-        System.out.println("Existing password: " + existingUser.getPassword());
         if (user.getPassword() == null || user.getPassword().isBlank()) {
 
             user.setPassword(existingUser.getPassword());

@@ -21,13 +21,8 @@
         <a th:href="@{/}" class="logout-button">Log ud</a>
     </div>
 </div>
-
-<div class="space">
-    <a th:href="@{/admin1}" th:classappend="${activePage == 'admin1' } ? 'active' : ''"> Projekt Manager</a>
-    <a th:href="@{/admin2}" th:classappend="${activePage == 'admin2' } ? 'active' : ''"> Ansatte </a>
-</div>
-
-<table>
+<h1>Min profil</h1>
+<table style="justify-content: center">
     <thead>
     <tr>
         <th>Navn</th>
@@ -37,41 +32,24 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each=" employee : ${employees}">
-        <td th:text="${employee.name}"></td>
-        <td th:text="${employee.role}"></td>
-        <td th:text="${employee.email}"></td>
+    <tr th:object="${user}">
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.email}"></td>
 
         <td>
             <ul>
-                <li th:each="skill : ${employee.skills}" th:text="${skill.skillName}"></li>
+                <li th:each="skill : ${user.skills}" th:text="${skill.skillName}"></li>
             </ul>
         </td>
 
         <td>
-            <a th:href="@{/edit/{userId}(userId=${employee.userId})}">
+            <a th:href="@{/edit/{userId}(userId=${user.userId})}">
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
             </a>
         </td>
-        <td>
-            <form th:action="@{/delete/{userId}(userId=${employee.userId})}" method="post"
-                  onsubmit="return confirm('Er du sikker på at du vil slette denne ansatte ');">
-
-                <button type="submit" class="btn-link"> X </button>
-
-
-            </form>
-        </td>
-
-    </tr>
-    <tr>
-        <div>
-            <a th:href="@{/create}"> + </a>
-        </div>
     </tr>
     </tbody>
 </table>
-
-
 </body>
 </html>

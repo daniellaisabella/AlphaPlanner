@@ -16,15 +16,15 @@
         </a>
     </div>
     <div class="space">
-        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/myProfile}">Min Profil</a>
         <a th:href="@{/}" class="logout-button">Log ud</a>
     </div>
 </div>
 
 
 <div class="space">
-    <a th:href="@{/admin1}"> Projekt Manager</a>
-    <a th:href="@{/admin2}"> Ansatte</a>
+    <a th:href="@{/admin1}" th:classappend="${activePage == 'admin1' } ? 'active' : ''"> Projekt Manager</a>
+    <a th:href="@{/admin2}" th:classappend="${activePage == 'admin2' } ? 'active' : ''"> Ansatte </a>
 </div>
 
 <table>

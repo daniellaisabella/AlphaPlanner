@@ -48,22 +48,30 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session){
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
-            return "redirect:/admin1";
+            return isLoggedIn(session) ? "redirect:/admin1" : "redirect:/logout";
+        } else {
+            return isLoggedIn(session) ? "redirect:/manEmpProfile" : "redirect:/logout";
         }
-        return isLoggedIn(session) ? "adminProfile" : "redirect:/logout";
     }
 
     @GetMapping("/admin1")
     public String admin1 (Model model, HttpSession session){
+        model.addAttribute("activePage","admin1");
         model.addAttribute("projectManagers",service.getUsersByRole("project manager"));
-
         return isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
     }
 
     @GetMapping("/admin2")
     public String admin2 (Model model, HttpSession session){
+        model.addAttribute("activePage","admin2");
         model.addAttribute("employees",service.getUsersByRole("employee"));
         return isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
+    }
+
+    @GetMapping("/myProfile")
+    public String myProfile (Model model, HttpSession session){
+        model.addAttribute("user",service.getUserById((Integer) session.getAttribute("userId")));
+        return isLoggedIn(session) ? "myProfile": "redirect:/logout";
     }
 
     @GetMapping("/create")
@@ -91,7 +99,7 @@ public class UserController {
         User user = service.getUserById(userId);
         model.addAttribute("user",user);
         model.addAttribute("roles", service.getRoles());
-        model.addAttribute("skills", service.getSkills());
+        model.addAttribute("enumSkills", service.getSkills());
         model.addAttribute("userEmail", user.getEmail().replace("@alpha.com", ""));
 
         return isLoggedIn(session) ? "editUser": "redirect:/logout";
@@ -99,7 +107,6 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser(@RequestParam String emailPrefix, @ModelAttribute User user){
-        System.out.println("Updating user: " + user);
         user.setEmail(emailPrefix + "@alpha.com");
         service.updateUser(user);
         return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
