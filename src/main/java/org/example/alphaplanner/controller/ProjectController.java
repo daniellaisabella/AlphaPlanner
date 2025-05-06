@@ -15,11 +15,16 @@ public class ProjectController {
     }
 
     @GetMapping("/pm1")
-    private String projectManagerPage()
+    private String projectManagerPage(HttpSession session)
     {
-        return "pm-page";
+
+        return isLoggedIn(session,"pm-Page");
     }
 
+    private String isLoggedIn(HttpSession session, String s){
+        if(session.getAttribute("userId") !=null)return s;
+        return "redirect:/login";
+    }
 
 
 }
