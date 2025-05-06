@@ -6,6 +6,12 @@ body {
     color: #333;
 }
 
+.centerX{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -166,5 +172,6 @@ a.active::after {
     bottom: -2px;
     left: 0;
 }
+
 
 
