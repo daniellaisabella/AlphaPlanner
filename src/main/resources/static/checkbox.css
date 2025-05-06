@@ -1,0 +1,30 @@
+/* Styling for checkbox group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Plads mellem checkboxes */
+}
+
+/* Styling for hver checkbox */
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px; /* Plads til højre for checkbox */
+    transform: scale(1.2); /* Øger størrelsen på checkboxen */
+    cursor: pointer;
+}
+
+/* Styling for labels ved siden af checkboxen */
+.checkbox-group label {
+    font-family: 'Montserrat', sans-serif; /* Sørger for fonten er Montserrat */
+    font-size: 16px; /* Passende skriftstørrelse */
+    cursor: pointer; /* Giver en pointercursor ved hover */
+}
+
+/* Styling ved hover over checkbox */
+.checkbox-group input[type="checkbox"]:hover + label {
+    color: orangered; /* Ændrer farve på label når du hover */
+}
+
+/* Når checkboxen er valgt */
+.checkbox-group input[type="checkbox"]:checked + label {
+    color: orangered; /* Giver et visuel indikation ved valg */
+}
