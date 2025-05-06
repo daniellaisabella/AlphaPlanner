@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/base.css}">
     <link rel="stylesheet" th:href="@{/buttons.css}">
@@ -16,21 +17,34 @@
         <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
     </div>
 </div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<p th:if="${wrongInput}" class="error">Forkert brugernavn eller adgangskode</p>
+
 <form class="form"
 
-        action="/login"
+        action="/"
         method="post"
         th:object="${userLogin}"
 >
-    <p th:if="${wrongInput}" class="error">Forkert brugernavn eller adgangskode</p>
-    <p><label id="email" >Email</label>
-        <input th:field="*{email}" name="email" type="text" autofocus></p>
 
-    <p><label class="">Adgangskode</label>
-        <input th:field="*{password}" name="password" type="password" autofocus></p>
+    <div class="form-row">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" th:field="*{email}" required />
+    </div>
+    <div class="form-row">
+        <label for="password">Adgangskode</label>
+        <input id="password" type="password" th:field="*{password}" required />
+    </div>
+
 
     <p>
-        <button class="" type="submit">Log ind</button>
+        <button class="btn-link" type="submit">Log ind</button>
     </p>
 
 </form>

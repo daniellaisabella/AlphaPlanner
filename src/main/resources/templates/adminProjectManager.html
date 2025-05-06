@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>ProjektManagers</title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
@@ -11,37 +13,66 @@
 <body>
 <div class="topbar">
     <div class="logo">
-        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        <a th:href="@{/admin1}">
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
     </div>
     <div class="space">
-        <a th:href="@{/profil}">Min Profil</a>
-        <a th:href="@{/login}" class="logout-button">Log ud</a>
+        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/}" class="logout-button">Log ud</a>
     </div>
 </div>
 
 
 <div class="space">
-    <a th:href="@{/admin1}"> Projekt Manager</a>
-    <a th:href="@{/admin2}"> Ansatte</a>
+    <a th:href="@{/admin1}" th:classappend="${activePage == 'admin1' } ? 'active' : ''"> Projekt Manager</a>
+    <a th:href="@{/admin2}" th:classappend="${activePage == 'admin2' } ? 'active' : ''"> Ansatte </a>
 </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Navn</th>
-            <th>Rolle</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="projectManager : ${projectManagers}">
-            <td th:text="${projectManager.name}"></td>
-            <td th:text="${projectManager.role}"></td>
-            <td th:text="${projectManager.email}"></td>
+<table>
+    <thead>
+    <tr>
+        <th>Navn</th>
+        <th>Rolle</th>
+        <th>Email</th>
+        <th>Skills</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="projectManager : ${projectManagers}">
+        <td th:text="${projectManager.name}"></td>
+        <td th:text="${projectManager.role}"></td>
+        <td th:text="${projectManager.email}"></td>
 
-        </tr>
-        </tbody>
-    </table>
+        <td>
+            <ul>
+                <li th:each="skill : ${projectManager.skills}" th:text="${skill.skillName}"></li>
+            </ul>
+        </td>
+
+        <td>
+            <a th:href="@{/edit/{userId}(userId=${projectManager.userId})}">
+                <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
+            </a>
+        </td>
+
+        <td>
+            <form th:action="@{/delete/{userId}(userId=${projectManager.userId})}" method="post"
+                  onsubmit="return confirm('Er du sikker på at du vil slette denne ansatte ');">
+
+                <button type="submit" class="btn-link"> X</button>
+            </form>
+        </td>
+
+
+    </tr>
+    <tr>
+        <div>
+            <a th:href="@{/create}"> + </a>
+        </div>
+    </tr>
+    </tbody>
+</table>
 
 
 </body>
