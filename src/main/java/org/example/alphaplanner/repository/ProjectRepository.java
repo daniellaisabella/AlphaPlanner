@@ -27,7 +27,7 @@ public class ProjectRepository {
 
     public void DeleteProjectSQL(int id) {
         String query = """
-                sql = "DELETE FROM PROJECTS WHERE project_id = ?";
+                DELETE FROM PROJECTS WHERE project_id = ?;
                 """;
         jdbcTemplate.update(query, id);
     }
@@ -50,9 +50,10 @@ public class ProjectRepository {
     }
 
     public List<Project> getAttachedProjects(Object userid) {
+
         String query = """
                 SELECT * FROM projects WHERE pm_id = ?
                 """;
-        return jdbcTemplate.queryForList(query, rowMapper, userid);
+        return jdbcTemplate.query(query, rowMapper, userid);
     }
 }

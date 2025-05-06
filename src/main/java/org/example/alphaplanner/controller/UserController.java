@@ -50,7 +50,7 @@ public class UserController {
     public String profile(Model model, HttpSession session){
         String userRole = service.getUserRole(session.getAttribute("userId"));
         if (userRole.equals("project manager") || userRole.equals("employee") ){
-            return isLoggedIn(session) ? "redirect:/pm1" : "redirect:/logout";
+            return isLoggedIn(session) ? "redirect:/projects" : "redirect:/logout";
         }
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return isLoggedIn(session) ? "redirect:/admin1" : "redirect:/logout";

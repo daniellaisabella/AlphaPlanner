@@ -21,8 +21,25 @@
 <div th:class="centerX">
     Projekter
 </div>
-<tr th:each="project : ${projects}">
-
+<table>
+    <thead>
+<tr>
+    <th><b>&#10004;</b></th>
+    <th><b>navn</b></th>
+    <th><b>beskrivelse</b></th>
+    <th><b>forfald</b></th>
 </tr>
+    </thead>
+    <tbody style="overflow-y: auto; padding: 2px">
+    <tr th:each="project : ${projects}">
+        <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
+        <td th:text="${project.getProjectName()}"></td>
+        <td th:text="${project.getProjectDesc()}"></td>
+        <td th:text="${project.getProjectDeadline()}"></td>
+        <td th:href="@{/projects/edit}">rediger</td>
+
+    </tr>
+    </tbody>
+    </table>
 </body>
 </html>

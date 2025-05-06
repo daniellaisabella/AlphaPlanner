@@ -1,6 +1,5 @@
 package org.example.alphaplanner.repository;
 
-import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.ProjectRowMapper;
 import org.example.alphaplanner.models.SubProject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,14 +23,14 @@ public class SubProjectRepository {
 
     public void DeleteProjectSQL(int id) {
         String query = """
-                sql = "DELETE FROM subprojects WHERE sub_id = ?";
+                DELETE FROM subprojects WHERE sub_id = ?;
                 """;
         jdbcTemplate.update(query, id);
     }
 
     public void UpdateSQL(SubProject project) {
         String query = """
-                        UPDATE projects
+                        UPDATE subprojects
                         SET sub_name = ?, sub_desc = ?, sub_deadline = ?, sub_status = ?, sub_dedicatedHours = ?, sub_timeEstimate = ?, project_id = ?
                         WHERE sub_id = ?
                 """;

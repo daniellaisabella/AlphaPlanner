@@ -1,13 +1,18 @@
 package org.example.alphaplanner.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.service.BaseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
+@RequestMapping("/projects")
 public class ProjectController {
 
     private final BaseService service;
@@ -16,11 +21,16 @@ public class ProjectController {
         this.service = service;
     }
 
-    @GetMapping("/pm1")
+    @GetMapping("")
     private String projectManagerPage(HttpSession session, Model model)
     {
-        model.addAttribute(service.getProjects(session.getAttribute("userid")));
-        return isLoggedIn(session,"pm-Page");
+       List<Project> projects = service.getProjects((Integer) session.getAttribute("userId"));
+       for (Project p : projects)
+       {
+           System.out.println(p.getProjectName()+"help");
+       }
+        model.addAttribute("projects",projects);
+        return "pm-page";
     }
 
     private String isLoggedIn(HttpSession session, String s){

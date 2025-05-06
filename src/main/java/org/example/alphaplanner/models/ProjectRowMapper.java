@@ -12,10 +12,10 @@ public class ProjectRowMapper implements RowMapper<Project> {
     public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
         int id = rs.getInt("project_id");
         String name = rs.getString("project_name");
-        String desc = rs.getString("project_description");
+        String desc = rs.getString("project_desc");
         LocalDate deadLine = rs.getDate("project_deadline").toLocalDate();
         boolean projectStatus = rs.getBoolean("project_status");
-        double estimatedTime = rs.getDouble("timeEstimate");
+        double estimatedTime = rs.getDouble("project_timeEstimate");
         double dedicatedTime = rs.getDouble("project_dedicatedHours");
         int pmId = rs.getInt("pm_id");
         return new Project(id, name, desc, deadLine, projectStatus, estimatedTime, dedicatedTime, pmId );

@@ -85,7 +85,7 @@ public class BaseService {
         userRepository.updateUser(user);
     }
 
-    public Object getProjects(Object userid) {
+    public List<Project> getProjects(int userid) {
         return projectRepository.getAttachedProjects(userid);
     }
 
