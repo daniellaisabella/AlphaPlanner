@@ -133,7 +133,7 @@ public class UserRepository {
         String sql = "SHOW COLUMNS FROM Users WHERE Field = 'role'";
         return jdbcTemplate.query(sql, rs -> {
             if (rs.next()) {
-                String enumStr = rs.getString("Type"); // f.eks. enum('employee','project manager','admin')
+                String enumStr = rs.getString("Type"); // enum('employee','project manager','admin')
                 // Udtræk værdierne fra enum-strengen
                 enumStr = enumStr.substring(enumStr.indexOf("(") + 1, enumStr.indexOf(")"));
                 String[] values = enumStr.replace("'", "").split(",");
