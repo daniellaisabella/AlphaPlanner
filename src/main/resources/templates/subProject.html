@@ -21,13 +21,13 @@
 </div >
 
 <h1 align="center" th:text="${sub.subProjectName}"></h1>
-<h2> Tasks: </h2>
+<h2> Opgaver: </h2>
 <table class="tasks">
     <thead>
     <tr >
         <th>Status</th>
-        <th>Name</th>
-        <th>Estimated Hours</th>
+        <th>Navn</th>
+        <th>forventede timer</th>
         <th>Deadline</th>
     </tr>
     </thead>
@@ -37,16 +37,16 @@
         th:data-task-name="${task.taskName}"
         th:data-task-desc="${task.taskDesc}"
         th:data-task-deadline="${task.taskDeadline}"
-        th:data-task-status="${task.taskStatus} ? 'Done' : 'Not done'"
+        th:data-task-status="${task.taskStatus} ? 'Færdig' : 'Ikke Færdig'"
         th:data-task-estimatedhours="${task.taskEstimatedHours}"
         th:data-task-dedicatedhours="${task.taskDedicatedHours}"
         th:data-all-labels="${labels}"
         th:data-task-labels="${task.labels}"
         th:data-task-assignees="${task.assignees}"
         onclick="openModalWithData(this)">
-        <td th:text="${task.taskStatus} ? 'Done' : 'Not done'">Status</td>
+        <td th:text="${task.taskStatus} ? 'Færdig' : 'Ikke færdig'">Status</td>
         <td th:text="${task.taskName}">Name</td>
-        <td th:text="${task.taskEstimatedHours} + ' Hours'">Estimated Hours</td>
+        <td th:text="${task.taskEstimatedHours} + ' Timer'">Estimated Hours</td>
         <td th:text="${task.taskDeadline}">Date</td>
     </tr>
     </tbody>
@@ -54,7 +54,7 @@
 
 <form action="/tasks/createTask" method="get">
     <input type="hidden" name="sub_id" th:value="${sub.subId}">
-    <button class="btn-link" type="submit">Create new Task</button>
+    <button class="btn-link" type="submit">Opret ny opgave</button>
 </form>
 
 <br>
@@ -62,11 +62,11 @@
 <!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
 <div class="modal" id="base_modal">
     <div class="modal-header">
-        <div class="title">Header </div>
+        <div class="title"></div>
         <button data-close-button class="close-button">&times;</button>
     </div>
     <div class="modal-body">
-        This is the body
+
     </div>
 </div>
 
@@ -94,7 +94,7 @@
         const taskEstimatedhours = row.dataset.taskEstimatedhours;
         const taskDedicatedhours = row.dataset.taskDedicatedhours;
         const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
-        const taskAssignees = row.dataset.taskAssignees;
+        const taskAssignees = row.dataset.taskAssignees ? parseLabels(row.dataset.taskAssignees) : '';
 
 
         console.log(taskLabels);
@@ -112,17 +112,17 @@
     </div>
     <p><strong>Deadline:</strong> <span id="taskDeadline">${taskDeadline}</span></p>
     <p><strong>Status:</strong> <span id="taskStatus">${taskStatus}</span></p>
-    <p><strong>Estimated Hours: </strong> <span id="taskEstimatedHours">${taskEstimatedhours}</span></p>
-    <p><strong>Dedicated Hours: </strong> <span id="taskDedicatedHours">${taskDedicatedhours}</span></p>
+    <p><strong>Forventede timer: </strong> <span id="taskEstimatedHours">${taskEstimatedhours}</span></p>
+    <p><strong>Dedikerede timer: </strong> <span id="taskDedicatedHours">${taskDedicatedhours}</span></p>
     <p>
-  <strong>Labels:</strong>
+  <strong>Etiketter:</strong>
   <span id="taskLabels">${taskLabels}</span>
   <button class="btn-link" id="editLabelsBtn" onclick="editLabels()" >
         <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
     </button>
 </p>
 <p>
-  <strong>Assignees:</strong>
+  <strong>Tildelte medarbejdere:</strong>
   <span id="taskAssignees">${taskAssignees}</span>
   <button class="btn-link" id="editAssigneesBtn" onclick="editAssignees()" >
    <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
@@ -132,14 +132,14 @@
 
 <div>
 
-<button class="btn-link" id="editButton" onclick="enableEditing()">Edit</button>
+<button class="btn-link" id="editButton" onclick="enableEditing()">Rediger</button>
 
     <!-- Save Button (Initially Hidden) -->
-    <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Save Changes</button>
+    <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Gem ændringer</button>
 
-<form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Are you sure you want to delete this task?');">
+<form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
 <input type="hidden" name="task_id" value="${taskId}">
-<button class="btn-link" >Delete</button>
+<button class="btn-link" >Slet</button>
 </form>
 </div>
 <br>
@@ -158,13 +158,15 @@
     }
 
     function enableEditing() {
+
+        const taskStatus = selectedRow.dataset.taskStatus;
         // Make the task information editable
         document.querySelector('.modal .modal-body #taskDescription').innerHTML = `<textarea id="taskDescriptionInput" style="width: 100%; height: 170px"  ">${document.querySelector('.modal .modal-body #taskDescription').innerText}</textarea>`;
         document.querySelector('.modal .modal-body #taskDeadline').innerHTML = `<input type="date" id="taskDeadlineInput" value="${document.querySelector('.modal .modal-body #taskDeadline').innerText}" >`;
-        document.querySelector('.modal .modal-body #taskStatus').innerHTML = `<select id="taskStatusInput">
-        <option value="Done">Done</option>
-        <option value="Not done">Not done</option>
-    </select>`;
+        document.querySelector('.modal .modal-body #taskStatus').innerHTML = ` <select id="taskStatusInput">
+            <option value="Done" ${taskStatus === 'Færdig' ? 'selected' : ''}>Færdig</option>
+            <option value="Not done" ${taskStatus === 'Ikke Færdig' ? 'selected' : ''}>Ikke færdig</option>
+        </select>`;
         document.querySelector('.modal .modal-body #taskEstimatedHours').innerHTML = `<input type="number" id="taskEstimatedHoursInput" value="${document.querySelector('.modal .modal-body #taskEstimatedHours').innerText}">`;
         document.querySelector('.modal .modal-body #taskDedicatedHours').innerHTML = `<input type="number" id="taskDedicatedHoursInput" value="${document.querySelector('.modal .modal-body #taskDedicatedHours').innerText}">`;
         document.getElementById("editLabelsBtn").style.display = "inline-block";
@@ -214,7 +216,7 @@
                 } else if (response.ok) {
                     window.location.reload();
                 } else {
-                    alert("Failed to update task.");
+                    alert("Kunne ikke opdatere opgaven.");
                 }
             })
             .catch(error => {
@@ -224,7 +226,7 @@
     }
 
     function editAssignees() {
-        document.querySelector('.modal .modal-header .title').innerText = 'Assign Employee';
+        document.querySelector('.modal .modal-header .title').innerText = 'Tildel medarbejder';
         document.querySelector('.modal .modal-body').innerHTML = `
         <div>
         <label>
@@ -234,7 +236,7 @@
             > A list of all employees from the project (Need to wait for xanders part)
         </label>
     </div>
-    <button id="saveAssignButton" onclick="saveAssigenees()">Save</button>
+    <button id="saveAssignButton" onclick="saveAssigenees()">Gem</button>
         `;
     }
 
@@ -256,7 +258,7 @@
         </label><br>`;
         }).join('');
 
-        document.querySelector('.modal .modal-header .title').innerText = 'Edit Labels';
+        document.querySelector('.modal .modal-header .title').innerText = 'Rediger etiketter';
         document.querySelector('.modal .modal-body').innerHTML = `
         <div>
             <div id="labelCheckboxList">
@@ -264,8 +266,8 @@
             </div>
         </div>
         <div>
-            <button class="btn-link" id="saveAssignButton" onclick="saveLabels()">Save</button>
-                <a class="btn-link" href="/tasks/manageLabels">Manage label</a>
+            <button class="btn-link" id="saveAssignButton" onclick="saveLabels()">Gem</button>
+                <a class="btn-link" href="/tasks/manageLabels">Administrer etiketter</a>
         </div>
 
 `;
@@ -288,7 +290,7 @@
             .then(response => {
                 if (response.redirected) window.location.href = response.url;
                 else if (response.ok) window.location.reload();
-                else alert("Failed to update labels.");
+                else alert("Kunne ikke opdatere etiketter.");
             })
             .catch(console.error);
     }

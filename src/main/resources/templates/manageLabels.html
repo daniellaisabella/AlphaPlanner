@@ -18,14 +18,14 @@
     </div>
 </div >
 
-<h1>Labels: </h1>
+<h1>Etiketter: </h1>
 
 
 
 <table>
     <thead>
     <tr>
-        <th>Name</th>
+        <th>Navn</th>
 
     </tr>
     </thead>
@@ -33,7 +33,7 @@
 
     <!-- Loop through the labels and display them in rows -->
     <tr th:each="label : ${labels}">
-        <td th:text="${label.labelName}">Label Name</td>
+        <td th:text="${label.labelName}">Etikettens navn</td>
         <td>
             <!-- Delete Button -->
             <form action="/tasks/deleteLabel" method="post">
@@ -47,19 +47,19 @@
     <tr>
         <form action="/tasks/createLabel" method="post">
             <td>
-                <strong for="labelName">create new Label</strong>
+                <strong for="labelName">Opret ny etiket</strong>
             </td>
             <td>
-                <input type="text" name="labelName" id="labelName" placeholder="Enter label name" required>
+                <input type="text" name="labelName" id="labelName" placeholder="Indtast etiketnavn" required>
             </td>
             <td>
-                <button class="btn-link"> Save </button>
+                <button class="btn-link">Gem</button>
             </td>
         </form>
     </tr>
 
     <p th:if="${nameExists}"  style="color: red;">
-        Label with that name already exists.</p>
+        Etiketten med det navn findes allerede.</p>
 
 
     </tbody>
