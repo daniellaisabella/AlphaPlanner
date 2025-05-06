@@ -3,7 +3,9 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.service.BaseService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class ProjectController {
@@ -15,9 +17,9 @@ public class ProjectController {
     }
 
     @GetMapping("/pm1")
-    private String projectManagerPage(HttpSession session)
+    private String projectManagerPage(HttpSession session, Model model)
     {
-
+        model.addAttribute(service.getProjects(session.getAttribute("userid")));
         return isLoggedIn(session,"pm-Page");
     }
 

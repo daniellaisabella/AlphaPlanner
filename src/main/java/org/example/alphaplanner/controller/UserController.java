@@ -48,8 +48,9 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session){
-        if (service.getUserRole(session.getAttribute("userId")).equals("project manager")){
-            return "redirect:/pm1";
+        String userRole = service.getUserRole(session.getAttribute("userId"));
+        if (userRole.equals("project manager") || userRole.equals("employee") ){
+            return isLoggedIn(session) ? "redirect:/pm1" : "redirect:/logout";
         }
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return isLoggedIn(session) ? "redirect:/admin1" : "redirect:/logout";

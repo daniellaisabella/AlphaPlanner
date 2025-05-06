@@ -5,6 +5,8 @@ import org.example.alphaplanner.models.ProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ProjectRepository {
 
@@ -45,5 +47,12 @@ public class ProjectRepository {
                 SELECT * FROM projects WHERE project_id = ?
                 """;
         jdbcTemplate.queryForObject(query, rowMapper, id);
+    }
+
+    public List<Project> getAttachedProjects(Object userid) {
+        String query = """
+                SELECT * FROM projects WHERE pm_id = ?
+                """;
+        return jdbcTemplate.queryForList(query, rowMapper, userid);
     }
 }
