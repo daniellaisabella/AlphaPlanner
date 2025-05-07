@@ -2,6 +2,7 @@ package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.Skill;
 import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.repository.rowmappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;

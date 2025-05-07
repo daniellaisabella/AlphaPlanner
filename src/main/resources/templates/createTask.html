@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/modal.css}" rel="stylesheet">
+    <link th:href="@{/base.css}" rel="stylesheet">
+    <link th:href="@{/buttons.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/login}" class="logout-button">Log ud</a>
+    </div>
+</div>
+
+<h1 align="center">Opret en opgave</h1>
+
+<form action="/tasks/saveTask" method="post">
+    <input type="hidden" name="sub_id" th:value="${sub_id}">
+
+    <div class="form-group">
+        <label for="name">Opgavens navn:
+            <input type="text" maxlength="15" name="name" id="name" required placeholder="Maks 15 tegn">
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label for="desc">Beskrivelse:
+            <textarea name="desc" id="desc" cols="40" rows="5" placeholder="Skriv beskrivelsen her..."></textarea>
+        </label>
+    </div>
+
+    <div class="form-group">
+    <label for="deadline">Deadline:
+        <input type="date" id="deadline" name="deadline">
+    </label>
+    </div>
+
+    <div class="form-group">
+    <label for="estimatedHours"> Forventede timer:
+        <input type="number" name="estimatedHours" id="estimatedHours" min="0" step="0.1" required>
+    </label>
+    </div>
+    <div class="form-group">
+    <h3>Vælg etiketter: </h3>
+    <div th:each="label : ${labels}">
+        <label>
+            <input type="checkbox"
+                   name="labels_id"
+                   th:value="${label.labelId}">
+            <span th:text="${label.labelName}"></span>
+        </label><br>
+    </div>
+    </div>
+    <button type="submit" class="btn-link">Gem Opgave</button>
+</form>
+
+
+<a class="btn-link" href="/tasks/showSub">Tilbage</a>
+
+<script>
+    // Set default value to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('deadline').value = today;
+</script>
+</body>
+</html>
