@@ -49,10 +49,21 @@ public class ProjectRepository {
         jdbcTemplate.queryForObject(query, rowMapper, id);
     }
 
-    public List<Project> getAttachedProjects(Object userid) {
+    public List<Project> getProjectsAttachedToManager(Object userid) {
 
         String query = """
                 SELECT * FROM projects WHERE pm_id = ?
+                """;
+        return jdbcTemplate.query(query, rowMapper, userid);
+    }
+
+    public List<Project> getProjectsAttachedToEmployee(int userid)
+    {
+        String query = """
+                SELECT p.*
+                FROM projects p
+                JOIN users_projects up ON p.project_id = up.project_id
+                WHERE up.user_id = ?
                 """;
         return jdbcTemplate.query(query, rowMapper, userid);
     }

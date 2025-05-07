@@ -23,7 +23,7 @@ public class ProjectController {
     @GetMapping("")
     private String projectPage(HttpSession session, Model model)
     {
-        if(session.getAttribute("userId") ==null)return "redirect:/login";
+        if(session.getAttribute("userId") ==null)return "redirect:";
         int userID = (int) session.getAttribute("userId");
         boolean authority = false;
         List<Project> projects = service.getProjects(userID);
@@ -37,13 +37,17 @@ public class ProjectController {
     private String AddProject(HttpSession session, Model model)
     {
         if(session.getAttribute("userId") ==null)return "redirect:/login";
+        int userId = (int) session.getAttribute("userId");
 
         return "new-project";
     }
 
+    @GetMapping("/edit")
+
+
     private String isLoggedIn(HttpSession session, String s){
         if(session.getAttribute("userId") !=null)return s;
-        return "redirect:/login";
+        return "redirect:/";
     }
 
 

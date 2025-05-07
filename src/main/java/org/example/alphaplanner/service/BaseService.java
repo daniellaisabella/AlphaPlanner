@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.example.alphaplanner.repository.TaskRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BaseService {
@@ -85,10 +86,16 @@ public class BaseService {
         userRepository.updateUser(user);
     }
 
+
+
+//----------------------------------Projects--------------------------------------------------
+
+
     public List<Project> getProjects(int userid) {
-        return projectRepository.getAttachedProjects(userid);
+        User user = getUserById(userid);
+        if (Objects.equals(user.getRole(), "project manager"))
+        {
+            return projectRepository.getProjectsAttachedToManager(userid);
+        }else return projectRepository.getProjectsAttachedToEmployee(userid);
     }
-
-
-//------------------------------------------------------------------------------------
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/base.css}"/>
     <link rel="stylesheet" th:href="@{/buttons.css}"/>
 </head>
@@ -14,33 +15,38 @@
         <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
     </div>
     <div class="space">
+        <a th:href="@{/myProfile}">Min Profil</a>
         <a th:href="@{/login}" class="logout-button">Log ud</a>
     </div>
 
 </div>
 <div th:class="centerX">
-    Projekter
+   Dine Projekter
 </div>
 <table>
     <thead>
-<tr>
-    <th><b>&#10004;</b></th>
-    <th><b>navn</b></th>
-    <th><b>beskrivelse</b></th>
-    <th><b>forfald</b></th>
-</tr>
+    <tr>
+        <th><b>&#10004;</b></th>
+        <th><b>Navn</b></th>
+        <th><b>Beskrivelse</b></th>
+        <th><b>Forfald</b></th>
+        <th><b>Estimerede timer</b></th>
+        <th><b>Dedikerede timer</b></th>
+    </tr>
     </thead>
     <tbody>
     <tr th:each="project : ${projects}">
         <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
         <td style=" white-space: nowrap;">
-                <a th:href="@{/projects/show(id=${project.id})}" th:text="${project.projectName}"></a>
+            <a th:href="@{/projects/show(id=${project.id})}" th:text="${project.projectName}"></a>
         </td>
         <td th:text="${project.getProjectDesc()}"></td>
         <td th:text="${project.getProjectDeadline()}"></td>
-        <td th:if="${role}"><a th:href="@{/projects/edit}">rediger</a></td>
+        <td th:text="${project.getEstimatedHours()}"></td>
+        <td th:text="${project.getDedicatedHours()}"></td>
+        <td th:if="${role}"><a th:href="@{/projects/edit}" style="color: indianred">rediger</a></td>
     </tr>
     </tbody>
-    </table>
+</table>
 </body>
 </html>

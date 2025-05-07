@@ -87,7 +87,7 @@ public class TaskRepository {
 
         // creates a new task
         Date sqlDeadline = Date.valueOf(deadline); // changes localDate to java.sql.date so it can be used in the sql entry
-        String sql = "INSERT INTO Tasks (sub_id, task_name, task_desc, tasl_timeEstimate, task_dedicatedHours)";
+        String sql = "INSERT INTO Tasks (sub_id, task_name, task_desc, task_timeEstimate, task_dedicatedHours)";
 
         jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0);
 
