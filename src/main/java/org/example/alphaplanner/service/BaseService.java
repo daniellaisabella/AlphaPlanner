@@ -25,6 +25,10 @@ public class BaseService {
         return userRepository.login(user);
     }
 
+    public User getUserById(int userId){
+        return userRepository.getUserById(userId);
+    }
+
     public int getUserId(User user) {
         return userRepository.getUserId(user);
     }
@@ -38,9 +42,30 @@ public class BaseService {
     }
 
 
+    public boolean checkForDup(String email) {
+        return userRepository.checkForDup(email);
+    }
+
+    public void saveUser(User user) {
+        userRepository.saveUser(user);
+    }
+
+    public List<String> getRoles() {
+        return userRepository.getRoles();
+    }
+
+    public List<String> getSkills() {
+        return userRepository.getSkills();
+    }
+
+    public void deleteUser(int userId) {
+        userRepository.deleteUser(userId);
+    }
+
+
 //----------------------Tasks and labels----------------------------------------------
 
-//================DELETE LATER JUST FOR TEST=====================================
+    //================DELETE LATER JUST FOR TEST=====================================
     public SubProject getSubdummy(int sub_id) {
         return taskRepository.getSubdummy(sub_id);
     }
@@ -85,6 +110,12 @@ public class BaseService {
         return taskRepository.getLabelsFromTask(task_id);
     }
 
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
+    }
+
+
+//------------------------------------------------------------------------------------
     public void addLabelsToTask(int task_id, List<Integer> labels){
         taskRepository.addLabelsToTask(task_id, labels);
     }

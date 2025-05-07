@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rediger</title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/buttons.css">
+    <link rel="stylesheet" href="/checkbox.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <a th:href="@{/admin1}">
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
+    </div>
+
+    <div class="space">
+        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/}" class="logout-button">Log ud</a>
+    </div>
+</div>
+
+<div>
+    <a th:href="@{/admin1}">Tilbage</a>
+</div>
+<form method="post" th:object="${user}" th:action="@{/update}">
+
+        <input type="hidden" th:field="*{userId}" />
+
+
+
+    <div class="form-row">
+        <label for="name">Navn</label>
+        <input id="name" type="text" th:field="*{name}" required/>
+    </div>
+
+
+    <div class="form-row">
+        <label for="emailPrefix">E-mail</label>
+        <div class="email-wrapper">
+            <input id="emailPrefix" name="emailPrefix" type="text" th:value="${userEmail}" required/>
+            <span>@alpha.com</span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="password">Adgangskode</label>
+        <input id="password" type="password" th:field="*{password}" placeholder="••••••••" />    </div>
+
+    <div class="form-row">
+        <label for="role">Rolle</label>
+        <select id="role" th:field="*{role}">
+
+            <option value="" disabled selected>-- Vælg rolle --</option>
+            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label>Færdigheder</label>
+        <div class="checkbox-group">
+            <div th:each="skill : ${enumSkills}">
+                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
+                <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-row">
+
+        <button type="submit" class="btn-link">Opdater bruger</button>
+    </div>
+</form>
+
+<script>
+    const form = document.querySelector("form");
+    const prefixInput = document.getElementById("emailPrefix");
+    const emailHidden = document.getElementById("email");
+
+    form.addEventListener("submit", function () {
+        emailHidden.value = prefixInput.value + "@alpha.com";
+    });
+</script>
+
+
+</body>
+</html>
+
+

@@ -9,7 +9,7 @@ CREATE TABLE Users (
                        user_name VARCHAR(100) NOT NULL,
                        email VARCHAR(100) UNIQUE NOT NULL,
                        role ENUM('employee', 'project manager', 'admin') NOT NULL,
-                       password VARCHAR(255) NOT NULL
+                       password VARCHAR(255)
 );
 
 -- Projects table
