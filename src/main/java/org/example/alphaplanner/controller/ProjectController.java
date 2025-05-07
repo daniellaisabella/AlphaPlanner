@@ -33,12 +33,12 @@ public class ProjectController {
       return "pm-page";
     }
 
-    @GetMapping
-    private String subProjectPage(@RequestParam int subId, HttpSession session, Model model)
+    @GetMapping("/add")
+    private String AddProject(HttpSession session, Model model)
     {
         if(session.getAttribute("userId") ==null)return "redirect:/login";
 
-
+        return "new-project";
     }
 
     private String isLoggedIn(HttpSession session, String s){
