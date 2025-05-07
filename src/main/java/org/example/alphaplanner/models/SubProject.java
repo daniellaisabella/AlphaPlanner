@@ -14,7 +14,7 @@ public class SubProject {
     private Boolean subProjectStatus;
     private double subDedicatedHours;
     private double subEstimatedHours;
-    private int projectId;
+    private final int projectId;
 
 
     public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, int projectId) {

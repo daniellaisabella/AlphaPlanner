@@ -30,14 +30,15 @@
     <th><b>forfald</b></th>
 </tr>
     </thead>
-    <tbody style="overflow-y: auto; padding: 2px">
+    <tbody>
     <tr th:each="project : ${projects}">
         <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
-        <td th:text="${project.getProjectName()}"></td>
+        <td style=" white-space: nowrap;">
+                <a th:href="@{/projects/show(id=${project.id})}" th:text="${project.projectName}"></a>
+        </td>
         <td th:text="${project.getProjectDesc()}"></td>
         <td th:text="${project.getProjectDeadline()}"></td>
-        <td th:href="@{/projects/edit}">rediger</td>
-
+        <td th:if="${role}"><a th:href="@{/projects/edit}">rediger</a></td>
     </tr>
     </tbody>
     </table>
