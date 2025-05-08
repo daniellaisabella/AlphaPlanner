@@ -46,7 +46,7 @@
         <td th:text="${project.getProjectDeadline()}"></td>
         <td th:text="${project.getEstimatedHours()}"></td>
         <td th:text="${project.getDedicatedHours()}"></td>
-        <td th:if="${role}"><a
+       <!-- <td th:if="${role}"><a
                 href="javascript:void(0)"
                 onclick="openModal(this)"
                 style="color: indianred"
@@ -58,12 +58,12 @@
            data-dedicated=${project.dedicatedHours}">
 
             rediger
-        </a></td>
+        </a></td>-->
     </tr>
 
     </tbody>
 </table>
-<div id="modalForm" class="modal" style="top: 30%;width: 70%; background-color:#f8f8f8" >
+<!--<div id="modalForm" class="modal" style="top: 30%;width: 70%; background-color:#f8f8f8" >
     <div class="modal-header"><b>Rediger Projekt</b><a onclick="closeModal()" class="modal-header.close-button">Close</A></div>
     <div class="form">
         <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form">
@@ -88,8 +88,8 @@
             <button type="submit">Save</button>
         </form>
     </div>
-</div>
-
+</div>-->
+<!--
 <script>
     function openModal(link) {
         // Get values from data- attributes
@@ -140,7 +140,7 @@
             closeModal();
         }
     }
-</script>
+</script>-->
 </body>
 
 </html>
