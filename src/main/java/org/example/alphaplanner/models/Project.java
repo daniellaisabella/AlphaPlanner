@@ -34,6 +34,10 @@ public class Project {
         this.pm_id= pm_id;
 
     }
+    //blank slate for editing
+    public Project() {
+
+    }
 
     public String getProjectName() {
         return projectName;

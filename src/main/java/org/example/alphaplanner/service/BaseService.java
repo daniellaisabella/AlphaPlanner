@@ -98,4 +98,8 @@ public class BaseService {
             return projectRepository.getProjectsAttachedToManager(userid);
         }else return projectRepository.getProjectsAttachedToEmployee(userid);
     }
+
+    public void updateProject(Project freshProject) {
+        projectRepository.UpdateSQL(freshProject);
+    }
 }

@@ -6,11 +6,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/base.css}"/>
     <link rel="stylesheet" th:href="@{/buttons.css}"/>
+    <link rel="stylesheet" th:href="@{/modal.css}"/>
+    <link rel="stylesheet" th:href="@{/management.css}"/>
 </head>
 
 <body>
 
-<div th:class="topbar">
+<div class="topbar">
     <div class="logo">
         <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
     </div>
@@ -20,7 +22,7 @@
     </div>
 
 </div>
-<div th:class="centerX">
+<div class="centerX">
    Dine Projekter
 </div>
 <table>
@@ -44,9 +46,101 @@
         <td th:text="${project.getProjectDeadline()}"></td>
         <td th:text="${project.getEstimatedHours()}"></td>
         <td th:text="${project.getDedicatedHours()}"></td>
-        <td th:if="${role}"><a th:href="@{/projects/edit}" style="color: indianred">rediger</a></td>
+        <td th:if="${role}"><a
+                href="javascript:void(0)"
+                onclick="openModal(this)"
+                style="color: indianred"
+                th:attr="data-id=${project.id},
+           data-name=${project.projectName},
+           data-desc=${project.projectDesc},
+           data-deadline=${project.projectDeadline},
+           data-estimated=${project.estimatedHours},
+           data-dedicated=${project.dedicatedHours}">
+
+            rediger
+        </a></td>
     </tr>
+
     </tbody>
 </table>
+<div id="modalForm" class="modal" style="top: 30%;width: 70%; background-color:#f8f8f8" >
+    <div class="modal-header"><b>Rediger Projekt</b><a onclick="closeModal()" class="modal-header.close-button">Close</A></div>
+    <div class="form">
+        <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form">
+
+            <input type="number" id="projectId" name="projectId" hidden="hidden" /><br>
+
+            <label for="projectName">Project Name:</label>
+            <input type="text" id="projectName" name="projectName" /><br>
+
+            <label for="projectDesc">Project Description:</label>
+            <textarea id="projectDesc" name="projectDesc"></textarea><br>
+
+            <label for="projectDeadline">Project Deadline:</label>
+            <input type="date" id="projectDeadline" name="projectDeadline" /><br>
+
+            <label for="estimatedHours">Estimated Hours:</label>
+            <input type="number" id="estimatedHours" name="estimatedHours" /><br>
+
+            <label for="dedicatedHours">Dedicated Hours:</label>
+            <input type="number" id="dedicatedHours" name="dedicatedHours" /><br>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(link) {
+        // Get values from data- attributes
+        const id = link.getAttribute("data-id");
+        const name = link.getAttribute("data-name");
+        const desc = link.getAttribute("data-desc");
+        const deadline = link.getAttribute("data-deadline");
+        const estimated = link.getAttribute("data-estimated");
+        const dedicated = link.getAttribute("data-dedicated");
+
+        // Set values in modal form
+        document.getElementById("projectId").value = id;
+        document.getElementById("projectName").value = name;
+        document.getElementById("projectDesc").value = desc;
+        document.getElementById("projectDeadline").value = deadline;
+        document.getElementById("estimatedHours").value = estimated;
+        document.getElementById("dedicatedHours").value = dedicated;
+
+        // Optional: add hidden input for project ID
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
+        }
+        hidden.value = id;
+
+        // Show modal
+        document.getElementById("modalForm").classList.add("active");
+
+    }
+
+    function closeModal() {
+        console.log("closeModal function called");
+
+        // Hide modal
+        document.getElementById('modalForm').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Click outside the modal to close it
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalForm');
+        if (event.target === modal || event.target === document.getElementById('overlay')) {
+            closeModal();
+        }
+    }
+</script>
 </body>
+
 </html>

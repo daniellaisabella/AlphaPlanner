@@ -1,0 +1,19 @@
+.modal-form {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px 15px;
+    padding: 20px;
+}
+
+.modal-form label {
+    text-align: right;
+    align-self: center;
+}
+
+.modal-form input,
+.modal-form textarea {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+}
+

@@ -20,34 +20,32 @@ public class ProjectController {
         this.service = service;
     }
 
-    @GetMapping("")
-    private String projectPage(HttpSession session, Model model)
-    {
-        if(session.getAttribute("userId") ==null)return "redirect:";
+    @PostMapping("")
+    private String projectPage(HttpSession session, Model model) {
+        if (session.getAttribute("userId") == null) return "redirect:";
         int userID = (int) session.getAttribute("userId");
         boolean authority = false;
         List<Project> projects = service.getProjects(userID);
         if (service.getUserRole(userID).equals("project manager")) authority = true;
-        model.addAttribute("projects",projects);
+        model.addAttribute("freshProject", new Project());
+        model.addAttribute("projects", projects);
         model.addAttribute("role", authority);
-      return "pm-page";
+        return "pm-page";
     }
 
-    @GetMapping("/add")
-    private String AddProject(HttpSession session, Model model)
-    {
-        if(session.getAttribute("userId") ==null)return "redirect:/login";
+    @PostMapping("/edit")
+    private String edit(HttpSession session, @ModelAttribute Project freshProject) {
+        if (session.getAttribute("userId") == null) return "redirect:";
+        service.updateProject(freshProject);
+        return "redirect:/projects";
+    }
+
+    @PostMapping("/add")
+    private String AddProject(HttpSession session, Model model) {
+        if (session.getAttribute("userId") == null) return "redirect:/login";
         int userId = (int) session.getAttribute("userId");
 
         return "new-project";
-    }
-
-    @GetMapping("/edit")
-
-
-    private String isLoggedIn(HttpSession session, String s){
-        if(session.getAttribute("userId") !=null)return s;
-        return "redirect:/";
     }
 
 
