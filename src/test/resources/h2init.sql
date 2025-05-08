@@ -1,3 +1,15 @@
+-- Drop tables if they exist
+DROP TABLE IF EXISTS users_tasks;
+DROP TABLE IF EXISTS users_skills;
+DROP TABLE IF EXISTS tasks_labels;
+DROP TABLE IF EXISTS Labels;
+DROP TABLE IF EXISTS Tasks;
+DROP TABLE IF EXISTS SubProjects;
+DROP TABLE IF EXISTS users_projects;
+DROP TABLE IF EXISTS Projects;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Skills;
+
 -- Users table with ENUM-based roles
 
 CREATE TABLE Users (
