@@ -56,10 +56,10 @@ CREATE TABLE Tasks (
                        task_id INT PRIMARY KEY AUTO_INCREMENT,
                        sub_id INT,
                        task_name VARCHAR(100) NOT NULL,
-                       task_desc VARCHAR(100),
+                       task_desc TEXT,
                        task_deadline DATE NOT NULL,
                        task_timeEstimate INT NOT NULL,
-                       task_dedicatedHours INT,
+                       task_dedicatedHours INT DEFAULT 0,
                        task_status BOOLEAN,
                        FOREIGN KEY (sub_id) REFERENCES SubProjects(sub_id) ON DELETE CASCADE
 );
@@ -77,8 +77,8 @@ CREATE TABLE tasks_labels (
                               label_id INT,
                               task_id INT,
                               PRIMARY KEY (label_id, task_id),
-                              FOREIGN KEY (label_id) REFERENCES Labels(label_id),
-                              FOREIGN KEY (task_id) REFERENCES Tasks(task_id)
+                              FOREIGN KEY (label_id) REFERENCES Labels(label_id) ON DELETE CASCADE,
+                              FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
 );
 
 -- Skills
@@ -104,6 +104,6 @@ CREATE TABLE users_tasks (
                              user_id INT,
                              task_id INT,
                              PRIMARY KEY(user_id, task_id),
-                             FOREIGN KEY (user_id) REFERENCES Users(user_id),
-                             FOREIGN KEY (task_id) REFERENCES Tasks(task_id)
+                             FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+                             FOREIGN KEY (task_id) REFERENCES Tasks(task_id) ON DELETE CASCADE
 );

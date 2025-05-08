@@ -64,7 +64,13 @@
         <label>Færdigheder</label>
         <div class="checkbox-group">
             <div th:each="skill : ${enumSkills}">
-                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
+                <input
+                        type="checkbox"
+                        th:id="'skill_' + ${skill}"
+                        th:name="skills"
+                        th:value="${skill}"
+                        th:checked="${#lists.contains(user.skills, skill)}" />
+
                 <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
             </div>
         </div>

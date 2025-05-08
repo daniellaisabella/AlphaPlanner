@@ -13,7 +13,8 @@ public class Task {
     private Boolean taskStatus;
     private double taskDedicatedHours;
     private double taskEstimatedHours;
-    private List<String> labels;
+    private String labels;
+    private String assignees; //might change to a list of users later
 
 
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
@@ -27,7 +28,7 @@ public class Task {
         this.taskStatus = false;
         this.taskDedicatedHours = 0;
         this.taskEstimatedHours = taskEstimatedHours;
-        this.labels = new ArrayList<>();
+        this.labels = "";
     }
 
     // To create new task
@@ -39,7 +40,7 @@ public class Task {
         this.taskStatus = false;
         this.taskDedicatedHours = 0;
         this.taskEstimatedHours = taskEstimatedHours;
-        this.labels = new ArrayList<>();
+        this.labels = "";
     }
 //-------------------------------------GETTER METHODS---------------------------------------------------------
 
@@ -99,11 +100,19 @@ public class Task {
         this.taskEstimatedHours = taskEstimatedHours;
     }
 
-    public List<String> getLabels() {
+    public String getLabels() {
         return labels;
     }
 
-    public void setLabels(List<String> labels) {
+    public void setLabels(String labels) {
         this.labels = labels;
+    }
+
+    public String getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(String assignees) {
+        this.assignees = assignees;
     }
 }

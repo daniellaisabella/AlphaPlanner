@@ -6,10 +6,10 @@
     transition: 200ms ease-in-out;
     border: 1px solid black;
     border-radius: 10px;
-    z-index: 1000;
     background-color: white;
-    width: 500px;
     max-width: 80%;
+    z-index: 10;
+    width: 1000px;
 }
 
 .modal.active {
@@ -42,6 +42,24 @@
     padding: 10px 15px;
 }
 
+
+.modal-description-container {
+    width: 100%;
+    height: 200px; /* Adjust height as per your need */
+    border: 1px solid #ccc; /* Light border around the container */
+    border-radius: 10px; /* Rounded corners for a soft look */
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allows scrolling if the description is too long */
+    font-size: 14px; /* Optional: Adjust font size to fit the description */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+#taskDescription {
+    margin: 0;
+    white-space: pre-wrap; /* Ensure newlines and spaces are respected */
+}
+
 #overlay {
     position: fixed;
     opacity: 0;
@@ -58,3 +76,33 @@
     opacity: 1;
     pointer-events: all;
 }
+
+.tasks tbody tr {
+    position: relative;
+}
+
+.tasks tbody tr:hover {
+    background-color: lightgrey;
+}
+
+.tasks tbody tr:hover::after {
+   background-color: grey;
+}
+
+.form-group {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    width: 150px;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+.form-group input,
+.form-group textarea {
+    flex: 1;
+}
+

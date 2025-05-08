@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All task From bob</title>
+    <link th:href="@{/modal.css}" rel="stylesheet">
+    <link th:href="@{/base.css}" rel="stylesheet">
+    <link th:href="@{/buttons.css}" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/login}" class="logout-button">Log ud</a>
+    </div>
+</div >
+
+<h1 align="center" th:text="${sub.subProjectName}"></h1>
+<h2> Opgaver: </h2>
+<table class="tasks">
+    <thead>
+    <tr >
+        <th>Status</th>
+        <th>Navn</th>
+        <th>forventede timer</th>
+        <th>Deadline</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}"
+        th:data-task-id="${task.taskId}"
+        th:data-task-name="${task.taskName}"
+        th:data-task-desc="${task.taskDesc}"
+        th:data-task-deadline="${task.taskDeadline}"
+        th:data-task-status="${task.taskStatus} ? 'Færdig' : 'Ikke Færdig'"
+        th:data-task-estimatedhours="${task.taskEstimatedHours}"
+        th:data-task-dedicatedhours="${task.taskDedicatedHours}"
+        th:data-all-labels="${labels}"
+        th:data-task-labels="${task.labels}"
+        th:data-task-assignees="${task.assignees}"
+        onclick="openModalWithData(this)">
+        <td th:text="${task.taskStatus} ? 'Færdig' : 'Ikke færdig'">Status</td>
+        <td th:text="${task.taskName}">Name</td>
+        <td th:text="${task.taskEstimatedHours} + ' Timer'">Estimated Hours</td>
+        <td th:text="${task.taskDeadline}">Date</td>
+    </tr>
+    </tbody>
+</table>
+
+<form action="/tasks/createTask" method="get">
+    <input type="hidden" name="sub_id" th:value="${sub.subId}">
+    <button class="btn-link" type="submit">Opret ny opgave</button>
+</form>
+
+<br>
+
+<!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
+<div class="modal" id="base_modal">
+    <div class="modal-header">
+        <div class="title"></div>
+        <button data-close-button class="close-button">&times;</button>
+    </div>
+    <div class="modal-body">
+
+    </div>
+</div>
+
+
+<a class="btn-link">Tilbage</a>
+
+<div id="overlay"></div>
+
+<!-- THIS IS THE JAVASCRIPT FOT THE MODAL  -->
+
+
+<script>
+    const openModalButtons = document.querySelectorAll('[data-modal-target]')
+    const closeModalButtons = document.querySelectorAll('[data-close-button]')
+    const overlay = document.getElementById('overlay')
+
+    let selectedRow;
+
+
+    function openModalWithData(row) {
+        selectedRow = row;
+        // Retrieve data from the clicked row
+        const taskId = row.dataset.taskId;
+        const taskName = row.dataset.taskName;
+        const taskDesc = row.dataset.taskDesc;
+        const taskDeadline = row.dataset.taskDeadline;
+        const taskStatus = row.dataset.taskStatus;
+        const taskEstimatedhours = row.dataset.taskEstimatedhours;
+        const taskDedicatedhours = row.dataset.taskDedicatedhours;
+        const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
+        const taskAssignees = row.dataset.taskAssignees ? parseLabels(row.dataset.taskAssignees) : '';
+
+
+        console.log(taskLabels);
+        // Get the modal element and overlay
+        const modal = document.getElementById('base_modal');
+        const overlay = document.getElementById('overlay');
+
+        // Set the modal content dynamically based on the task data
+        document.querySelector('.modal .modal-header .title').innerText = taskName;
+        document.querySelector('.modal .modal-body').innerHTML = `
+        <div class="modal-body">
+    <!-- Big square container for description -->
+    <div class="modal-description-container" id="taskDescriptionContainer">
+        <p id="taskDescription">${taskDesc}</p>
+    </div>
+    <p><strong>Deadline:</strong> <span id="taskDeadline">${taskDeadline}</span></p>
+    <p><strong>Status:</strong> <span id="taskStatus">${taskStatus}</span></p>
+    <p><strong>Forventede timer: </strong> <span id="taskEstimatedHours">${taskEstimatedhours}</span></p>
+    <p><strong>Dedikerede timer: </strong> <span id="taskDedicatedHours">${taskDedicatedhours}</span></p>
+    <p>
+  <strong>Etiketter:</strong>
+  <span id="taskLabels">${taskLabels}</span>
+  <button class="btn-link" id="editLabelsBtn" onclick="editLabels()" >
+        <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
+    </button>
+</p>
+<p>
+  <strong>Tildelte medarbejdere:</strong>
+  <span id="taskAssignees">${taskAssignees}</span>
+  <button class="btn-link" id="editAssigneesBtn" onclick="editAssignees()" >
+   <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
+  </button>
+</p>
+</div>
+
+<div>
+
+<button class="btn-link" id="editButton" onclick="enableEditing()">Rediger</button>
+
+    <!-- Save Button (Initially Hidden) -->
+    <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Gem ændringer</button>
+
+<form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
+<input type="hidden" name="task_id" value="${taskId}">
+<button class="btn-link" >Slet</button>
+</form>
+</div>
+<br>
+`;
+
+        const labelSpan = document.getElementById("taskLabels");
+        if (labelSpan) {
+            labelSpan.innerHTML = taskLabels && taskLabels.length > 0
+                ? taskLabels
+                : "No labels assigned";
+
+            // Open the modal by adding the 'active' class
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        }
+    }
+
+    function enableEditing() {
+
+        const taskStatus = selectedRow.dataset.taskStatus;
+        // Make the task information editable
+        document.querySelector('.modal .modal-body #taskDescription').innerHTML = `<textarea id="taskDescriptionInput" style="width: 100%; height: 170px"  ">${document.querySelector('.modal .modal-body #taskDescription').innerText}</textarea>`;
+        document.querySelector('.modal .modal-body #taskDeadline').innerHTML = `<input type="date" id="taskDeadlineInput" value="${document.querySelector('.modal .modal-body #taskDeadline').innerText}" >`;
+        document.querySelector('.modal .modal-body #taskStatus').innerHTML = ` <select id="taskStatusInput">
+            <option value="Done" ${taskStatus === 'Færdig' ? 'selected' : ''}>Færdig</option>
+            <option value="Not done" ${taskStatus === 'Ikke Færdig' ? 'selected' : ''}>Ikke færdig</option>
+        </select>`;
+        document.querySelector('.modal .modal-body #taskEstimatedHours').innerHTML = `<input type="number" id="taskEstimatedHoursInput" value="${document.querySelector('.modal .modal-body #taskEstimatedHours').innerText}">`;
+        document.querySelector('.modal .modal-body #taskDedicatedHours').innerHTML = `<input type="number" id="taskDedicatedHoursInput" value="${document.querySelector('.modal .modal-body #taskDedicatedHours').innerText}">`;
+        document.getElementById("editLabelsBtn").style.display = "inline-block";
+        document.getElementById("editAssigneesBtn").style.display = "inline-block";
+
+        // Show the Save button and hide the Edit button
+        document.getElementById("editButton").style.display = "none";
+        document.getElementById("saveButton").style.display = "inline-block";
+    }
+
+    function saveChanges() {
+        // Retrieve the updated information from the input fields
+        const updatedDescription = document.getElementById("taskDescriptionInput").value;
+        const updatedDeadline = document.getElementById("taskDeadlineInput").value;
+        const updatedStatus = document.getElementById("taskStatusInput").value === "Done";
+        const updatedEstimatedHours = document.getElementById("taskEstimatedHoursInput").value;
+        const updatedDedicatedHours = document.getElementById("taskDedicatedHoursInput").value;
+
+
+        const taskId = selectedRow.dataset.taskId;
+        const taskName = selectedRow.dataset.taskName;
+
+        const formData = new FormData();
+        formData.append("taskId", taskId);
+        formData.append("taskName", taskName);
+        formData.append("description", updatedDescription);
+        formData.append("deadline", updatedDeadline);
+        formData.append("status", updatedStatus);
+        formData.append("estimatedHours", updatedEstimatedHours);
+        formData.append("dedicatedHours", updatedDedicatedHours);
+
+        console.log("Deadline being sent:", updatedDeadline);
+        console.log("name: ", taskName)
+        console.log("description", updatedDescription);
+        console.log("deadline", updatedDeadline);
+        console.log("status", updatedStatus);
+        console.log("estimatedHours", updatedEstimatedHours);
+        console.log("dedicatedHours", updatedDedicatedHours);
+
+        fetch("/tasks/updateTask", {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;  // Follow Spring's redirect
+                } else if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Kunne ikke opdatere opgaven.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+
+    }
+
+    function editAssignees() {
+        document.querySelector('.modal .modal-header .title').innerText = 'Tildel medarbejder';
+        document.querySelector('.modal .modal-body').innerHTML = `
+        <div>
+        <label>
+            <input type="checkbox"
+            name="assignees_id"
+                   id="assignees_id"
+            > A list of all employees from the project (Need to wait for xanders part)
+        </label>
+    </div>
+    <button id="saveAssignButton" onclick="saveAssigenees()">Gem</button>
+        `;
+    }
+
+    function saveAssigenees() {
+
+    }
+
+    function editLabels(){
+
+        const selectedLabels = parseIdNameList(selectedRow.dataset.taskLabels || "");
+        const allLabels = parseIdNameList(selectedRow.dataset.allLabels || "");
+
+        const labelCheckboxes = allLabels.map(label => {
+            const isChecked = selectedLabels.some(sel => sel.id === label.id);
+            return `
+        <label>
+            <input type="checkbox" name="labels" value="${label.id}" ${isChecked ? 'checked' : ''}>
+            ${label.name}
+        </label><br>`;
+        }).join('');
+
+        document.querySelector('.modal .modal-header .title').innerText = 'Rediger etiketter';
+        document.querySelector('.modal .modal-body').innerHTML = `
+        <div>
+            <div id="labelCheckboxList">
+                ${labelCheckboxes}
+            </div>
+        </div>
+        <div>
+            <button class="btn-link" id="saveAssignButton" onclick="saveLabels()">Gem</button>
+                <a class="btn-link" href="/tasks/manageLabels">Administrer etiketter</a>
+        </div>
+
+`;
+    }
+
+    function saveLabels() {
+        const checkboxes = document.querySelectorAll('input[name="labels"]:checked');
+        const selectedLabelIds = Array.from(checkboxes).map(cb => cb.value);
+
+        const formData = new FormData();
+        formData.append("taskId", selectedRow.dataset.taskId);
+        selectedLabelIds.forEach(id => formData.append("labels", id)); // send IDs
+
+        console.log("new tasks: ", selectedLabelIds );
+
+        fetch("/tasks/updateLabelsFromTask", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (response.redirected) window.location.href = response.url;
+                else if (response.ok) window.location.reload();
+                else alert("Kunne ikke opdatere etiketter.");
+            })
+            .catch(console.error);
+    }
+
+    function parseIdNameList(dataString) {
+        if (!dataString) return [];
+
+        return dataString.split(',').map(item => {
+            const [id, name] = item.split(':');
+            return { id: parseInt(id), name: name };
+        });
+    }
+
+    function parseLabels(labelString) {
+        return labelString.split(',').map(item => {
+            const [id, name] = item.split(':');
+            return name;  // Return just the name of the label
+        }).join(', '); // Join all names into a comma-separated string
+    }
+
+    openModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.querySelector(button.dataset.modalTarget)
+            openModal(modal)
+        })
+    })
+
+    overlay.addEventListener('click', () => {
+        const modals = document.querySelectorAll('.modal.active')
+        modals.forEach(modal => {
+            closeModal(modal)
+        })
+    })
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal')
+            closeModal(modal)
+        })
+    })
+
+    function openModal(modal) {
+        if (modal == null) return
+        modal.classList.add('active')
+        overlay.classList.add('active')
+    }
+
+    function closeModal(modal) {
+        if (modal == null) return
+        modal.classList.remove('active')
+        overlay.classList.remove('active')
+    }
+</script>
+</body>
+</html>

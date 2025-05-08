@@ -9,7 +9,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private List<Skill> skills;
+    private List<String> skills;
 
 
     public User(String name, String email, String password, String role) {
@@ -89,11 +89,11 @@ public class User {
         this.role = role;
     }
 
-    public List<Skill> getSkills() {
+    public List<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skill> skills) {
+    public void setSkills(List<String> skills) {
         this.skills = skills;
     }
 }

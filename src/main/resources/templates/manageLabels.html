@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Labels</title>
+    <link th:href="@{/base.css}" rel="stylesheet">
+    <link th:href="@{/buttons.css}" rel="stylesheet">
+    <link th:href="@{/modal.css}" rel="stylesheet">
+</head>
+<body>
+<div class="topbar">
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/login}" class="logout-button">Log ud</a>
+    </div>
+</div >
+
+<h1>Etiketter: </h1>
+
+
+
+<table>
+    <thead>
+    <tr>
+        <th>Navn</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    <!-- Loop through the labels and display them in rows -->
+    <tr th:each="label : ${labels}">
+        <td th:text="${label.labelName}">Etikettens navn</td>
+        <td>
+            <!-- Delete Button -->
+            <form action="/tasks/deleteLabel" method="post">
+                <input type="hidden" name="label_id" th:value="${label.labelId}">
+                <button class="btn-link" >Slet</button>
+            </form>
+        </td>
+    </tr>
+
+    <!-- i want to have this to the side instead -->
+    <tr>
+        <form action="/tasks/createLabel" method="post">
+            <td>
+                <strong for="labelName">Opret ny etiket</strong>
+            </td>
+            <td>
+                <input type="text" name="labelName" id="labelName" placeholder="Indtast etiketnavn" required>
+            </td>
+            <td>
+                <button class="btn-link">Gem</button>
+            </td>
+        </form>
+    </tr>
+
+    <p th:if="${nameExists}"  style="color: red;">
+        Etiketten med det navn findes allerede.</p>
+
+
+    </tbody>
+</table>
+<br>
+
+<a class="btn-link" href="/tasks/showSub">Tilbage</a>
+</body>
+</html>
