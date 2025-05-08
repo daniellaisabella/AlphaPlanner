@@ -20,7 +20,7 @@ public class ProjectController {
         this.service = service;
     }
 
-    @PostMapping("")
+    @GetMapping("")
     private String projectPage(HttpSession session, Model model) {
         if (session.getAttribute("userId") == null) return "redirect:";
         int userID = (int) session.getAttribute("userId");

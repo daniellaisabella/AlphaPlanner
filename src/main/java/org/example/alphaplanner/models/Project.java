@@ -36,7 +36,14 @@ public class Project {
     }
     //blank slate for editing
     public Project() {
-
+        id = 0;
+        projectName = "";
+        projectDesc = "";
+        projectDeadline = LocalDate.now();
+        projectStatus = false;
+        estimatedHours = 0;
+        dedicatedHours = 0;
+        pm_id = 0;
     }
 
     public String getProjectName() {
