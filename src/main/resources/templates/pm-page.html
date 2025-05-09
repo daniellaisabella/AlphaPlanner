@@ -7,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/base.css}"/>
     <link rel="stylesheet" th:href="@{/buttons.css}"/>
     <link rel="stylesheet" th:href="@{/modal.css}"/>
-    <link rel="stylesheet" th:href="@{/management.css}"/>
 </head>
 
 <body>
@@ -23,7 +22,7 @@
 
 </div>
 <div class="centerX">
-   Dine Projekter
+    Dine Projekter
 </div>
 <table>
     <thead>
@@ -46,7 +45,7 @@
         <td th:text="${project.getProjectDeadline()}"></td>
         <td th:text="${project.getEstimatedHours()}"></td>
         <td th:text="${project.getDedicatedHours()}"></td>
-       <td th:if="${role}"><a
+        <td th:if="${role}"><a
                 href="javascript:void(0)"
                 onclick="openModal(this)"
                 style="color: indianred"
@@ -63,29 +62,54 @@
 
     </tbody>
 </table>
-<div id="modalForm" class="modal" style="top: 30%;width: 70%; background-color:#f8f8f8" >
-    <div class="modal-header"><b>Rediger Projekt</b><a onclick="closeModal()" class="modal-header.close-button">Close</A></div>
-    <div class="form">
+
+<div id="modalForm" class="modal" style="background-color:#f8f8f8">
+    <div class="modal-header"><b>Rediger Projekt</b><a onclick="closeModal()"
+                                                       class="modal-header.close-button">Close</A></div>
+    <div>
         <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form">
+            <input type="number" th:field="*{id}" hidden="hidden"/><br>
+            <table class="modal-Table">
 
-            <input type="number" th:field="*{id}" hidden="hidden" /><br>
 
-            <label for="projectName">Project Name:</label>
-            <input type="text" th:field="*{projectName}" id="projectName" /><br>
+                <tr>
+                    <td>
+                        <label for="projectName">Project Name:</label>
+                        <input type="text" th:field="*{projectName}" id="projectName"/><br>
+                    </td>
+                </tr>
 
-            <label for="projectDesc">Project Description:</label>
-            <textarea id="projectDesc" th:field="*{projectDesc}"></textarea><br>
+                <tr>
+                    <td>
+                        <label for="projectDesc">Project Description:</label>
+                        <input id="projectDesc" th:field="*{projectDesc}"></input><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="projectDeadline">Project Deadline:</label>
+                        <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="estimatedHours">Estimated Hours:</label>
+                        <input type="number" id="estimatedHours" th:field="*{estimatedHours}"/><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="dedicatedHours">Dedicated Hours:</label>
+                        <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}"/><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="submit">Save</button>
+                    </td>
+                </tr>
 
-            <label for="projectDeadline">Project Deadline:</label>
-            <input type="date" id="projectDeadline" th:field="*{projectDeadline}" /><br>
-
-            <label for="estimatedHours">Estimated Hours:</label>
-            <input type="number" id="estimatedHours" th:field="*{estimatedHours}" /><br>
-
-            <label for="dedicatedHours">Dedicated Hours:</label>
-            <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}" /><br>
-
-            <button type="submit">Save</button>
+            </table>
         </form>
     </div>
 </div>
@@ -134,7 +158,7 @@
     }
 
     // Click outside the modal to close it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         const modal = document.getElementById('modalForm');
         if (event.target === modal || event.target === document.getElementById('overlay')) {
             closeModal();

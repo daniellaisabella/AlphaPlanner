@@ -19,10 +19,14 @@ public class ProjectController {
     public ProjectController(BaseService service) {
         this.service = service;
     }
+    private boolean isloggedIn(HttpSession session)
+    {
+        return (session.getAttribute("userId") == null);
+    }
 
     @GetMapping("")
     private String projectPage(HttpSession session, Model model) {
-        if (session.getAttribute("userId") == null) return "redirect:";
+        if (isloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
         boolean authority = false;
         List<Project> projects = service.getProjects(userID);
@@ -35,14 +39,14 @@ public class ProjectController {
 
     @PostMapping("/edit")
     private String edit(HttpSession session, @ModelAttribute Project freshProject) {
-        if (session.getAttribute("userId") == null) return "redirect:";
+        if (isloggedIn(session)) return "redirect:";
         service.updateProject(freshProject);
         return "redirect:/projects";
     }
 
     @PostMapping("/add")
     private String AddProject(HttpSession session, Model model) {
-        if (session.getAttribute("userId") == null) return "redirect:/login";
+        if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
 
         return "new-project";

@@ -86,7 +86,7 @@
 }
 
 .tasks tbody tr:hover::after {
-   background-color: grey;
+    background-color: grey;
 }
 
 .form-group {
@@ -104,5 +104,9 @@
 .form-group input,
 .form-group textarea {
     flex: 1;
+}
+
+.modal-Table {
+    transform: translate(-50%, -50%)
 }
 
