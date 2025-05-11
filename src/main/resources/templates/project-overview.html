@@ -40,7 +40,7 @@
   <tr th:each="subProject : ${subProjects}">
     <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
     <td>
-      <a th:text="${subProject.subProjectName}"></a>
+      <a th:text="${subProject.subProjectName}" th:href="@{subProjects/showSub(id=${subProject.subId})}"></a>
     </td>
     <td th:text="${subProject.getSubProjectDesc()}"></td>
     <td th:text="${subProject.getSubDedicatedHours()}"></td>
@@ -58,7 +58,7 @@
       >
         Rediger
       </a>
-      <a style="color: indianred;  margin-left: 40px; " th:href="@{subProjects/delete(id=${subProject.id})}" class="space">Slet</a>
+      <a style="color: indianred;  margin-left: 40px; " th:href="@{subProjects/delete(id=${subProject.subId})}" class="space">Slet</a>
     </td>
   <tr>
     <td>
