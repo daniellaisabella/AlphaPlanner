@@ -17,7 +17,7 @@
     </div>
     <div class="space">
         <a th:href="@{/myProfile}">Min Profil</a>
-        <a th:href="@{/login}" class="logout-button">Log ud</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 
 </div>
@@ -68,7 +68,9 @@
                                                        class="modal-header.close-button">Close</A></div>
     <div>
         <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form">
-            <input type="number" th:field="*{id}" hidden="hidden"/><br>
+            <label hidden="hidden">
+                <input type="number" th:field="*{id}"/>
+            </label>
             <table class="modal-Table">
 
 
@@ -82,7 +84,7 @@
                 <tr>
                     <td>
                         <label for="projectDesc">Project Description:</label>
-                        <input id="projectDesc" th:field="*{projectDesc}"></input><br>
+                        <textarea style="resize: none; height: 18px" id="projectDesc" th:field="*{projectDesc}"></textarea><br>
                     </td>
                 </tr>
                 <tr>
