@@ -2,6 +2,8 @@ package org.example.alphaplanner.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Project;
+import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.BaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,9 +30,8 @@ public class ProjectController {
     private String projectPage(HttpSession session, Model model) {
         if (isloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
-        boolean authority = false;
+        boolean authority = service.getUserRole(userID).equals("project manager");
         List<Project> projects = service.getProjects(userID);
-        if (service.getUserRole(userID).equals("project manager")) authority = true;
         model.addAttribute("freshProject", new Project());
         model.addAttribute("projects", projects);
         model.addAttribute("role", authority);
@@ -45,11 +46,36 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
-    private String AddProject(HttpSession session, Model model) {
+    private String AddProject(HttpSession session, @ModelAttribute Project freshProject) {
         if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
+        freshProject.setPm_id(userId);
+        service.newProject(freshProject);
+        return "redirect:/projects";
+    }
 
-        return "new-project";
+    @GetMapping("/delete")
+    private String deleteProject(HttpSession session, @RequestParam int id){
+        if (isloggedIn(session)) return "redirect:";
+        int userId = (int) session.getAttribute("userId");
+        service.deleteProject(userId, id);
+        return "redirect:/projects";
+
+    }
+
+    @GetMapping("/projectOverview")
+    private String projectOverview(HttpSession session, Model model, @RequestParam int id)
+    {
+        if (isloggedIn(session)) return "redirect:";
+
+        boolean authority = service.getUserRole(session.getAttribute("userId")).equals("project manager");
+        Project parentProject = service.getProject(id);
+        List<SubProject> subProjects = service.getSubProjects(id);
+        model.addAttribute("role", authority);
+        model.addAttribute("projectName", parentProject.getProjectName());
+        model.addAttribute("freshSubProject", new SubProject());
+        model.addAttribute("subProjects", subProjects);
+        return "project-overview";
     }
 
 

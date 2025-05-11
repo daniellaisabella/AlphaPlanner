@@ -36,87 +36,124 @@
     </tr>
     </thead>
     <tbody>
+
     <tr th:each="project : ${projects}">
         <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
-        <td style=" white-space: nowrap;">
-            <a th:href="@{/projects/show(id=${project.id})}" th:text="${project.projectName}"></a>
+        <td>
+            <a th:href="@{/projects/projectOverview(id=${project.id})}" th:text="${project.projectName}"></a>
         </td>
         <td th:text="${project.getProjectDesc()}"></td>
         <td th:text="${project.getProjectDeadline()}"></td>
         <td th:text="${project.getEstimatedHours()}"></td>
         <td th:text="${project.getDedicatedHours()}"></td>
-        <td th:if="${role}"><a
-                href="javascript:void(0)"
-                onclick="openModal(this)"
-                style="color: indianred"
-                th:attr="data-id=${project.id},
+        <td th:if="${role}">
+            <a style="color: indianred"
+                    onclick="openModal(this)"
+                    th:attr="data-id=${project.id},
            data-name=${project.projectName},
            data-desc=${project.projectDesc},
            data-deadline=${project.projectDeadline},
            data-estimated=${project.estimatedHours},
-           data-dedicated=${project.dedicatedHours}">
-
-            rediger
-        </a></td>
+           data-dedicated=${project.dedicatedHours}"
+            >
+                Rediger
+            </a>
+            <a style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space">Slet</a>
+        </td>
+    <tr>
+        <td>
+            <a onclick="openModalBlanc()">+</a>
+        </td>
     </tr>
-
     </tbody>
 </table>
 
-<div id="modalForm" class="modal" style="background-color:#f8f8f8">
-    <div class="modal-header"><b>Rediger Projekt</b><a onclick="closeModal()"
-                                                       class="modal-header.close-button">Close</A></div>
-    <div>
-        <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form">
-            <label hidden="hidden">
-                <input type="number" th:field="*{id}"/>
-            </label>
-            <table class="modal-Table">
 
-
-                <tr>
-                    <td>
-                        <label for="projectName">Project Name:</label>
-                        <input type="text" th:field="*{projectName}" id="projectName"/><br>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label for="projectDesc">Project Description:</label>
-                        <textarea style="resize: none; height: 18px" id="projectDesc" th:field="*{projectDesc}"></textarea><br>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="projectDeadline">Project Deadline:</label>
-                        <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/><br>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="estimatedHours">Estimated Hours:</label>
-                        <input type="number" id="estimatedHours" th:field="*{estimatedHours}"/><br>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="dedicatedHours">Dedicated Hours:</label>
-                        <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}"/><br>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="submit">Save</button>
-                    </td>
-                </tr>
-
-            </table>
-        </form>
+<div id="NewProject" class="modal" style="background-color:#f8f8f8">
+    <div class="modal-header">
+        <b>Rediger Projekt</b>
+        <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
+    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container">
+
+        <div class="form-row">
+            <label for="newProjectName">Project Name:</label>
+            <input type="text" id="newProjectName" th:field="*{projectName}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newProjectDesc">Project Description:</label>
+            <textarea id="newProjectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="newProjectDeadline">Project Deadline:</label>
+            <label for="newProjectDeadline" th:field="*{projectDeadline}"></label><input type="date"
+                                                                                         id="newProjectDeadline"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newEstimatedHours">Estimated Hours:</label>
+            <input type="number" id="newEstimatedHours" th:field="*{estimatedHours}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newDedicatedHours">Dedicated Hours:</label>
+            <input type="number" id="newDedicatedHours" th:field="*{dedicatedHours}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
+</div>
+
+<div id="modalForm" class="modal" style="background-color:#f8f8f8">
+    <div class="modal-header">
+        <b>Rediger Projekt</b>
+        <a onclick="closeModal()" class="close-button">Close</A>
+    </div>
+    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container">
+        <label hidden="hidden">
+            <input type="number" th:field="*{id}"/>
+        </label>
+
+        <div class="form-row">
+            <label for="projectName">Project Name:</label>
+            <input type="text" th:field="*{projectName}" id="projectName"/>
+        </div>
+
+        <div class="form-row">
+            <label for="projectDesc">Project Description:</label>
+            <textarea id="projectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="projectDeadline">Project Deadline:</label>
+            <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="estimatedHours">Estimated Hours:</label>
+            <input type="number" id="estimatedHours" th:field="*{estimatedHours}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="dedicatedHours">Dedicated Hours:</label>
+            <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
 </div>
 
 <script>
+    function openModalBlanc() {
+        document.getElementById("NewProject").classList.add("active");
+    }
+
     function openModal(link) {
         // Get values from data- attributes
         const id = link.getAttribute("data-id");
@@ -147,14 +184,18 @@
 
         // Show modal
         document.getElementById("modalForm").classList.add("active");
-
     }
 
     function closeModal() {
-        console.log("closeModal function called");
-
         // Hide modal
         document.getElementById('modalForm').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    function closeNewModal() {
+        // Hide modal
+        document.getElementById('NewProject').classList.remove('active');
         // Hide overlay
         document.getElementById('overlay').classList.remove('active');
     }

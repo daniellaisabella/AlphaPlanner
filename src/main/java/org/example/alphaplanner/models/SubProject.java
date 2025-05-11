@@ -14,8 +14,19 @@ public class SubProject {
     private Boolean subProjectStatus;
     private double subDedicatedHours;
     private double subEstimatedHours;
-    private final int projectId;
+    private int projectId;
 
+
+    public SubProject() {
+        subId= 0;
+        subProjectName = "";
+        subProjectDesc = "";
+        subProjectDeadline = LocalDate.now();
+        subProjectStatus = false;
+        subEstimatedHours = 0;
+        subDedicatedHours = 0;
+        projectId = 0;
+    }
 
     public SubProject(int subId, String subProjectName, String subProjectDesc, LocalDate subProjectDeadline, int projectId) {
         this.subId = subId;
@@ -98,5 +109,8 @@ public class SubProject {
 
     public Object getprojectID() {
         return projectId;
+    }
+    public void setProjectId(int id) {
+        this.projectId = id;
     }
 }

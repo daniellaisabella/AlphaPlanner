@@ -2,6 +2,7 @@ package org.example.alphaplanner.service;
 
 import org.example.alphaplanner.models.*;
 import org.example.alphaplanner.repository.ProjectRepository;
+import org.example.alphaplanner.repository.SubProjectRepository;
 import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.example.alphaplanner.repository.TaskRepository;
@@ -16,11 +17,13 @@ public class BaseService {
     private final ProjectRepository projectRepository;
     private UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final SubProjectRepository subProjectRepository;
 
-    public BaseService(UserRepository userRepository, TaskRepository taskRepository, ProjectRepository projectRepository) {
+    public BaseService(UserRepository userRepository, TaskRepository taskRepository, ProjectRepository projectRepository, SubProjectRepository subProjectRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
+        this.subProjectRepository = subProjectRepository;
     }
 
     //------------ USER METHODS-----------//
@@ -173,5 +176,46 @@ public class BaseService {
 
     public void updateProject(Project freshProject) {
         projectRepository.UpdateSQL(freshProject);
+    }
+
+    public void newProject(Project freshProject) {
+        projectRepository.addProjectSql(freshProject);
+    }
+
+    public void deleteProject(int userId, int project) {
+
+        if(authProjectManager(userId, project))projectRepository.DeleteProjectSQL(project);
+    }
+
+    public boolean authProjectManager(int userId, int project)
+    {
+        projectRepository.getProject(project);
+        return ( projectRepository.getProject(project).getPm_id() == userId);
+    }
+
+
+    public Project getProject(int id) {
+        return projectRepository.getProject(id);
+    }
+
+//----------------------------------Projects--------------------------------------------------
+
+    public void updateSubProject(SubProject freshSubProject) {
+        subProjectRepository.UpdateSQL(freshSubProject);
+    }
+
+    public void newSubProject(SubProject freshSubProject) {
+        subProjectRepository.addSubProjectToSql(freshSubProject);
+    }
+
+    public void deleteSubProject(int id) {
+        subProjectRepository.DeleteProjectSQL(id);
+    }
+
+    public List<SubProject> getSubProjects(int projectId) {
+            return subProjectRepository.getSubProjectAttachedToProject(projectId);
+    }
+    public SubProject getSubProject(int id) {
+        return subProjectRepository.getSubProject(id);
     }
 }

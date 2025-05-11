@@ -11,7 +11,7 @@ public class SubProjectRowMApper implements RowMapper<SubProject> {
     public SubProject mapRow(ResultSet rs, int rowNum) throws SQLException {
         int subID = rs.getInt("sub_id");
         String name = rs.getString("sub_name");
-        String desc = rs.getString("sub_description");
+        String desc = rs.getString("sub_desc");
         LocalDate deadLine = rs.getDate("sub_deadline").toLocalDate();
         boolean projectStatus = rs.getBoolean("sub_status");
         double estimatedTime = rs.getDouble("sub_timeEstimate");

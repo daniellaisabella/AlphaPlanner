@@ -17,7 +17,7 @@ public class ProjectRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void AddProjectSql(Project project) {
+    public void addProjectSql(Project project) {
         String query = """
                 INSERT INTO projects(project_name, project_desc, project_deadline, project_status, project_dedicatedHours, project_timeEstimate, pm_id)
                 values(?,?,?,?,?,?,?)
@@ -41,12 +41,12 @@ public class ProjectRepository {
         jdbcTemplate.update(query, project.getProjectName(), project.getProjectDesc(), project.getProjectDeadline(), project.getProjectStatus(), project.getDedicatedHours(), project.getEstimatedHours(), project.getId());
     }
 
-    public void getProject(int id)
+    public Project getProject(int id)
     {
         String query = """
                 SELECT * FROM projects WHERE project_id = ?
                 """;
-        jdbcTemplate.queryForObject(query, rowMapper, id);
+        return jdbcTemplate.queryForObject(query, rowMapper, id);
     }
 
     public List<Project> getProjectsAttachedToManager(Object userid) {

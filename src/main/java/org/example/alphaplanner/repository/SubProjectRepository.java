@@ -1,19 +1,26 @@
 package org.example.alphaplanner.repository;
 
-import org.example.alphaplanner.models.ProjectRowMapper;
+import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.models.SubProjectRowMApper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
 public class SubProjectRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ProjectRowMapper rowMapper = new ProjectRowMapper();
+    private final SubProjectRowMApper rowMapper = new SubProjectRowMApper();
 
     public SubProjectRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void AddProjectSql(SubProject project) {
+
+    public void addSubProjectToSql(SubProject project) {
         String query = """
                 INSERT INTO subprojects(sub_name, sub_desc, sub_deadline, sub_status, sub_dedicatedHours, sub_timeEstimate, project_id)
                 values(?,?,?,?,?,?,?)
@@ -37,11 +44,18 @@ public class SubProjectRepository {
         jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getprojectID(), project.getSubId());
     }
 
-    public void getProject(int id)
-    {
+    public SubProject getSubProject(int id) {
         String query = """
                 SELECT * FROM subprojects WHERE sub_id = ?
                 """;
         jdbcTemplate.queryForObject(query, rowMapper, id);
+        return null;
+    }
+
+    public List<SubProject> getSubProjectAttachedToProject(int id) {
+        String query = """
+                SELECT * FROM subprojects WHERE project_id = ?
+                """;
+        return jdbcTemplate.query(query, rowMapper, id);
     }
 }

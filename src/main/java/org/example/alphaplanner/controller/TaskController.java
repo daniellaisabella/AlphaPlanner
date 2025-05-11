@@ -35,16 +35,6 @@ public class TaskController {
     }
 
     // dummy method to get into the task of a specific subproject=============================================
-    @GetMapping("/showSub")
-    public String showSub(Model model) {
-        SubProject subProject = service.getSubdummy(1);
-        model.addAttribute("sub", subProject);
-        List<Task> tasks = service.showAllTasksFromSub(1);
-        model.addAttribute("tasks", tasks);
-        String labels = service.getLabelsInString(service.getAllLabels());
-        model.addAttribute("labels", labels);
-        return "subProject";
-    }
 //===========================================================
 
 
