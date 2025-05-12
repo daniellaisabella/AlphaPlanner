@@ -47,11 +47,11 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpSession session){
+    public String profile(HttpSession session){
         if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
             return isLoggedIn(session) ? "redirect:/admin1" : "redirect:/logout";
         } else {
-            return isLoggedIn(session) ? "redirect:/manEmpProfile" : "redirect:/logout";
+            return isLoggedIn(session) ? "redirect:/projects" : "redirect:/logout";
         }
     }
 
