@@ -56,10 +56,10 @@
            data-estimated=${subProject.subEstimatedHours},
            data-dedicated=${subProject.subDedicatedHours}"
             >
-                Rediger
+                <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
             <a style="color: indianred;  margin-left: 40px; "
-               th:href="@{/SubProjects/delete(subId=${subProject.subId})}" class="space">Slet</a>
+               th:href="@{/SubProjects/delete(subId=${subProject.subId})}" class="space"> X </a>
         </td>
     <tr>
         <td>
