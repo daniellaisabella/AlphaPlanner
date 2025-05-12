@@ -2,7 +2,6 @@ package org.example.alphaplanner.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.User;
-import org.example.alphaplanner.service.BaseService;
 import org.example.alphaplanner.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,29 +59,27 @@ public class UserController {
     @GetMapping("/admin1")
     public String admin1 (Model model, HttpSession session){
         model.addAttribute("activePage","admin1");
-        model.addAttribute("projectManagers",service.getUsersByRole("project manager"));
-        return service.getUserRole(session.getAttribute("userId")).equals("admin")
-                && isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
         model.addAttribute("projectManagers",userService.getUsersByRole("project manager"));
-        return isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
+        return userService.getUserRole(session.getAttribute("userId")).equals("admin")
+                && isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
+
     }
 
     @GetMapping("/admin2")
     public String admin2 (Model model, HttpSession session){
         model.addAttribute("activePage","admin2");
-        model.addAttribute("employees",service.getUsersByRole("employee"));
-        return service.getUserRole(session.getAttribute("userId")).equals("admin")
-                && isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
         model.addAttribute("employees",userService.getUsersByRole("employee"));
-        return isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
+        return userService.getUserRole(session.getAttribute("userId")).equals("admin")
+                && isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
+
     }
 
     @GetMapping("/myProfile")
     public String myProfile (Model model, HttpSession session){
         int userID = (int) session.getAttribute("userId");
-        boolean aut = service.getUserRole(userID).equals("admin");
+        boolean aut = userService.getUserRole(userID).equals("admin");
         model.addAttribute("role", aut);
-        model.addAttribute("user",service.getUserById((Integer) session.getAttribute("userId")));
+        model.addAttribute("user",userService.getUserById((Integer) session.getAttribute("userId")));
         model.addAttribute("user",userService.getUserById((Integer) session.getAttribute("userId")));
         return isLoggedIn(session) ? "myProfile": "redirect:/logout";
     }
