@@ -1,5 +1,6 @@
 package org.example.alphaplanner.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Project;
@@ -39,26 +40,42 @@ public class SubProjectController {
     }
 
     @PostMapping("/edit")
-    private String edit(HttpSession session, @ModelAttribute SubProject freshSubProject) {
+    private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
         service.updateSubProject(freshSubProject);
-        return "redirect:/SubProjects";
+        String referer = request.getHeader("referer");
+        return "redirect:" + referer;
     }
 
     @PostMapping("/add")
-    private String AddSubProject(HttpSession session, @ModelAttribute SubProject freshSubProject, @ModelAttribute int projectId) {
+    private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
-        freshSubProject.setProjectId(projectId);
+        System.out.println(freshSubProject.getProjectId());
         service.newSubProject(freshSubProject);
-        return "redirect:/projects";
+        String referer = request.getHeader("referer");
+        return "redirect:" + referer;
+
     }
 
     @GetMapping("/delete")
-    private String deleteSubProject(HttpSession session, @RequestParam int id){
+    private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId){
         if (isloggedIn(session)) return "redirect:";
-        service.deleteSubProject(id);
-        return "redirect:/projects";
+        service.deleteSubProject(subId);
+        String referer = request.getHeader("referer");
+        return "redirect:" + referer;
 
+    }
+
+    @GetMapping("/showSub")
+    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
+        if (isloggedIn(session)) return "redirect:";
+        SubProject subProject = service.getSubProject(subId);
+        model.addAttribute("sub", subProject);
+        List<Task> tasks = service.showAllTasksFromSub(subId);
+        model.addAttribute("tasks", tasks);
+        String labels = service.getLabelsInString(service.getAllLabels());
+        model.addAttribute("labels", labels);
+        return "subProject";
     }
 
 }

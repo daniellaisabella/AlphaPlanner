@@ -48,8 +48,7 @@ public class SubProjectRepository {
         String query = """
                 SELECT * FROM subprojects WHERE sub_id = ?
                 """;
-        jdbcTemplate.queryForObject(query, rowMapper, id);
-        return null;
+        return jdbcTemplate.queryForObject(query, rowMapper, id);
     }
 
     public List<SubProject> getSubProjectAttachedToProject(int id) {

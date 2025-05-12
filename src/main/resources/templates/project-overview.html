@@ -1,212 +1,228 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" th:href="@{/base.css}"/>
-  <link rel="stylesheet" th:href="@{/buttons.css}"/>
-  <link rel="stylesheet" th:href="@{/modal.css}"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/base.css}"/>
+    <link rel="stylesheet" th:href="@{/buttons.css}"/>
+    <link rel="stylesheet" th:href="@{/modal.css}"/>
 </head>
 
 <body>
 
 <div class="topbar">
-  <div class="logo">
-    <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
-  </div>
-  <div class="space">
-    <a th:href="@{/myProfile}">Min Profil</a>
-    <a th:href="@{/logout}" class="logout-button">Log ud</a>
-  </div>
+    <div class="logo">
+        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+    </div>
+    <div class="space">
+        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
+    </div>
 
 </div>
 <div class="centerX" th:text="${projectName}">
-  Dine Projekter
+    Dine Projekter
 </div>
 <table>
-  <thead>
-  <tr>
-    <th><b>&#10004;</b></th>
-    <th><b>Navn</b></th>
-    <th><b>Beskrivelse</b></th>
-    <th><b>Forfald</b></th>
-    <th><b>Estimerede timer</b></th>
-    <th><b>Dedikerede timer</b></th>
-  </tr>
-  </thead>
-  <tbody>
+    <thead>
+    <tr>
+        <th><b>&#10004;</b></th>
+        <th><b>Navn</b></th>
+        <th><b>Beskrivelse</b></th>
+        <th><b>Forfald</b></th>
+        <th><b>Estimerede timer</b></th>
+        <th><b>Dedikerede timer</b></th>
+    </tr>
+    </thead>
+    <tbody>
 
-  <tr th:each="subProject : ${subProjects}">
-    <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
-    <td>
-      <a th:text="${subProject.subProjectName}" th:href="@{subProjects/showSub(id=${subProject.subId})}"></a>
-    </td>
-    <td th:text="${subProject.getSubProjectDesc()}"></td>
-    <td th:text="${subProject.getSubProjectDeadline()}"></td>
-    <td th:text="${subProject.getSubDedicatedHours()}"></td>
-    <td th:text="${subProject.getSubDedicatedHours()}"></td>
-    <td th:if="${role}">
-      <a style="color: indianred"
-         onclick="openModal(this)"
-         th:attr="data-id=${subProject.subId},
+    <tr th:each="subProject : ${subProjects}">
+        <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
+        <td>
+            <a th:text="${subProject.subProjectName}" th:href="@{/SubProjects/showSub(subId=${subProject.subId})}"></a>
+        </td>
+        <td th:text="${subProject.getSubProjectDesc()}"></td>
+        <td th:text="${subProject.getSubProjectDeadline()}"></td>
+        <td th:text="${subProject.getSubDedicatedHours()}"></td>
+        <td th:text="${subProject.getSubDedicatedHours()}"></td>
+        <td th:if="${role}">
+            <a style="color: indianred"
+               onclick="openModal(this)"
+               th:attr="data-id=${subProject.subId},
            data-name=${subProject.subProjectName},
            data-desc=${subProject.subProjectDesc},
            data-deadline=${subProject.subProjectDeadline},
            data-estimated=${subProject.subEstimatedHours},
            data-dedicated=${subProject.subDedicatedHours}"
-      >
-        Rediger
-      </a>
-      <a style="color: indianred;  margin-left: 40px; " th:href="@{subProjects/delete(id=${subProject.subId})}" class="space">Slet</a>
-    </td>
-  <tr>
-    <td>
-      <a onclick="openModalBlanc()">+</a>
-    </td>
-  </tr>
-  </tbody>
+            >
+                Rediger
+            </a>
+            <a style="color: indianred;  margin-left: 40px; "
+               th:href="@{/SubProjects/delete(subId=${subProject.subId})}" class="space">Slet</a>
+        </td>
+    <tr>
+        <td>
+            <a onclick="openModalBlanc()">+</a>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 
 <div id="NewProject" class="modal" style="background-color:#f8f8f8">
-  <div class="modal-header">
-    <b>Rediger Projekt</b>
-    <a onclick="closeNewModal()" class="close-button">Close</A>
-  </div>
-  <form th:action="@{/subProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
-
-    <div class="form-row">
-      <label for="newProjectName">Project Name:</label>
-      <input type="text" id="newProjectName" th:field="*{subProjectName}"/>
+    <div class="modal-header">
+        <b>Tilføj subprojekt</b>
+        <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
+    <form th:action="@{/SubProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
 
-    <div class="form-row">
-      <label for="newProjectDesc">Project Description:</label>
-      <textarea id="newProjectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
-    </div>
+        <div class="form-row" hidden="hidden">
+            <label for="ProjectId" hidden="hidden">Project id:</label>
+            <input type="text" id="ProjectId" th:field="*{projectId}" hidden="hidden"/>
+        </div>
 
-    <div class="form-row">
-      <label for="newProjectDeadline">Project Deadline:</label>
-      <label for="newProjectDeadline" th:field="*{subProjectDeadline}"></label><input type="date"
-                                                                                   id="newProjectDeadline"/>
-    </div>
+        <div class="form-row">
+            <label for="newProjectName">Project Name:</label>
+            <input type="text" id="newProjectName" th:field="*{subProjectName}"/>
+        </div>
 
-    <div class="form-row">
-      <label for="newEstimatedHours">Estimated Hours:</label>
-      <input type="number" id="newEstimatedHours" th:field="*{subEstimatedHours}"/>
-    </div>
+        <div class="form-row">
+            <label for="newProjectDesc">Project Description:</label>
+            <textarea id="newProjectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
+        </div>
 
-    <div class="form-row">
-      <label for="newDedicatedHours">Dedicated Hours:</label>
-      <input type="number" id="newDedicatedHours" th:field="*{subDedicatedHours}"/>
-    </div>
-    <div>
-      <button type="submit">Save</button>
-    </div>
+        <div class="form-row">
+            <label for="newProjectDeadline">Project Deadline:</label>
+            <label for="newProjectDeadline" th:field="*{subProjectDeadline}"></label><input type="date" id="newProjectDeadline"/>
+        </div>
 
-  </form>
+        <div class="form-row">
+            <label for="newEstimatedHours">Estimated Hours:</label>
+            <input type="number" id="newEstimatedHours" th:field="*{subEstimatedHours}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newDedicatedHours">Dedicated Hours:</label>
+            <input type="number" id="newDedicatedHours" th:field="*{subDedicatedHours}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
 </div>
 
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
-  <div class="modal-header">
-    <b>Rediger Projekt</b>
-    <a onclick="closeModal()" class="close-button">Close</A>
-  </div>
-  <form th:action="@{/subProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container">
-    <label hidden="hidden">
-      <input type="number" th:field="*{subId}"/>
-    </label>
-
-    <div class="form-row">
-      <label for="projectName">Project Name:</label>
-      <input type="text" th:field="*{subProjectName}" id="projectName"/>
+    <div class="modal-header">
+        <b>Rediger Projekt</b>
+        <a onclick="closeModal()" class="close-button">Close</A>
     </div>
+    <form th:action="@{/subProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container">
+        <label hidden="hidden">
+            <input type="number" th:field="*{subId}"/>
+        </label>
 
-    <div class="form-row">
-      <label for="projectDesc">Project Description:</label>
-      <textarea id="projectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
-    </div>
+        <div class="form-row">
+            <label for="projectName">Project Name:</label>
+            <input type="text" th:field="*{subProjectName}" id="projectName"/>
+        </div>
 
-    <div class="form-row">
-      <label for="projectDeadline">Project Deadline:</label>
-      <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
-    </div>
+        <div class="form-row">
+            <label for="projectDesc">Project Description:</label>
+            <textarea id="projectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
+        </div>
 
-    <div class="form-row">
-      <label for="estimatedHours">Estimated Hours:</label>
-      <input type="number" id="estimatedHours" th:field="*{subEstimatedHours}"/>
-    </div>
+        <div class="form-row">
+            <label for="projectDeadline">Project Deadline:</label>
+            <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
+        </div>
 
-    <div class="form-row">
-      <label for="dedicatedHours">Dedicated Hours:</label>
-      <input type="number" id="dedicatedHours" th:field="*{subDedicatedHours}"/>
-    </div>
-    <div>
-      <button type="submit">Save</button>
-    </div>
+        <div class="form-row">
+            <label for="estimatedHours">Estimated Hours:</label>
+            <input type="number" id="estimatedHours" th:field="*{subEstimatedHours}"/>
+        </div>
 
-  </form>
+        <div class="form-row">
+            <label for="dedicatedHours">Dedicated Hours:</label>
+            <input type="number" id="dedicatedHours" th:field="*{subDedicatedHours}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
 </div>
 
 <script>
-  function openModalBlanc() {
-    document.getElementById("NewProject").classList.add("active");
-  }
+    function openModalBlanc() {
+        document.getElementById("NewProject").classList.add("active");
 
-  function openModal(link) {
-    // Get values from data- attributes
-    const id = link.getAttribute("data-id");
-    const name = link.getAttribute("data-name");
-    const desc = link.getAttribute("data-desc");
-    const deadline = link.getAttribute("data-deadline");
-    const estimated = link.getAttribute("data-estimated");
-    const dedicated = link.getAttribute("data-dedicated");
-
-    // Set values in modal form
-    document.getElementById("id").value = id;
-    document.getElementById("projectName").value = name;
-    document.getElementById("projectDesc").value = desc;
-    document.getElementById("projectDeadline").value = deadline;
-    document.getElementById("estimatedHours").value = estimated;
-    document.getElementById("dedicatedHours").value = dedicated;
-
-    // Optional: add hidden input for subProject ID
-    let hidden = document.getElementById("projectId");
-    if (!hidden) {
-      hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.id = "projectId";
-      hidden.name = "id";
-      document.querySelector("#modalForm form").appendChild(hidden);
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
+        }
+        hidden.value = id;
     }
-    hidden.value = id;
 
-    // Show modal
-    document.getElementById("modalForm").classList.add("active");
-  }
+    function openModal(link) {
+        // Get values from data- attributes
+        const id = link.getAttribute("data-id");
+        const name = link.getAttribute("data-name");
+        const desc = link.getAttribute("data-desc");
+        const deadline = link.getAttribute("data-deadline");
+        const estimated = link.getAttribute("data-estimated");
+        const dedicated = link.getAttribute("data-dedicated");
 
-  function closeModal() {
-    // Hide modal
-    document.getElementById('modalForm').classList.remove('active');
-    // Hide overlay
-    document.getElementById('overlay').classList.remove('active');
-  }
+        // Set values in modal form
+        document.getElementById("id").value = id;
+        document.getElementById("projectName").value = name;
+        document.getElementById("projectDesc").value = desc;
+        document.getElementById("projectDeadline").value = deadline;
+        document.getElementById("estimatedHours").value = estimated;
+        document.getElementById("dedicatedHours").value = dedicated;
 
-  function closeNewModal() {
-    // Hide modal
-    document.getElementById('NewProject').classList.remove('active');
-    // Hide overlay
-    document.getElementById('overlay').classList.remove('active');
-  }
 
-  // Click outside the modal to close it
-  window.onclick = function (event) {
-    const modal = document.getElementById('modalForm');
-    if (event.target === modal || event.target === document.getElementById('overlay')) {
-      closeModal();
+        // Optional: add hidden input for subProject ID
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
+        }
+        hidden.value = id;
+
+        // Show modal
+        document.getElementById("modalForm").classList.add("active");
     }
-  }
+
+    function closeModal() {
+        // Hide modal
+        document.getElementById('modalForm').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    function closeNewModal() {
+        // Hide modal
+        document.getElementById('NewProject').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Click outside the modal to close it
+    window.onclick = function (event) {
+        const modal = document.getElementById('modalForm');
+        if (event.target === modal || event.target === document.getElementById('overlay')) {
+            closeModal();
+        }
+    }
 </script>
 </body>
 

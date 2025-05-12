@@ -70,10 +70,12 @@ public class ProjectController {
 
         boolean authority = service.getUserRole(session.getAttribute("userId")).equals("project manager");
         Project parentProject = service.getProject(id);
+        SubProject freshSubProject = new SubProject();
+        freshSubProject.setProjectId(id);
         List<SubProject> subProjects = service.getSubProjects(id);
         model.addAttribute("role", authority);
         model.addAttribute("projectName", parentProject.getProjectName());
-        model.addAttribute("freshSubProject", new SubProject());
+        model.addAttribute("freshSubProject", freshSubProject);
         model.addAttribute("subProjects", subProjects);
         return "project-overview";
     }

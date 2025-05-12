@@ -113,4 +113,8 @@ public class SubProject {
     public void setProjectId(int id) {
         this.projectId = id;
     }
+
+    public int getProjectId() {
+        return projectId;
+    }
 }
