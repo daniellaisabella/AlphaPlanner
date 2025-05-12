@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.Task;
-import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +17,19 @@ import java.util.List;
 @RequestMapping("/SubProjects")
 public class SubProjectController {
 
-    private final BaseService service;
+    private final LabelService labelService;
+    private final TaskService taskService;
+    private final SubProjectService subProjectService;
+    private final UserService userService;
 
-    public SubProjectController(BaseService service) {
-        this.service = service;
+    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService) {
+        this.labelService = labelService;
+        this.taskService = taskService;
+        this.subProjectService = subProjectService;
+        this.userService = userService;
     }
-    private boolean isloggedIn(HttpSession session)
-    {
+
+    private boolean isloggedIn(HttpSession session) {
         return (session.getAttribute("userId") == null);
     }
 
@@ -31,8 +37,8 @@ public class SubProjectController {
     private String projectPage(HttpSession session, Model model) {
         if (isloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
-        boolean authority = service.getUserRole(userID).equals("project manager");
-        List<SubProject> subProjects = service.getSubProjects(userID);
+        boolean authority = userService.getUserRole(userID).equals("project manager");
+        List<SubProject> subProjects = subProjectService.getSubProjects(userID);
         model.addAttribute("freshSubProject", new SubProject());
         model.addAttribute("projects", subProjects);
         model.addAttribute("role", authority);
@@ -42,7 +48,7 @@ public class SubProjectController {
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
-        service.updateSubProject(freshSubProject);
+        subProjectService.updateSubProject(freshSubProject);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
     }
@@ -51,16 +57,16 @@ public class SubProjectController {
     private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
         System.out.println(freshSubProject.getProjectId());
-        service.newSubProject(freshSubProject);
+        subProjectService.newSubProject(freshSubProject);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
 
     }
 
     @GetMapping("/delete")
-    private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId){
+    private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId) {
         if (isloggedIn(session)) return "redirect:";
-        service.deleteSubProject(subId);
+        subProjectService.deleteSubProject(subId);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
 
@@ -69,11 +75,11 @@ public class SubProjectController {
     @GetMapping("/showSub")
     public String showSub(HttpSession session, Model model, @RequestParam int subId) {
         if (isloggedIn(session)) return "redirect:";
-        SubProject subProject = service.getSubProject(subId);
+        SubProject subProject = subProjectService.getSubProject(subId);
         model.addAttribute("sub", subProject);
-        List<Task> tasks = service.showAllTasksFromSub(subId);
+        List<Task> tasks = taskService.showAllTasksFromSub(subId);
         model.addAttribute("tasks", tasks);
-        String labels = service.getLabelsInString(service.getAllLabels());
+        String labels = labelService.getLabelsInString(labelService.getAllLabels());
         model.addAttribute("labels", labels);
         return "subProject";
     }
