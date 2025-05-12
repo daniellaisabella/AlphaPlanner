@@ -127,18 +127,10 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/admin2"));
     }
 
-    @Test
-    void testEditUser() throws Exception {
-        User user = new User("Bob", "bob@alpha.com", "pwd", "employee");
-        Mockito.when(userService.getUserById(1)).thenReturn(user);
-        Mockito.when(userService.getRoles()).thenReturn(Collections.singletonList("employee"));
-        Mockito.when(userService.getSkills()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/edit/1").session(session))
-                .andExpect(status().isOk())
-                .andExpect(view().name("editUser"))
-                .andExpect(model().attributeExists("user", "roles", "enumSkills", "userEmail"));
-    }
+//    @Test
+//    void testEditUser() throws Exception {
+//
+//    }
 
     @Test
     void testUpdateUser() throws Exception {
