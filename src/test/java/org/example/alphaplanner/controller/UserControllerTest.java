@@ -25,12 +25,10 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private BaseService service;
+    private UserService userService;
 
     private User user;
     private MockHttpSession session;
-    @Autowired
-    private UserService userService;
 
     @BeforeEach
     void setUp() {
