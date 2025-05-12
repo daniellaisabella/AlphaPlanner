@@ -2,6 +2,7 @@ package org.example.alphaplanner.controller;
 
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,6 +29,8 @@ public class UserControllerTest {
 
     private User user;
     private MockHttpSession session;
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -46,8 +49,8 @@ public class UserControllerTest {
 
     @Test
     void testLoginSuccess() throws Exception {
-        Mockito.when(service.login(any(User.class))).thenReturn(true);
-        Mockito.when(service.getUserId(any(User.class))).thenReturn(1);
+        Mockito.when(userService.login(any(User.class))).thenReturn(true);
+        Mockito.when(userService.getUserId(any(User.class))).thenReturn(1);
 
         mockMvc.perform(post("/")
                         .param("email", "alice@alpha.com")
@@ -58,7 +61,7 @@ public class UserControllerTest {
 
     @Test
     void testLoginFailure() throws Exception {
-        Mockito.when(service.login(any(User.class))).thenReturn(false);
+        Mockito.when(userService.login(any(User.class))).thenReturn(false);
 
         mockMvc.perform(post("/")
                         .param("email", "wrong@alpha.com")
@@ -77,7 +80,7 @@ public class UserControllerTest {
 
     @Test
     void testProfileRedirectAdmin() throws Exception {
-        Mockito.when(service.getUserRole(1)).thenReturn("admin");
+        Mockito.when(userService.getUserRole(1)).thenReturn("admin");
 
         mockMvc.perform(get("/profile").session(session))
                 .andExpect(status().is3xxRedirection())
@@ -86,7 +89,7 @@ public class UserControllerTest {
 
     @Test
     void testProfileRedirectEmployee() throws Exception {
-        Mockito.when(service.getUserRole(1)).thenReturn("employee");
+        Mockito.when(userService.getUserRole(1)).thenReturn("employee");
 
         mockMvc.perform(get("/profile").session(session))
                 .andExpect(status().is3xxRedirection())
@@ -95,8 +98,8 @@ public class UserControllerTest {
 
     @Test
     void testCreateUser() throws Exception {
-        Mockito.when(service.getRoles()).thenReturn(Collections.singletonList("employee"));
-        Mockito.when(service.getSkills()).thenReturn(Collections.emptyList());
+        Mockito.when(userService.getRoles()).thenReturn(Collections.singletonList("employee"));
+        Mockito.when(userService.getSkills()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/create").session(session))
                 .andExpect(status().isOk())
@@ -106,7 +109,7 @@ public class UserControllerTest {
 
     @Test
     void testSaveUserDuplicate() throws Exception {
-        Mockito.when(service.checkForDup("alice@alpha.com")).thenReturn(true);
+        Mockito.when(userService.checkForDup("alice@alpha.com")).thenReturn(true);
 
         mockMvc.perform(post("/save")
                         .param("email", "alice@alpha.com")
@@ -118,7 +121,7 @@ public class UserControllerTest {
 
     @Test
     void testSaveUserSuccess() throws Exception {
-        Mockito.when(service.checkForDup("bob@alpha.com")).thenReturn(false);
+        Mockito.when(userService.checkForDup("bob@alpha.com")).thenReturn(false);
 
         mockMvc.perform(post("/save")
                         .param("email", "bob@alpha.com")
@@ -130,9 +133,9 @@ public class UserControllerTest {
     @Test
     void testEditUser() throws Exception {
         User user = new User("Bob", "bob@alpha.com", "pwd", "employee");
-        Mockito.when(service.getUserById(1)).thenReturn(user);
-        Mockito.when(service.getRoles()).thenReturn(Collections.singletonList("employee"));
-        Mockito.when(service.getSkills()).thenReturn(Collections.emptyList());
+        Mockito.when(userService.getUserById(1)).thenReturn(user);
+        Mockito.when(userService.getRoles()).thenReturn(Collections.singletonList("employee"));
+        Mockito.when(userService.getSkills()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/edit/1").session(session))
                 .andExpect(status().isOk())
@@ -151,7 +154,7 @@ public class UserControllerTest {
 
     @Test
     void testDeleteUser() throws Exception {
-        Mockito.when(service.getUserRole(1)).thenReturn("employee");
+        Mockito.when(userService.getUserRole(1)).thenReturn("employee");
 
         mockMvc.perform(post("/delete/1"))
                 .andExpect(status().is3xxRedirection())
