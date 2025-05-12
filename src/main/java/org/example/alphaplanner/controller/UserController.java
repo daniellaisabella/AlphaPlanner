@@ -3,6 +3,7 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("")
 @Controller
 public class UserController {
-    private BaseService service;
 
-    public UserController(BaseService service) {
-        this.service = service;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     private boolean isLoggedIn(HttpSession session){
@@ -29,8 +31,8 @@ public class UserController {
 
     @PostMapping("/")
     public String login(@ModelAttribute("userLogin") User user, Model model, HttpSession session){
-        if (service.login(user)){
-            session.setAttribute("userId",service.getUserId(user));
+        if (userService.login(user)){
+            session.setAttribute("userId",userService.getUserId(user));
             session.setMaxInactiveInterval(1800);
             return "redirect:/profile";
         } else {
@@ -48,7 +50,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profile(HttpSession session){
-        if (service.getUserRole(session.getAttribute("userId")).equals("admin")){
+        if (userService.getUserRole(session.getAttribute("userId")).equals("admin")){
             return isLoggedIn(session) ? "redirect:/admin1" : "redirect:/logout";
         } else {
             return isLoggedIn(session) ? "redirect:/projects" : "redirect:/logout";
@@ -61,6 +63,8 @@ public class UserController {
         model.addAttribute("projectManagers",service.getUsersByRole("project manager"));
         return service.getUserRole(session.getAttribute("userId")).equals("admin")
                 && isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
+        model.addAttribute("projectManagers",userService.getUsersByRole("project manager"));
+        return isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
     }
 
     @GetMapping("/admin2")
@@ -69,6 +73,8 @@ public class UserController {
         model.addAttribute("employees",service.getUsersByRole("employee"));
         return service.getUserRole(session.getAttribute("userId")).equals("admin")
                 && isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
+        model.addAttribute("employees",userService.getUsersByRole("employee"));
+        return isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
     }
 
     @GetMapping("/myProfile")
@@ -77,35 +83,36 @@ public class UserController {
         boolean aut = service.getUserRole(userID).equals("admin");
         model.addAttribute("role", aut);
         model.addAttribute("user",service.getUserById((Integer) session.getAttribute("userId")));
+        model.addAttribute("user",userService.getUserById((Integer) session.getAttribute("userId")));
         return isLoggedIn(session) ? "myProfile": "redirect:/logout";
     }
 
     @GetMapping("/create")
     public String createUser(Model model, HttpSession session){
         model.addAttribute("user", new User());
-        model.addAttribute("roles", service.getRoles());
-        model.addAttribute("enumSkills", service.getSkills());
+        model.addAttribute("roles", userService.getRoles());
+        model.addAttribute("enumSkills", userService.getSkills());
 
         return isLoggedIn(session) ? "createUser": "redirect:/logout";
     }
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute User user, Model model){
-        if(service.checkForDup(user.getEmail())){
+        if(userService.checkForDup(user.getEmail())){
             model.addAttribute("duplicate", true);
             return "/createUser";
         }else{
-            service.saveUser(user);
+            userService.saveUser(user);
             return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
         }
     }
 
     @GetMapping("/edit/{userId}")
     public String editUser(@PathVariable int userId, HttpSession session, Model model){
-        User user = service.getUserById(userId);
+        User user = userService.getUserById(userId);
         model.addAttribute("user",user);
-        model.addAttribute("roles", service.getRoles());
-        model.addAttribute("enumSkills", service.getSkills());
+        model.addAttribute("roles", userService.getRoles());
+        model.addAttribute("enumSkills", userService.getSkills());
         model.addAttribute("userEmail", user.getEmail().replace("@alpha.com", ""));
 
         return isLoggedIn(session) ? "editUser": "redirect:/logout";
@@ -114,14 +121,14 @@ public class UserController {
     @PostMapping("/update")
     public String updateUser(@RequestParam String emailPrefix, @ModelAttribute User user){
         user.setEmail(emailPrefix + "@alpha.com");
-        service.updateUser(user);
+        userService.updateUser(user);
         return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
     }
 
     @PostMapping("/delete/{userId}")
     public String deleteUser(@PathVariable int userId){
-        boolean userRole = service.getUserRole(userId).equals("employee");
-        service.deleteUser(userId);
+        boolean userRole = userService.getUserRole(userId).equals("employee");
+        userService.deleteUser(userId);
         return userRole ? "redirect:/admin2" : "redirect:/admin1";
     }
 
