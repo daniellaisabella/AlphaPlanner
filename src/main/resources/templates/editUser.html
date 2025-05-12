@@ -60,7 +60,7 @@
         </select>
     </div>
 
-    <div class="form-row">
+    <div th:if="${!role}" class="form-row">
         <label>Færdigheder</label>
         <div class="checkbox-group">
             <div th:each="skill : ${enumSkills}">

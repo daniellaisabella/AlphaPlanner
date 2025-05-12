@@ -89,7 +89,6 @@ public class UserController {
         model.addAttribute("user", new User());
         model.addAttribute("roles", userService.getRoles());
         model.addAttribute("enumSkills", userService.getSkills());
-
         return isLoggedIn(session) ? "createUser": "redirect:/logout";
     }
 
@@ -106,6 +105,8 @@ public class UserController {
 
     @GetMapping("/edit/{userId}")
     public String editUser(@PathVariable int userId, HttpSession session, Model model){
+        boolean aut = userService.getUserRole(userId).equals("admin");
+        model.addAttribute("role", aut);
         User user = userService.getUserById(userId);
         model.addAttribute("user",user);
         model.addAttribute("roles", userService.getRoles());

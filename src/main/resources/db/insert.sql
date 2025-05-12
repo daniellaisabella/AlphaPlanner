@@ -48,7 +48,7 @@ INSERT INTO Skills (skill_name) VALUES
 
 -- users_skills
 INSERT INTO users_skills (user_id, skill_id) VALUES
-                                                 (1, 2), -- Alice knows SQL
+                                            -- Alice admin does not have skills
                                                  (2, 1), -- Bob knows JavaScript
                                                  (3, 3), -- Charlie knows UI Design
                                                  (4, 4); -- Diana knows Testing

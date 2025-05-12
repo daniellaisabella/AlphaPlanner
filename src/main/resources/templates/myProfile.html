@@ -33,7 +33,7 @@
         <th>Navn</th>
         <th>Rolle</th>
         <th>Email</th>
-        <th>Skills</th>
+        <th th:if="${!role}">Skills</th>
     </tr>
     </thead>
     <tbody>
@@ -42,7 +42,7 @@
         <td th:text="${user.role}"></td>
         <td th:text="${user.email}"></td>
 
-        <td>
+        <td th:if="${!role}">
             <ul>
                 <li th:each="skill : ${user.skills}" th:text="${skill}"></li>
             </ul>
