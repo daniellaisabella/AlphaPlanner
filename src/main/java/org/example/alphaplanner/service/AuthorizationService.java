@@ -1,7 +1,9 @@
 package org.example.alphaplanner.service;
 
 import org.example.alphaplanner.repository.ProjectRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthorizationService {
 
 
@@ -14,7 +16,6 @@ public class AuthorizationService {
 
     public boolean authProjectManager(int userId, int project)
     {
-        projectRepository.getProject(project);
-        return ( projectRepository.getProject(project).getPm_id() == userId);
+        return ( projectRepository.getPm_id(project) == userId);
     }
 }

@@ -2,6 +2,7 @@ package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.ProjectRowMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -66,5 +67,17 @@ public class ProjectRepository {
                 WHERE up.user_id = ?
                 """;
         return jdbcTemplate.query(query, rowMapper, userid);
+    }
+
+    public int getPm_id(int projectId)
+    {
+        String query = """
+                SELECT projects.pm_id FROM projects WHERE project_Id = ?
+                """;
+        try {
+            return jdbcTemplate.queryForObject(query, Integer.class, projectId);
+        } catch (DataAccessException d) {
+            throw new RuntimeException("Error getting user_id ", d);
+        }
     }
 }

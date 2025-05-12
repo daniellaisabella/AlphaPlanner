@@ -4,8 +4,6 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Task;
-import org.example.alphaplanner.service.BaseService;
 import org.example.alphaplanner.service.LabelService;
 import org.example.alphaplanner.service.SubProjectService;
 import org.example.alphaplanner.service.TaskService;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
