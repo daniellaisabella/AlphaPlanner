@@ -66,7 +66,7 @@ public class ProjectController {
     private String deleteProject(HttpSession session, @RequestParam int id){
         if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
-        projectService.deleteProject(userId, id);
+        projectService.deleteProject(id);
         return "redirect:/projects";
 
     }

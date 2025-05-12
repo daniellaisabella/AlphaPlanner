@@ -36,7 +36,7 @@ public class ProjectService {
         projectRepository.addProjectSql(freshProject);
     }
 
-    public void deleteProject(int userId, int project) {
+    public void deleteProject(int project) {
 
         projectRepository.DeleteProjectSQL(project);
     }
