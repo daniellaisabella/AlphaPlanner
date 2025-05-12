@@ -43,7 +43,10 @@ public class TaskRepository {
             String name = rs.getString("sub_name");
             String desc = rs.getString("sub_desc");
             LocalDate deadline = rs.getDate("sub_deadLine").toLocalDate();
-            return new SubProject(id, name, desc, deadline);
+            int projectID = rs.getInt("project_id");
+
+
+            return new SubProject(id, name, desc, deadline, projectID);
         }
     }
 

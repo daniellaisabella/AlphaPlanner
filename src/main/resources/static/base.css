@@ -6,6 +6,13 @@ body {
     color: #333;
 }
 
+.centerX{
+    text-align: center;
+    font-size: 300%;
+    padding: 20px;
+
+}
+
 form {
     display: flex;
     flex-direction: column;

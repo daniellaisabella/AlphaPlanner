@@ -90,7 +90,7 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/profile").session(session))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/manEmpProfile"));
+                .andExpect(redirectedUrl("/projects"));
     }
 
     @Test
