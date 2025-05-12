@@ -89,7 +89,6 @@ public class UserController {
         model.addAttribute("user", new User());
         model.addAttribute("roles", userService.getRoles());
         model.addAttribute("enumSkills", userService.getSkills());
-
         return isLoggedIn(session) ? "createUser": "redirect:/logout";
     }
 
