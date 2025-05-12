@@ -56,9 +56,9 @@
            data-estimated=${project.estimatedHours},
            data-dedicated=${project.dedicatedHours}"
             >
-                Rediger
+                <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
-            <a style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space">Slet</a>
+            <a style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
         </td>
     <tr>
         <td>
@@ -72,8 +72,9 @@
 <div id="NewProject" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Nyt Projekt</b>
-        <a onclick="closeNewModal()" class="close-button">Close</A>
+        <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
+
     <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container">
 
         <div class="form-row">
@@ -111,7 +112,7 @@
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Rediger Projekt</b>
-        <a onclick="closeModal()" class="close-button">Close</A>
+        <a onclick="closeModal();" class="close-button">Luk</A>
     </div>
     <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container">
         <label hidden="hidden">

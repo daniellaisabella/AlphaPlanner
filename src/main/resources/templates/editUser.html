@@ -25,7 +25,7 @@
 </div>
 
 <div>
-    <a th:href="@{/admin1}">Tilbage</a>
+    <a onclick="return confirm('Dine ændringer er ikke gemt, er du sikker på du vil gå tilbage?');" href="javascript:history.back()" class="btn-link">Tilbage</a>
 </div>
 <form method="post" th:object="${user}" th:action="@{/update}">
 

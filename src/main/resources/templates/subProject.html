@@ -71,7 +71,8 @@
 </div>
 
 
-<a class="btn-link">Tilbage</a>
+<a href="javascript:history.back()" class="btn-link">Tilbage</a>
+
 
 <div id="overlay"></div>
 
@@ -142,7 +143,7 @@
 
 <form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
 <input type="hidden" name="task_id" value="${taskId}">
-<button class="btn-link" >Slet</button>
+<button class="btn-link" > Slet opgave </button>
 </form>
 </div>
 <br>
