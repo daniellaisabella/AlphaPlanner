@@ -59,14 +59,16 @@ public class UserController {
     public String admin1 (Model model, HttpSession session){
         model.addAttribute("activePage","admin1");
         model.addAttribute("projectManagers",service.getUsersByRole("project manager"));
-        return isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
+        return service.getUserRole(session.getAttribute("userId")).equals("admin")
+                && isLoggedIn(session) ? "adminProjectManager": "redirect:/logout";
     }
 
     @GetMapping("/admin2")
     public String admin2 (Model model, HttpSession session){
         model.addAttribute("activePage","admin2");
         model.addAttribute("employees",service.getUsersByRole("employee"));
-        return isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
+        return service.getUserRole(session.getAttribute("userId")).equals("admin")
+                && isLoggedIn(session) ? "adminEmployees": "redirect:/logout";
     }
 
     @GetMapping("/myProfile")
