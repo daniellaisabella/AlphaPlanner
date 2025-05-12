@@ -5,6 +5,9 @@ import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.ProjectService;
+import org.example.alphaplanner.service.SubProjectService;
+import org.example.alphaplanner.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +19,15 @@ import java.util.List;
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final BaseService service;
 
-    public ProjectController(BaseService service) {
-        this.service = service;
+    private final UserService userService;
+    private final ProjectService projectService;
+    private final SubProjectService subProjectService;
+
+    public ProjectController(UserService userService, ProjectService projectService, SubProjectService subProjectService) {
+        this.userService = userService;
+        this.projectService = projectService;
+        this.subProjectService = subProjectService;
     }
     private boolean isloggedIn(HttpSession session)
     {
@@ -30,8 +38,8 @@ public class ProjectController {
     private String projectPage(HttpSession session, Model model) {
         if (isloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
-        boolean authority = service.getUserRole(userID).equals("project manager");
-        List<Project> projects = service.getProjects(userID);
+        boolean authority = userService.getUserRole(userID).equals("project manager");
+        List<Project> projects = projectService.getProjects(userID);
         model.addAttribute("freshProject", new Project());
         model.addAttribute("projects", projects);
         model.addAttribute("role", authority);
@@ -41,7 +49,7 @@ public class ProjectController {
     @PostMapping("/edit")
     private String edit(HttpSession session, @ModelAttribute Project freshProject) {
         if (isloggedIn(session)) return "redirect:";
-        service.updateProject(freshProject);
+        projectService.updateProject(freshProject);
         return "redirect:/projects";
     }
 
@@ -50,7 +58,7 @@ public class ProjectController {
         if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
         freshProject.setPm_id(userId);
-        service.newProject(freshProject);
+        projectService.newProject(freshProject);
         return "redirect:/projects";
     }
 
@@ -58,7 +66,7 @@ public class ProjectController {
     private String deleteProject(HttpSession session, @RequestParam int id){
         if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
-        service.deleteProject(userId, id);
+        projectService.deleteProject(id);
         return "redirect:/projects";
 
     }
@@ -68,11 +76,11 @@ public class ProjectController {
     {
         if (isloggedIn(session)) return "redirect:";
 
-        boolean authority = service.getUserRole(session.getAttribute("userId")).equals("project manager");
-        Project parentProject = service.getProject(id);
+        boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
+        Project parentProject = projectService.getProject(id);
         SubProject freshSubProject = new SubProject();
         freshSubProject.setProjectId(id);
-        List<SubProject> subProjects = service.getSubProjects(id);
+        List<SubProject> subProjects = subProjectService.getSubProjects(id);
         model.addAttribute("role", authority);
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("freshSubProject", freshSubProject);

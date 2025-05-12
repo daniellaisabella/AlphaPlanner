@@ -6,6 +6,9 @@ import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.LabelService;
+import org.example.alphaplanner.service.SubProjectService;
+import org.example.alphaplanner.service.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +26,15 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final BaseService service;
 
-    public TaskController(BaseService service) {
-        this.service = service;
+    private final LabelService labelService;
+    private final TaskService taskService;
+    private final SubProjectService subProjectService;
+
+    public TaskController(LabelService labelService, TaskService taskService, SubProjectService subProjectService) {
+        this.labelService = labelService;
+        this.taskService = taskService;
+        this.subProjectService = subProjectService;
     }
 
     //------------------------HELPER METHOD TO CHECK IF USER IS LOGGED IN------------------------------------
@@ -40,9 +48,9 @@ public class TaskController {
 
     @GetMapping("/createTask")
     public String createTask(Model model, int sub_id, HttpSession session) {
-        SubProject subProject = service.getSubdummy(1);
+        SubProject subProject = subProjectService.getSubProject(sub_id);
         model.addAttribute("sub_id", sub_id);
-        List<Label> labels = service.getAllLabels();
+        List<Label> labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
         return isLoggedIn(session) ? "createTask" : "redirect:/login";
     }
@@ -62,7 +70,7 @@ public class TaskController {
             if (labels_id != null) {
                 labelsResult = labels_id;
             }
-            service.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
+            taskService.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
@@ -82,7 +90,7 @@ public class TaskController {
         System.out.println(">>> Received updateTask POST request <<<");
 
         if (isLoggedIn(session)) {
-            service.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
+            taskService.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
@@ -100,7 +108,7 @@ public class TaskController {
             if (labels != null) {
                 result = labels;
             }
-            service.addLabelsToTask(taskId, result);
+            labelService.addLabelsToTask(taskId, result);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
@@ -110,7 +118,7 @@ public class TaskController {
     @GetMapping("/manageLabels")
     public String manageLabels(Model model, HttpSession session) {
         if (isLoggedIn(session)) {
-            List<Label> labels = service.getAllLabels();
+            List<Label> labels = labelService.getAllLabels();
             model.addAttribute("labels", labels);
             return "manageLabels";
         } else {
@@ -122,7 +130,7 @@ public class TaskController {
     public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session) {
 
         if (isLoggedIn(session)) {
-            service.deleteLabel(label_id);
+            labelService.deleteLabel(label_id);
             return "redirect:/tasks/manageLabels";
         } else {
             return "redirect:/login";
@@ -134,7 +142,7 @@ public class TaskController {
     public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session) {
 
         if (isLoggedIn(session)) {
-            service.deleteTask(task_id);
+            taskService.deleteTask(task_id);
             return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
@@ -146,14 +154,14 @@ public class TaskController {
     public String createLabel(@RequestParam(name = "labelName") String labelName,
                               Model model,
                               HttpSession session) {
-        if (service.checkIfLabelNameExist(labelName)) {
-            List<Label> labels = service.getAllLabels();
+        if (labelService.checkIfLabelNameExist(labelName)) {
+            List<Label> labels = labelService.getAllLabels();
             model.addAttribute("labels", labels);
             model.addAttribute("nameExists", true);
             return "manageLabels";
         }
         if (isLoggedIn(session)) {
-            service.createLabel(labelName);
+            labelService.createLabel(labelName);
             return "redirect:/tasks/manageLabels";
         } else {
             return "redirect:/login";
