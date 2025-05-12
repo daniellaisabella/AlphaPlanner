@@ -1,7 +1,6 @@
 package org.example.alphaplanner.controller;
 
 import org.example.alphaplanner.models.User;
-import org.example.alphaplanner.service.BaseService;
 import org.example.alphaplanner.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

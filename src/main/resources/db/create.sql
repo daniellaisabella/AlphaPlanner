@@ -9,7 +9,7 @@ CREATE TABLE Users (
                        user_name VARCHAR(100) NOT NULL,
                        email VARCHAR(100) UNIQUE NOT NULL,
                        role ENUM('employee', 'project manager', 'admin') NOT NULL,
-                       password VARCHAR(255)
+                       password VARCHAR(255) NOT NULL
 );
 
 -- Projects table
@@ -32,8 +32,8 @@ CREATE TABLE users_projects (
                                 user_id INT,
                                 project_id INT,
                                 PRIMARY KEY (user_id, project_id),
-                                FOREIGN KEY (user_id) REFERENCES Users(user_id),
-                                FOREIGN KEY (project_id) REFERENCES Projects(project_id)
+                                FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+                                FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE CASCADE
 );
 
 -- SubProjects table
@@ -56,10 +56,10 @@ CREATE TABLE Tasks (
                        task_id INT PRIMARY KEY AUTO_INCREMENT,
                        sub_id INT,
                        task_name VARCHAR(100) NOT NULL,
-                       task_desc TEXT,
+                       task_desc VARCHAR(100),
                        task_deadline DATE NOT NULL,
                        task_timeEstimate INT NOT NULL,
-                       task_dedicatedHours INT DEFAULT 0,
+                       task_dedicatedHours INT,
                        task_status BOOLEAN,
                        FOREIGN KEY (sub_id) REFERENCES SubProjects(sub_id) ON DELETE CASCADE
 );
@@ -94,8 +94,8 @@ CREATE TABLE users_skills (
                               user_id INT,
                               skill_id INT,
                               PRIMARY KEY(user_id, skill_id),
-                              FOREIGN KEY (user_id) REFERENCES Users(user_id),
-                              FOREIGN KEY (skill_id) REFERENCES Skills(skill_id)
+                              FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+                              FOREIGN KEY (skill_id) REFERENCES Skills(skill_id) ON DELETE CASCADE
 );
 
 -- Users and Tasks junction

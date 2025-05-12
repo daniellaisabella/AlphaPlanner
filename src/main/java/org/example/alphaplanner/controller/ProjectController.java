@@ -3,12 +3,10 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Task;
-import org.example.alphaplanner.service.BaseService;
+import org.example.alphaplanner.service.AuthorizationService;
 import org.example.alphaplanner.service.ProjectService;
 import org.example.alphaplanner.service.SubProjectService;
 import org.example.alphaplanner.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +21,13 @@ public class ProjectController {
     private final UserService userService;
     private final ProjectService projectService;
     private final SubProjectService subProjectService;
+    private final AuthorizationService authorizationService;
 
-    public ProjectController(UserService userService, ProjectService projectService, SubProjectService subProjectService) {
+    public ProjectController(UserService userService, ProjectService projectService, SubProjectService subProjectService, AuthorizationService authorizationService) {
         this.userService = userService;
         this.projectService = projectService;
         this.subProjectService = subProjectService;
+        this.authorizationService = authorizationService;
     }
     private boolean isloggedIn(HttpSession session)
     {
@@ -49,6 +49,7 @@ public class ProjectController {
     @PostMapping("/edit")
     private String edit(HttpSession session, @ModelAttribute Project freshProject) {
         if (isloggedIn(session)) return "redirect:";
+        System.out.println(freshProject.getId());
         projectService.updateProject(freshProject);
         return "redirect:/projects";
     }
@@ -64,8 +65,8 @@ public class ProjectController {
 
     @GetMapping("/delete")
     private String deleteProject(HttpSession session, @RequestParam int id){
-        if (isloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
+        if (!authorizationService.authProjectManager(userId, id)) return "redirect:";
         projectService.deleteProject(id);
         return "redirect:/projects";
 
