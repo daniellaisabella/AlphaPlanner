@@ -43,7 +43,7 @@ public class ProjectController {
         model.addAttribute("freshProject", new Project());
         model.addAttribute("projects", projects);
         model.addAttribute("role", authority);
-        return "pm-page";
+        return !userService.getUserRole(session.getAttribute("userId")).equals("admin") ? "pm-page" : "redirect:/admin1";
     }
 
     @PostMapping("/edit")
@@ -75,6 +75,7 @@ public class ProjectController {
     @GetMapping("/projectOverview")
     private String projectOverview(HttpSession session, Model model, @RequestParam int id)
     {
+
         if (isloggedIn(session)) return "redirect:";
 
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
@@ -86,6 +87,8 @@ public class ProjectController {
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("freshSubProject", freshSubProject);
         model.addAttribute("subProjects", subProjects);
+        model.addAttribute("projectId", id);
+
         return "project-overview";
     }
 
