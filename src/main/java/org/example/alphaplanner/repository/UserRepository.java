@@ -116,9 +116,6 @@ public class UserRepository {
     public boolean checkForDup(String email) {
         String sql = """
                 SELECT COUNT(*) > 0 FROM USERS WHERE BINARY EMAIL = ?;
-                
-                
-                
                 """;
         try {
             Boolean userExist = jdbcTemplate.queryForObject(sql, Boolean.class, email);
