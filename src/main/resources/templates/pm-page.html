@@ -72,8 +72,9 @@
 <div id="NewProject" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Nyt Projekt</b>
-        <a onclick="closeNewModal()" class="close-button">Close</A>
+        <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
+
     <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container">
 
         <div class="form-row">
@@ -111,7 +112,7 @@
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Rediger Projekt</b>
-        <a onclick="closeModal()" class="close-button">Close</A>
+        <a onclick="closeModal();" class="close-button">Luk</A>
     </div>
     <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container">
         <label hidden="hidden">
