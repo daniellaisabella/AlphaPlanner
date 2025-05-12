@@ -11,15 +11,17 @@ import java.util.Objects;
 @Service
 public class ProjectService {
 
+    private final UserService userService;
     ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository projectRepository)
+    public ProjectService(ProjectRepository projectRepository, UserService userService)
     {
         this.projectRepository = projectRepository;
+        this.userService = userService;
     }
 
     public List<Project> getProjects(int userid) {
-        User user = getUserById(userid);
+        User user = userService.getUserById(userid);
         if (Objects.equals(user.getRole(), "project manager"))
         {
             return projectRepository.getProjectsAttachedToManager(userid);
