@@ -71,6 +71,9 @@ public class UserController {
 
     @GetMapping("/myProfile")
     public String myProfile (Model model, HttpSession session){
+        int userID = (int) session.getAttribute("userId");
+        boolean aut = service.getUserRole(userID).equals("admin");
+        model.addAttribute("role", aut);
         model.addAttribute("user",service.getUserById((Integer) session.getAttribute("userId")));
         return isLoggedIn(session) ? "myProfile": "redirect:/logout";
     }

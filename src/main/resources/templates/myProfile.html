@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Ansatte</title>
+    <title>Min profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
@@ -43,7 +43,8 @@
             </ul>
         </td>
 
-        <td>
+
+        <td th:if="${role}">
             <a th:href="@{/edit/{userId}(userId=${user.userId})}">
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
             </a>
