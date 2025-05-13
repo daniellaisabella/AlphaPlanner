@@ -18,7 +18,8 @@ Project Managers are responsible for planning and organizing projects. Their cap
 - Creating and managing projects, sub-projects, and tasks
 - Setting time estimates, deadlines, and assigning team members to projects, sub-projects, and tasks
 - Monitoring progress and updating project scopes
-Project Managers can assign access to projects and ensure that the right people are working on the right tasks.
+
+Project Managers can assign access to projects and ensure that the right people are working on the right tasks
 
 ### 👷 Employee
 Employees focus on task execution. They can:
