@@ -6,12 +6,12 @@ Thanks for your interest in contributing to **Alpha Planner**! Whether you're fi
 
 ## 📚 Table of Contents
 
-- [Code of Conduct](#code-of-conduct)  
-- [How to Contribute](#how-to-contribute)  
-  - [Ask Questions](#ask-questions)  
-  - [Create an Issue](#create-an-issue)  
-  - [Submit a Pull Request](#submit-a-pull-request)  
-- [Project Setup](#project-setup)  
+- Code of Conduct  
+- How to Contribute  
+  - Ask Questions 
+  - Create an Issue 
+  - Submit a Pull Request 
+- Project Setup
 
 ---
 
