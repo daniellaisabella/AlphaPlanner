@@ -58,7 +58,7 @@
             >
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
-            <a style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
+            <a onclick="return confirm('Er du sikker på du vil slette dette projekt')" style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
         </td>
     <tr>
         <td>
@@ -75,7 +75,7 @@
         <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
 
-    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container">
+    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container" >
 
         <div class="form-row">
             <label for="newProjectName">Project Name:</label>
@@ -112,9 +112,12 @@
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Rediger Projekt</b>
-        <a onclick="closeModal();" class="close-button">Luk</A>
+        <a onclick="
+            if(confirm('Hvis du trykker ok vil dine ændringer ikke blive gemt')){
+            closeModal();
+        } " class="close-button">Luk</A>
     </div>
-    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container">
+    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{id}"/>
         </label>
