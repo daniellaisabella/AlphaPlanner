@@ -1,6 +1,7 @@
 package org.example.alphaplanner.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
@@ -58,7 +59,7 @@ public class TaskController {
                            String desc,
                            LocalDate deadline,
                            double estimatedHours,
-                           @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id, HttpSession session) {
+                           @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id, HttpSession session,  HttpServletRequest request) {
 
         List<Integer> labelsResult = new ArrayList<>();
 
@@ -68,7 +69,7 @@ public class TaskController {
                 labelsResult = labels_id;
             }
             taskService.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
-            return "redirect:/tasks/showSub";
+            return "redirect:" + request.getHeader("referer");
         } else {
             return "redirect:/login";
         }
@@ -82,13 +83,14 @@ public class TaskController {
                            @RequestParam("status") boolean status,
                            @RequestParam("estimatedHours") double estimatedHours,
                            @RequestParam("dedicatedHours") double dedicatedHours,
+                           HttpServletRequest request,
                            HttpSession session) {
 
         System.out.println(">>> Received updateTask POST request <<<");
 
         if (isLoggedIn(session)) {
             taskService.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
-            return "redirect:/tasks/showSub";
+            return "redirect:" + request.getHeader("referer");
         } else {
             return "redirect:/login";
         }
@@ -96,7 +98,7 @@ public class TaskController {
 
     @PostMapping("/updateLabelsFromTask")
     public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<Integer> labels,
-                                     @RequestParam(name = "taskId") int taskId,
+                                     @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                      HttpSession session) {
         System.out.println(">>> Received updateTask POST request <<<");
         System.out.println("Received label IDs: " + labels);
@@ -106,7 +108,7 @@ public class TaskController {
                 result = labels;
             }
             labelService.addLabelsToTask(taskId, result);
-            return "redirect:/tasks/showSub";
+            return "redirect:" + request.getHeader("referer");
         } else {
             return "redirect:/login";
         }
@@ -136,11 +138,11 @@ public class TaskController {
     }
 
     @PostMapping("/deleteTask")
-    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session) {
+    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session,  HttpServletRequest request) {
 
         if (isLoggedIn(session)) {
             taskService.deleteTask(task_id);
-            return "redirect:/tasks/showSub";
+            return "redirect:" + request.getHeader("referer");
         } else {
             return "redirect:/login";
         }

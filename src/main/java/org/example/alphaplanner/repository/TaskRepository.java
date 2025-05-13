@@ -66,7 +66,7 @@ public class TaskRepository {
 
     public List<Task> showAllTasksFromSub(int sub_id) {
         try {
-            String sql = "SELECT t.task_id, t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status " +
+            String sql = "SELECT t.task_id, t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status, t.sub_id " +
                     "FROM Tasks t WHERE t.sub_id = ?";
 
             List<Task> tasks = jdbcTemplate.query(sql, new TaskRowMapper(), sub_id);
@@ -85,7 +85,7 @@ public class TaskRepository {
 
     public Task getTaskById(int task_id) {
         try {
-            String sql = "SELECT t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status " +
+            String sql = "SELECT t.task_id, t.task_name, t.task_desc, t.task_deadline, t.task_timeEstimate, t.task_dedicatedHours, t.task_status, t.sub_id " +
                     "FROM Tasks t WHERE task_id = ?";
             return jdbcTemplate.queryForObject(sql, new TaskRowMapper(), task_id);
         } catch (EmptyResultDataAccessException e) {
@@ -130,6 +130,32 @@ public class TaskRepository {
             jdbcTemplate.update(sql, task_id);
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while deleting task.", e);
+        }
+    }
+
+    public int getSumDedicatedHours(int subId)
+    {
+        String query = """
+                SELECT SUM(tasks.task_dedicatedHours) FROM tasks WHERE tasks.sub_id = ?;
+                """;
+        try {
+            return jdbcTemplate.queryForObject(query, Integer.class, subId);
+        } catch (NullPointerException e)
+        {
+         return 0;
+        }
+    }
+
+    public int getSumEstimatedHours(int subId)
+    {
+        String query = """
+                SELECT SUM(tasks.task_timeEstimate) FROM tasks WHERE tasks.sub_id = ?;
+                """;
+        try {
+            return jdbcTemplate.queryForObject(query, Integer.class, subId);
+        } catch (NullPointerException e)
+        {
+            return 0;
         }
     }
 
