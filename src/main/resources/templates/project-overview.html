@@ -45,7 +45,7 @@
         <td th:text="${subProject.getSubProjectDesc()}"></td>
         <td th:text="${subProject.getSubProjectDeadline()}"></td>
         <td th:text="${subProject.getSubDedicatedHours()}"></td>
-        <td th:text="${subProject.getSubDedicatedHours()}"></td>
+        <td th:text="${subProject.getSubEstimatedHours()}"></td>
         <td th:if="${role}">
             <a style="color: indianred"
                onclick="openModal(this)"
@@ -124,9 +124,9 @@
             closeModal();
         } " class="close-button">Close</A>
     </div>
-    <form th:action="@{/subProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
+    <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
-            <input type="number" th:field="*{subId}"/>
+            <input type="number" th:field="*{subId}" id="subId"/>
         </label>
 
         <div class="form-row">
@@ -185,7 +185,7 @@
         const dedicated = link.getAttribute("data-dedicated");
 
         // Set values in modal form
-        document.getElementById("id").value = id;
+        document.getElementById("subId").value = id;
         document.getElementById("projectName").value = name;
         document.getElementById("projectDesc").value = desc;
         document.getElementById("projectDeadline").value = deadline;
