@@ -225,15 +225,15 @@ public class UserRepository {
                          INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
                          VALUES(?, ?)
                     """;
-            try {
-                Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
-                assert (skillId != null);
-                jdbcTemplate.update(insertUserSkill, user.getUserId(), skillId);
-            } catch (DataIntegrityViolationException e) {
-                throw new IllegalArgumentException("Fejl ved opdatering af skills (indsæt)" + e);
+                    try {
+                        Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                        assert (skillId != null);
+                        jdbcTemplate.update(insertUserSkill, user.getUserId(), skillId);
+                    } catch (DataIntegrityViolationException e) {
+                        throw new IllegalArgumentException("Fejl ved opdatering af skills (indsæt)" + e);
+                    }
+                }
             }
         }
-    }
-}
 }
 }
