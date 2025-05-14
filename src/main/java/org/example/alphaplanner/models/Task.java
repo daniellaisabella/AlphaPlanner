@@ -15,16 +15,18 @@ public class Task {
     private double taskEstimatedHours;
     private String labels;
     private String assignees; //might change to a list of users later
+    private final int subId;
 
 
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
 
     // to retrieve from sql
-    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours){
+    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, int subId){
         this.taskId=taskId;
         this.taskName=taskName;
         this.taskDesc = taskDesc;
         this.taskDeadline = taskDeadline;
+        this.subId = subId;
         this.taskStatus = false;
         this.taskDedicatedHours = 0;
         this.taskEstimatedHours = taskEstimatedHours;
@@ -33,10 +35,11 @@ public class Task {
 
     // To create new task
 
-    public Task(String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours){
+    public Task(String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, int subId){
         this.taskName=taskName;
         this.taskDesc = taskDesc;
         this.taskDeadline = taskDeadline;
+        this.subId = subId;
         this.taskStatus = false;
         this.taskDedicatedHours = 0;
         this.taskEstimatedHours = taskEstimatedHours;
@@ -114,5 +117,9 @@ public class Task {
 
     public void setAssignees(String assignees) {
         this.assignees = assignees;
+    }
+
+    public int getSubprojectId() {
+        return subId;
     }
 }

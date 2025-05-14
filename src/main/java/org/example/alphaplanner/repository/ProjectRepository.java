@@ -1,7 +1,7 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.Project;
-import org.example.alphaplanner.models.ProjectRowMapper;
+import org.example.alphaplanner.repository.rowmappers.ProjectRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

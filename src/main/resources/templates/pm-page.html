@@ -92,16 +92,6 @@
             <label for="newProjectDeadline" th:field="*{projectDeadline}"></label><input type="date"
                                                                                          id="newProjectDeadline"/>
         </div>
-
-        <div class="form-row">
-            <label for="newEstimatedHours">Estimated Hours:</label>
-            <input type="number" id="newEstimatedHours" th:field="*{estimatedHours}"/>
-        </div>
-
-        <div class="form-row">
-            <label for="newDedicatedHours">Dedicated Hours:</label>
-            <input type="number" id="newDedicatedHours" th:field="*{dedicatedHours}"/>
-        </div>
         <div>
             <button type="submit">Save</button>
         </div>
@@ -136,16 +126,6 @@
             <label for="projectDeadline">Project Deadline:</label>
             <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
         </div>
-
-        <div class="form-row">
-            <label for="estimatedHours">Estimated Hours:</label>
-            <input type="number" id="estimatedHours" th:field="*{estimatedHours}"/>
-        </div>
-
-        <div class="form-row">
-            <label for="dedicatedHours">Dedicated Hours:</label>
-            <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}"/>
-        </div>
         <div>
             <button type="submit">Save</button>
         </div>
@@ -161,19 +141,13 @@
     function openModal(link) {
         // Get values from data- attributes
         const id = link.getAttribute("data-id");
-        const name = link.getAttribute("data-name");
-        const desc = link.getAttribute("data-desc");
-        const deadline = link.getAttribute("data-deadline");
-        const estimated = link.getAttribute("data-estimated");
-        const dedicated = link.getAttribute("data-dedicated");
 
         // Set values in modal form
         document.getElementById("id").value = id;
-        document.getElementById("projectName").value = name;
-        document.getElementById("projectDesc").value = desc;
-        document.getElementById("projectDeadline").value = deadline;
-        document.getElementById("estimatedHours").value = estimated;
-        document.getElementById("dedicatedHours").value = dedicated;
+        document.getElementById("projectName").value = link.getAttribute("data-name");
+        document.getElementById("projectDesc").value = link.getAttribute("data-desc");
+        document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
+
 
         // Optional: add hidden input for project ID
         let hidden = document.getElementById("projectId");
