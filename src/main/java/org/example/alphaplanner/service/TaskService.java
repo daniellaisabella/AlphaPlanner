@@ -41,6 +41,8 @@ public class TaskService {
     }
 
     public void deleteTask(int task_id){
+        Task task = taskRepository.getTaskById(task_id);
+        subProjectService.updateHours(task.getSubprojectId());
         taskRepository.deleteTask(task_id);
     }
 

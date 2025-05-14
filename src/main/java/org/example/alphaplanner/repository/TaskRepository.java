@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -67,7 +68,7 @@ public class TaskRepository {
             jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0, false);
 
             String getTaskId = "SELECT t.task_id FROM Tasks t WHERE task_name = ? AND task_desc = ?";
-            int task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
+            Integer task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
 
             String labelSql = "INSERT INTO tasks_labels (label_id, task_id) VALUES (?, ?)";
             for (Integer l : labels_id) {
@@ -101,12 +102,8 @@ public class TaskRepository {
         String query = """
                 SELECT SUM(tasks.task_dedicatedHours) FROM tasks WHERE tasks.sub_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, subId);
-        } catch (NullPointerException e)
-        {
-         return 0;
-        }
+            Integer i = jdbcTemplate.queryForObject(query, Integer.class, subId);
+        return Objects.requireNonNullElse(i, 0);
     }
 
     public int getSumEstimatedHours(int subId)
@@ -114,12 +111,8 @@ public class TaskRepository {
         String query = """
                 SELECT SUM(tasks.task_timeEstimate) FROM tasks WHERE tasks.sub_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, subId);
-        } catch (NullPointerException e)
-        {
-            return 0;
-        }
+        Integer i = jdbcTemplate.queryForObject(query, Integer.class, subId);
+        return Objects.requireNonNullElse(i, 0);
     }
 
 //======================================LABEL METHODS===================================================================
@@ -182,13 +175,14 @@ public class TaskRepository {
 
             for (Integer l : labels) {
                 try {
-                    int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+                    Integer labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+                    assert (labelId != null);
                     jdbcTemplate.update(sql, task_id, labelId);
                 } catch (EmptyResultDataAccessException ex) {
                     throw new IllegalArgumentException("Label not found: " + l);
                 }
             }
-        } catch (DataAccessException e) {
+        } catch (AssertionError e) {
             throw new IllegalStateException("Database error while adding labels to the task.", e);
         }
     }
