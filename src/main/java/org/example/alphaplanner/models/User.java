@@ -31,15 +31,6 @@ public class User {
     public User() {
     }
 
-    // CONSTRUCTOR FOR
-//    public User( int userId, String userName, String email, String role) {
-//        this.userId = userId;
-//        name = userName;
-//        this.email = email;
-//        this.role = role;
-//        this.skills = new ArrayList<>();
-//    }
-
     public User(int id, String userName, String email, String password, String role) {
         this.userId = id;
         name = userName;
