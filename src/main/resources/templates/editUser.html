@@ -63,6 +63,9 @@
     <div th:if="${!role}" class="form-row">
         <label>Færdigheder</label>
         <div class="checkbox-group">
+            <!-- skjult input for at sende noget, selv hvis ingen er valgt -->
+            <input type="hidden" name="skills" value="__none__" />
+
             <div th:each="skill : ${enumSkills}">
                 <input
                         type="checkbox"
