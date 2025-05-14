@@ -23,43 +23,10 @@ public class TaskRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    //DUMMY REMOVE LATER
-    private final SubRowMapper subRowMapper = new SubRowMapper();
-
 //---------------------------------CONSTRUCTOR--------------------------------------------------------------------------
 
     public TaskRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-//--------------------------------TASK METHODS--------------------------------------------------------------------------
-
-    //dummy method to get a subproject DELETE LATER===============================================================================
-
-    public class SubRowMapper implements RowMapper<SubProject> {
-        @Override
-        public SubProject mapRow(ResultSet rs, int rowNum) throws SQLException {
-            int id = rs.getInt("sub_id");
-            String name = rs.getString("sub_name");
-            String desc = rs.getString("sub_desc");
-            LocalDate deadline = rs.getDate("sub_deadLine").toLocalDate();
-            int projectID = rs.getInt("project_id");
-
-
-            return new SubProject(id, name, desc, deadline, projectID);
-        }
-    }
-
-    public SubProject getSubdummy(int sub_id) {
-        try {
-            String sql = "SELECT sP.sub_id, sP.sub_name, sP.sub_desc, sP.sub_deadLine " +
-                    "FROM SubProjects sP WHERE sP.sub_id = ? ";
-            return jdbcTemplate.queryForObject(sql, subRowMapper, sub_id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("Subproject not found with id: " + sub_id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while retrieving subproject.", e);
-        }
     }
 
 //============================================TASK METHODS==============================================================
