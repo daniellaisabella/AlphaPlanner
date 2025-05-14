@@ -4,9 +4,7 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
-import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.service.LabelService;
-import org.example.alphaplanner.service.SubProjectService;
 import org.example.alphaplanner.service.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -27,12 +25,10 @@ public class TaskController {
 
     private final LabelService labelService;
     private final TaskService taskService;
-    private final SubProjectService subProjectService;
 
-    public TaskController(LabelService labelService, TaskService taskService, SubProjectService subProjectService) {
+    public TaskController(LabelService labelService, TaskService taskService) {
         this.labelService = labelService;
         this.taskService = taskService;
-        this.subProjectService = subProjectService;
     }
 
     //------------------------HELPER METHOD TO CHECK IF USER IS LOGGED IN------------------------------------
@@ -46,7 +42,6 @@ public class TaskController {
 
     @GetMapping("/createTask")
     public String createTask(Model model, int sub_id, HttpSession session) {
-        SubProject subProject = subProjectService.getSubProject(sub_id);
         model.addAttribute("sub_id", sub_id);
         List<Label> labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
