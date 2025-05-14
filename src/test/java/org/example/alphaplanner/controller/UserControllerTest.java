@@ -149,4 +149,6 @@ public class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin2"));
     }
+
+
 }

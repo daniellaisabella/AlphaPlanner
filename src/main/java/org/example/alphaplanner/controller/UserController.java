@@ -1,5 +1,4 @@
 package org.example.alphaplanner.controller;
-
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.service.UserService;
@@ -96,7 +95,7 @@ public class UserController {
     public String saveUser(@ModelAttribute User user, Model model){
         if(userService.checkForDup(user.getEmail())){
             model.addAttribute("duplicate", true);
-            return "/createUser";
+            return "createUser";
         }else{
             userService.saveUser(user);
             return user.getRole().equals("employee") ? "redirect:/admin2" : "redirect:/admin1";
