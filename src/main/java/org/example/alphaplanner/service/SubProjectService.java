@@ -1,6 +1,7 @@
 package org.example.alphaplanner.service;
 
 import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.repository.SubProjectRepository;
 import org.example.alphaplanner.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,18 @@ public class SubProjectService {
     {
 
         SubProject subProject = getSubProject(id);
+        List<Task> tasks = taskRepository.showAllTasksFromSub(id);
+        boolean isFullyDone =true;
+        for (Task task : tasks)
+        {
+            System.out.println(task.getTaskStatus());
+            if (!task.getTaskStatus()) {
+                isFullyDone = false;
+                break;
+            }
+        }
+        System.out.println("end results "+isFullyDone);
+        subProject.setSubProjectStatus(isFullyDone);
         subProject.setSubEstimatedHours(taskRepository.getSumEstimatedHours(id));
         subProject.setSubDedicatedHours(taskRepository.getSumDedicatedHours(id));
         updateSubProject(subProject);

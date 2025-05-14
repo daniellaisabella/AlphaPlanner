@@ -19,7 +19,7 @@ public class Task {
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
 
     // to retrieve from sql
-    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, int subId){
+    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, int subId, boolean taskStatus){
         this.taskId=taskId;
         this.taskName=taskName;
         this.taskDesc = taskDesc;
@@ -29,6 +29,7 @@ public class Task {
         this.taskDedicatedHours = 0;
         this.taskEstimatedHours = taskEstimatedHours;
         this.labels = "";
+        this.taskStatus = taskStatus;
     }
 
     // To create new task
