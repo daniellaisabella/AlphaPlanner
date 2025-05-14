@@ -32,6 +32,7 @@ public class UserRepository {
         String sql = "SELECT * FROM USERS WHERE USER_ID = ?";
         try {
             User user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
+            assert user != null;
             user.setSkills(getUserSKills(userId));
             return user;
         } catch (DataAccessException d) {
@@ -42,7 +43,9 @@ public class UserRepository {
     public int getUserId(User user) {
         String sql = "SELECT USER_ID FROM USERS WHERE EMAIL = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, Integer.class, user.getEmail());
+            Integer i = jdbcTemplate.queryForObject(sql, Integer.class, user.getEmail());
+            assert i!=null;
+            return i;
         } catch (DataAccessException d) {
             throw new RuntimeException("Error getting user_id ", d);
         }
@@ -86,7 +89,8 @@ public class UserRepository {
 
         try {
             jdbcTemplate.update(insertUserSql, user.getName(), user.getEmail(), user.getRole(), user.getPassword());
-            int userId = jdbcTemplate.queryForObject(getUserIdSql, Integer.class, user.getEmail());
+            Integer userId = jdbcTemplate.queryForObject(getUserIdSql, Integer.class, user.getEmail());
+            assert(userId != null);
             saveSkills(user, userId);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Fejl ved oprettelse af bruger" + e);
@@ -103,7 +107,8 @@ public class UserRepository {
                          VALUES(?, ?)
                     """;
                 try {
-                    int skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                    Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                    assert (skillId != null);
                     jdbcTemplate.update(insertUserSkill, userId, skillId);
                 } catch (DataIntegrityViolationException e) {
                     throw new IllegalArgumentException("Fejl ved oprettelse af skills" + e);
@@ -210,7 +215,8 @@ public class UserRepository {
                          VALUES(?, ?)
                     """;
             try {
-                int skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                assert (skillId != null);
                 jdbcTemplate.update(insertUserSkill, user.getUserId(), skillId);
             } catch (DataIntegrityViolationException e) {
                 throw new IllegalArgumentException("Fejl ved opdatering af skills (indsæt)" + e);
