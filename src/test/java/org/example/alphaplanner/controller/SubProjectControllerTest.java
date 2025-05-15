@@ -32,6 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -90,16 +91,22 @@ class SubProjectControllerTest {
 
 @Test
     void testEdit() throws Exception {
-        mockMvc.perform(post("subprojects/edit"))
+    mockMvc.perform(post("/subprojects/edit")
+                    .session(session)
+                    .param("subId", "1")  // Tidligere: "id"
+                    .param("subProjectName", "UI Design")  // Tidligere: "title"
+                    .param("subProjectDesc", "Design af brugergrænseflade")  // Tidligere: "description"
+                    .param("subProjectDeadline", "2024-12-31")  // Tidligere: "deadline"
+                    .param("status", "false")
+                    .param("estimatedTime", "10.0")
+                    .param("progress", "100.0")
+                    .param("projectId", "1")
+                    .header("referer", "/previousPage"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/previousPage"));
 }
 
-    @PostMapping("/edit")
-    private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
-        if (isloggedIn(session)) return "redirect:";
-        subProjectService.updateSubProject(freshSubProject);
-        String referer = request.getHeader("referer");
-        return "redirect:" + referer;
-    }
+
 
 }
 
