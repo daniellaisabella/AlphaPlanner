@@ -1,6 +1,8 @@
 package org.example.alphaplanner.service;
 
 import org.example.alphaplanner.models.Project;
+import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.ProjectRepository;
 import org.example.alphaplanner.repository.SubProjectRepository;
@@ -42,6 +44,16 @@ public class ProjectService {
     public void updateHours(int id)
     {
         Project project = projectRepository.getProject(id);
+        List<SubProject> subProjects = subProjectRepository.getSubProjectAttachedToProject(id);
+        boolean isFullyDone =true;
+        for (SubProject subProject : subProjects)
+        {
+            if (!subProject.getSubProjectStatus()) {
+                isFullyDone = false;
+                break;
+            }
+        }
+        project.setProjectStatus(isFullyDone);
         project.setEstimatedHours(subProjectRepository.getSumEstimatedHours(id));
         project.setDedicatedHours(subProjectRepository.getSumDedicatedHours(id));
         updateProject(project);

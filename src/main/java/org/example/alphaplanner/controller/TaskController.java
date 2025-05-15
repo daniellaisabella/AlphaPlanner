@@ -82,7 +82,7 @@ public class TaskController {
                            HttpSession session) {
 
         System.out.println(">>> Received updateTask POST request <<<");
-
+        System.out.println(status);
         if (isLoggedIn(session)) {
             taskService.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
             return "redirect:" + request.getHeader("referer");
