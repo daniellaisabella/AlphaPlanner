@@ -207,22 +207,33 @@ public class UserRepository {
         } catch (DataIntegrityViolationException d) {
             throw new IllegalArgumentException("Fejl ved opdatering af skills (slet)" + d);
         }
+        // removes placeholder
+        if (user.getSkills() != null) {
+            List<String> cleanedSkills = new ArrayList<>();
 
-        for (String s : user.getSkills()) {
-            String getSkillIdSql = "SELECT SKILL_ID FROM SKILLS WHERE SKILL_NAME = ?";
-            String insertUserSkill = """
+            for (String skill : user.getSkills()) {
+                if (!"__none__".equals(skill)) {
+                    cleanedSkills.add(skill);
+                }
+            }
+            user.setSkills(cleanedSkills);
+
+            if (user.getSkills() != null) {
+                for (String s : user.getSkills()) {
+                    String getSkillIdSql = "SELECT SKILL_ID FROM SKILLS WHERE SKILL_NAME = ?";
+                    String insertUserSkill = """
                          INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
                          VALUES(?, ?)
                     """;
-            try {
-                Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
-                assert (skillId != null);
-                jdbcTemplate.update(insertUserSkill, user.getUserId(), skillId);
-            } catch (DataIntegrityViolationException e) {
-                throw new IllegalArgumentException("Fejl ved opdatering af skills (indsæt)" + e);
+                    try {
+                        Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
+                        assert (skillId != null);
+                        jdbcTemplate.update(insertUserSkill, user.getUserId(), skillId);
+                    } catch (DataIntegrityViolationException e) {
+                        throw new IllegalArgumentException("Fejl ved opdatering af skills (indsæt)" + e);
+                    }
+                }
             }
         }
-    }
-
-
+}
 }
