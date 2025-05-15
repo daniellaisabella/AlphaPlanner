@@ -24,9 +24,10 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
 
+    private UserService userService;
     private User user;
+
     private MockHttpSession session;
 
     @BeforeEach
@@ -112,7 +113,7 @@ public class UserControllerTest {
                         .param("email", "alice@alpha.com")
                         .param("role", "admin"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/createUser"))
+                .andExpect(view().name("createUser"))
                 .andExpect(model().attributeExists("duplicate"));
     }
 

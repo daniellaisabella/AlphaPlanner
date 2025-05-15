@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/SubProjects")
+@RequestMapping("/subprojects")
 public class SubProjectController {
 
     private final LabelService labelService;
@@ -33,18 +33,17 @@ public class SubProjectController {
         return (session.getAttribute("userId") == null);
     }
 
-    @GetMapping("")
-    private String projectPage(HttpSession session, Model model) {
+    @GetMapping("/showsub")
+    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
         if (isloggedIn(session)) return "redirect:";
-        int userID = (int) session.getAttribute("userId");
-        boolean authority = userService.getUserRole(userID).equals("project manager");
-        List<SubProject> subProjects = subProjectService.getSubProjects(userID);
-        model.addAttribute("freshSubProject", new SubProject());
-        model.addAttribute("projects", subProjects);
-        model.addAttribute("role", authority);
+        SubProject subProject = subProjectService.getSubProject(subId);
+        model.addAttribute("sub", subProject);
+        List<Task> tasks = taskService.showAllTasksFromSub(subId);
+        model.addAttribute("tasks", tasks);
+        String labels = labelService.getLabelsInString(labelService.getAllLabels());
+        model.addAttribute("labels", labels);
         return "subProject";
     }
-
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
@@ -72,16 +71,6 @@ public class SubProjectController {
 
     }
 
-    @GetMapping("/showSub")
-    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
-        if (isloggedIn(session)) return "redirect:";
-        SubProject subProject = subProjectService.getSubProject(subId);
-        model.addAttribute("sub", subProject);
-        List<Task> tasks = taskService.showAllTasksFromSub(subId);
-        model.addAttribute("tasks", tasks);
-        String labels = labelService.getLabelsInString(labelService.getAllLabels());
-        model.addAttribute("labels", labels);
-        return "subProject";
-    }
+
 
 }

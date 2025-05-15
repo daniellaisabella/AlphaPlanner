@@ -1,6 +1,4 @@
 package org.example.alphaplanner.controller;
-
-
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.models.SubProject;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
-
 
     private final LabelService labelService;
     private final TaskService taskService;
