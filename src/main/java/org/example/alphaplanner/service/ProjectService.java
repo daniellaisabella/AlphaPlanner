@@ -82,7 +82,9 @@ public class ProjectService {
     }
 
     public void assignUserToProject(UserToProjectDto newJunction) {
-        projectRepository.assignUser(newJunction);
+        if (Objects.equals(userRepository.getUserRole(newJunction.getUserId()), "employee")) {
+            projectRepository.assignUser(newJunction);
+        }
     }
 
     public void unassignUserFromProject(UserToProjectDto oldJunction)

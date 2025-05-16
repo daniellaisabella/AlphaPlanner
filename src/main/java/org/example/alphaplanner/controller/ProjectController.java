@@ -53,7 +53,6 @@ public class ProjectController {
     @PostMapping("/edit")
     private String edit(HttpSession session, @ModelAttribute Project freshProject) {
         if (isloggedIn(session)) return "redirect:";
-        System.out.println(freshProject.getId());
         projectService.updateProject(freshProject);
         return "redirect:/projects";
     }
@@ -98,14 +97,12 @@ public class ProjectController {
     @GetMapping("/projectAssignees")
     private String projectAssignees(HttpSession session, Model model, @RequestParam int projectId) {
         if (isloggedIn(session)) return "redirect:";
+        session.setAttribute("project", projectId);
         Project parentProject = projectService.getProject(projectId);
         List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
         List<User> availableUsers = userService.getEmployeesNotAssignedToProject(assignedUsers);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
-        UserToProjectDto dto = new UserToProjectDto();
-        dto.setProjectId(projectId);
         model.addAttribute("projectId", projectId);
-        model.addAttribute("newJunction", dto);
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("role", authority);
         model.addAttribute("availableUsers", availableUsers);
@@ -114,10 +111,10 @@ public class ProjectController {
     }
 
     @PostMapping("assignEmployee")
-    private String assignEmployee(HttpSession session, HttpServletRequest request, @ModelAttribute UserToProjectDto newJunction) {
+    private String assignEmployee(HttpSession session, HttpServletRequest request, @RequestParam("employeeId") int employeeId) {
+        UserToProjectDto newJunction = new UserToProjectDto(employeeId, (Integer) session.getAttribute("projectId"));
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
             return "redirect:";
-
         projectService.assignUserToProject(newJunction);
 
         String referer = request.getHeader("referer");
@@ -125,7 +122,8 @@ public class ProjectController {
     }
 
     @PostMapping("unAssignEmployee")
-    private String unAssignEmployee(HttpServletRequest request, HttpSession session, @ModelAttribute UserToProjectDto newJunction){
+    private String unAssignEmployee(HttpServletRequest request, HttpSession session, @RequestParam("employeeId") int employeeId){
+        UserToProjectDto newJunction = new UserToProjectDto(employeeId, (Integer) session.getAttribute("projectId"));
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
             return "redirect:";
 
