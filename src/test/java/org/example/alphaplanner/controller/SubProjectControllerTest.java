@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Task;
-import org.example.alphaplanner.service.LabelService;
-import org.example.alphaplanner.service.SubProjectService;
-import org.example.alphaplanner.service.TaskService;
-import org.example.alphaplanner.service.UserService;
+import org.example.alphaplanner.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +48,8 @@ class SubProjectControllerTest {
     private UserService userService;
     @MockitoBean
     private MockHttpSession session;
-
+    @MockitoBean
+    private AuthorizationService authorizationService;
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
@@ -72,7 +70,7 @@ class SubProjectControllerTest {
         when(subProjectService.getSubProject(1)).thenReturn(sub);
         when(taskService.showAllTasksFromSub(1)).thenReturn(List.of());
         when(labelService.getLabelsInString(any())).thenReturn("Label1, Label2"); // Return mock labels
-
+        when(authorizationService.authProjectManager(anyInt(), anyInt())).thenReturn(true);
     }
 
 
@@ -138,13 +136,6 @@ class SubProjectControllerTest {
         mockMvc.perform(post("/subprojects/delete")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
-                        .param("subProjectName", "UI Design")
-                        .param("subProjectDesc", "Design af brugergrænseflade")
-                        .param("subProjectDeadline", "2024-12-31")
-                        .param("status", "false")
-                        .param("estimatedTime", "10.0")
-                        .param("progress", "100.0")
-                        .param("projectId", "1")
                         .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
                 .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
                 .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
