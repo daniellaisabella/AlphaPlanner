@@ -114,11 +114,10 @@ public class ProjectController {
     }
 
     @PostMapping("assignEmployee")
-    private String assignEmployee(HttpSession session, HttpServletRequest request, @ModelAttribute UserToProjectDto newJunction, @ModelAttribute int chosenEmployee) {
+    private String assignEmployee(HttpSession session, HttpServletRequest request, @ModelAttribute UserToProjectDto newJunction) {
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
             return "redirect:";
 
-        newJunction.setUserId(chosenEmployee);
         projectService.assignUserToProject(newJunction);
 
         String referer = request.getHeader("referer");
@@ -126,8 +125,8 @@ public class ProjectController {
     }
 
     @PostMapping("unAssignEmployee")
-    private String unAssignEmployee(HttpServletRequest request, HttpSession session, @ModelAttribute UserToProjectDto newJunction, @RequestParam("userId") int junctionUser){
-        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), junctionUser))
+    private String unAssignEmployee(HttpServletRequest request, HttpSession session, @ModelAttribute UserToProjectDto newJunction){
+        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
             return "redirect:";
 
         projectService.unassignUserFromProject(newJunction);
