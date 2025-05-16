@@ -30,7 +30,7 @@ public class SubProjectController {
     }
 
     private boolean isloggedIn(HttpSession session) {
-        return (session.getAttribute("userId") != null);
+        return (session.getAttribute("userId") == null);
     }
 
     @GetMapping("/showsub")
