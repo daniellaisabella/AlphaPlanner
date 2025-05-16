@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/SubProjects")
+@RequestMapping("/subprojects")
 public class SubProjectController {
 
     private final LabelService labelService;
@@ -29,25 +29,24 @@ public class SubProjectController {
         this.authorizationService = authorizationService;
     }
 
-    private boolean isloggedIn(HttpSession session) {
+    private boolean isNotLoggedIn(HttpSession session) {
         return (session.getAttribute("userId") == null);
     }
 
-    @GetMapping("")
-    private String projectPage(HttpSession session, Model model) {
-        if (isloggedIn(session)) return "redirect:";
-        int userID = (int) session.getAttribute("userId");
-        boolean authority = userService.getUserRole(userID).equals("project manager");
-        List<SubProject> subProjects = subProjectService.getSubProjects(userID);
-        model.addAttribute("freshSubProject", new SubProject());
-        model.addAttribute("projects", subProjects);
-        model.addAttribute("role", authority);
+    @GetMapping("/showsub")
+    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
+        if (isNotLoggedIn(session)) return "redirect:";
+        SubProject subProject = subProjectService.getSubProject(subId);
+        model.addAttribute("sub", subProject);
+        List<Task> tasks = taskService.showAllTasksFromSub(subId);
+        model.addAttribute("tasks", tasks);
+        String labels = labelService.getLabelsInString(labelService.getAllLabels());
+        model.addAttribute("labels", labels);
         return "subProject";
     }
-
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotLoggedIn(session)) return "redirect:";
         freshSubProject.setProjectId((Integer) session.getAttribute("projectId"));
         subProjectService.updateSubProject(freshSubProject);
 
@@ -57,7 +56,7 @@ public class SubProjectController {
 
     @PostMapping("/add")
     private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotLoggedIn(session)) return "redirect:";
         System.out.println(freshSubProject.getProjectId());
         subProjectService.newSubProject(freshSubProject);
         String referer = request.getHeader("referer");
@@ -65,7 +64,7 @@ public class SubProjectController {
 
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId) {
         int pId = subProjectService.getSubProject(subId).getProjectId();
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), pId)) return "redirect:";
@@ -75,16 +74,6 @@ public class SubProjectController {
 
     }
 
-    @GetMapping("/showSub")
-    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
-        if (isloggedIn(session)) return "redirect:";
-        SubProject subProject = subProjectService.getSubProject(subId);
-        model.addAttribute("sub", subProject);
-        List<Task> tasks = taskService.showAllTasksFromSub(subId);
-        model.addAttribute("tasks", tasks);
-        String labels = labelService.getLabelsInString(labelService.getAllLabels());
-        model.addAttribute("labels", labels);
-        return "subProject";
-    }
+
 
 }
