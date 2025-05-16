@@ -80,13 +80,13 @@ class SubProjectControllerTest {
     @Test
     void testShowSub() throws Exception {
         mockMvc.perform(get("/subprojects/showsub") //Mocker en HTTP GET request til controllerens endpoint
-                        .param("subId", "1")
-                        .session(session))
-                .andExpect(status().isOk())
-                .andExpect(view().name("subProject"))
-                .andExpect(model().attributeExists("sub"))
+                        .param("subId", "1") //simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
+                        .session(session)) //tilføjer en mocket session, for at tjekke status
+                .andExpect(status().isOk()) //forventer en logget bruger
+                .andExpect(view().name("subProject")) //forventer view HTML "subproject"
+                .andExpect(model().attributeExists("sub")) //forventer følgende attributter som Model har (subProject objekt)
                 .andExpect(model().attributeExists("tasks"))
-                .andExpect(model().attribute("labels", notNullValue()))
+                .andExpect(model().attribute("labels", notNullValue())) //forventer at labels ikke er null og ikke er en tom String
                 .andExpect(model().attribute("labels", not(emptyString())));
     }
 
@@ -106,7 +106,22 @@ class SubProjectControllerTest {
                 .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
                 .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
     }
-
+ @Test
+    void testAdd() throws Exception{
+     mockMvc.perform(post("/subprojects/add")
+             .session(session)//Mocker en HTTP POST request til Controllerens endpoint
+                     .param("subId", "1") //Simulerer følgende form felter, som i HTML form
+                     .param("subProjectName", "UI Design")
+                     .param("subProjectDesc", "Design af brugergrænseflade")
+                     .param("subProjectDeadline", "2024-12-31")
+                     .param("status", "false")
+                     .param("estimatedTime", "10.0")
+                     .param("progress", "100.0")
+                     .param("projectId", "1")
+                     .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
+             .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
+             .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
+ }
 
 }
 
