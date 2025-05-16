@@ -54,6 +54,8 @@ class SubProjectControllerTest {
     void setUp() {
         session = new MockHttpSession();
         session.setAttribute("userId", 1);
+        session.setAttribute("projectId", 1);
+
 
         SubProject sub = new SubProject(
                 1,
@@ -72,7 +74,15 @@ class SubProjectControllerTest {
         when(labelService.getLabelsInString(any())).thenReturn("Label1, Label2"); // Return mock labels
         when(authorizationService.authProjectManager(anyInt(), anyInt())).thenReturn(true);
     }
-
+    @Test
+    void testShowSub_NotLoggedIn() throws Exception {
+        MockHttpSession emptySession = new MockHttpSession(); // uden userId sat
+        mockMvc.perform(get("/subprojects/showsub")
+                        .param("subId", "1")
+                        .session(emptySession))
+                .andExpect(status().is3xxRedirection())  // redirect expected
+                .andExpect(redirectedUrl("")); // redirect til rod
+    }
 
     @Test
     void testShowSub() throws Exception {

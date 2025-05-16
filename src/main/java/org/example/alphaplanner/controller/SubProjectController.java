@@ -29,13 +29,13 @@ public class SubProjectController {
         this.authorizationService = authorizationService;
     }
 
-    private boolean isloggedIn(HttpSession session) {
+    private boolean isNotLoggedIn(HttpSession session) {
         return (session.getAttribute("userId") == null);
     }
 
     @GetMapping("/showsub")
     public String showSub(HttpSession session, Model model, @RequestParam int subId) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotLoggedIn(session)) return "redirect:";
         SubProject subProject = subProjectService.getSubProject(subId);
         model.addAttribute("sub", subProject);
         List<Task> tasks = taskService.showAllTasksFromSub(subId);
@@ -46,7 +46,7 @@ public class SubProjectController {
     }
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotLoggedIn(session)) return "redirect:";
         freshSubProject.setProjectId((Integer) session.getAttribute("projectId"));
         subProjectService.updateSubProject(freshSubProject);
 
@@ -56,7 +56,7 @@ public class SubProjectController {
 
     @PostMapping("/add")
     private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotLoggedIn(session)) return "redirect:";
         System.out.println(freshSubProject.getProjectId());
         subProjectService.newSubProject(freshSubProject);
         String referer = request.getHeader("referer");
