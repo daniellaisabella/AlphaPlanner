@@ -29,8 +29,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.text.IsEmptyString.emptyString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -88,6 +87,12 @@ class SubProjectControllerTest {
                 .andExpect(model().attributeExists("tasks"))
                 .andExpect(model().attribute("labels", notNullValue())) //forventer at labels ikke er null og ikke er en tom String
                 .andExpect(model().attribute("labels", not(emptyString())));
+
+//Berkræfter at service metoder bliver kaldt
+        verify(subProjectService, times(1)).getSubProject(1);
+        verify(taskService, times(1)).showAllTasksFromSub(1);
+        verify(labelService, times(1)).getAllLabels();
+        verify(labelService, times(1)).getLabelsInString(any());
     }
 
     @Test
@@ -105,23 +110,48 @@ class SubProjectControllerTest {
                         .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
                 .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
                 .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
+        verify(subProjectService, times(1)).updateSubProject(any(SubProject.class));
+
+
     }
- @Test
-    void testAdd() throws Exception{
-     mockMvc.perform(post("/subprojects/add")
-             .session(session)//Mocker en HTTP POST request til Controllerens endpoint
-                     .param("subId", "1") //Simulerer følgende form felter, som i HTML form
-                     .param("subProjectName", "UI Design")
-                     .param("subProjectDesc", "Design af brugergrænseflade")
-                     .param("subProjectDeadline", "2024-12-31")
-                     .param("status", "false")
-                     .param("estimatedTime", "10.0")
-                     .param("progress", "100.0")
-                     .param("projectId", "1")
-                     .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
-             .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
-             .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
- }
+
+    @Test
+    void testAdd() throws Exception {
+        mockMvc.perform(post("/subprojects/add")
+                        .session(session)//Mocker en HTTP POST request til Controllerens endpoint
+                        .param("subId", "1") //Simulerer følgende form felter, som i HTML form
+                        .param("subProjectName", "UI Design")
+                        .param("subProjectDesc", "Design af brugergrænseflade")
+                        .param("subProjectDeadline", "2024-12-31")
+                        .param("status", "false")
+                        .param("estimatedTime", "10.0")
+                        .param("progress", "100.0")
+                        .param("projectId", "1")
+                        .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
+                .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
+                .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
+        verify(subProjectService, times(1)).newSubProject(any(SubProject.class));
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        mockMvc.perform(post("/subprojects/delete")
+                        .session(session)//Mocker en HTTP POST request til Controllerens endpoint
+                        .param("subId", "1") //Simulerer følgende form felter, som i HTML form
+                        .param("subProjectName", "UI Design")
+                        .param("subProjectDesc", "Design af brugergrænseflade")
+                        .param("subProjectDeadline", "2024-12-31")
+                        .param("status", "false")
+                        .param("estimatedTime", "10.0")
+                        .param("progress", "100.0")
+                        .param("projectId", "1")
+                        .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
+                .andExpect(status().is3xxRedirection()) //forventer at brugeren bliver redirected
+                .andExpect(redirectedUrl("/")); //forventer at brugeren bliver redirected til ("/")
+
+        verify(subProjectService, times(1)).deleteSubProject(1);
+
+    }
 
 }
 
