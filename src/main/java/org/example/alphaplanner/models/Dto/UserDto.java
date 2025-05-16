@@ -1,4 +1,4 @@
-package org.example.alphaplanner.models;
+package org.example.alphaplanner.models.Dto;
 
 public class UserDto {
     private int id;

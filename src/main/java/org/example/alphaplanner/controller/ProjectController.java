@@ -1,8 +1,11 @@
 package org.example.alphaplanner.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.service.AuthorizationService;
 import org.example.alphaplanner.service.ProjectService;
 import org.example.alphaplanner.service.SubProjectService;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,13 +33,13 @@ public class ProjectController {
         this.subProjectService = subProjectService;
         this.authorizationService = authorizationService;
     }
-    private boolean isloggedIn(HttpSession session)
-    {
+
+    private boolean isloggedIn(HttpSession session) {
         return (session.getAttribute("userId") == null);
     }
 
     @GetMapping("")
-    private String projectPage(HttpSession session, Model model) {
+    private String usersProjectsPage(HttpSession session, Model model) {
         if (isloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
         boolean authority = userService.getUserRole(userID).equals("project manager");
@@ -43,7 +47,7 @@ public class ProjectController {
         model.addAttribute("freshProject", new Project());
         model.addAttribute("projects", projects);
         model.addAttribute("role", authority);
-        return !userService.getUserRole(session.getAttribute("userId")).equals("admin") ? "pm-page" : "redirect:/admin1";
+        return !userService.getUserRole(session.getAttribute("userId")).equals("admin") ? "project-overview" : "redirect:/admin1";
     }
 
     @PostMapping("/edit")
@@ -64,7 +68,7 @@ public class ProjectController {
     }
 
     @GetMapping("/delete")
-    private String deleteProject(HttpSession session, @RequestParam int id){
+    private String deleteProject(HttpSession session, @RequestParam int id) {
         int userId = (int) session.getAttribute("userId");
         if (!authorizationService.authProjectManager(userId, id)) return "redirect:";
         projectService.deleteProject(id);
@@ -73,23 +77,63 @@ public class ProjectController {
     }
 
     @GetMapping("/projectOverview")
-    private String projectOverview(HttpSession session, Model model, @RequestParam int id)
-    {
+    private String projectOverview(HttpSession session, Model model, @RequestParam int projectId) {
 
         if (isloggedIn(session)) return "redirect:";
-        session.setAttribute("projectId", id);
+        session.setAttribute("projectId", projectId);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
-        Project parentProject = projectService.getProject(id);
+        Project parentProject = projectService.getProject(projectId);
         SubProject freshSubProject = new SubProject();
-        freshSubProject.setProjectId(id);
-        List<SubProject> subProjects = subProjectService.getSubProjects(id);
+        freshSubProject.setProjectId(projectId);
+        List<SubProject> subProjects = subProjectService.getSubProjects(projectId);
         model.addAttribute("role", authority);
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("freshSubProject", freshSubProject);
         model.addAttribute("subProjects", subProjects);
-        model.addAttribute("projectId", id);
+        model.addAttribute("projectId", projectId);
 
-        return "project-overview";
+        return "project";
+    }
+
+    @GetMapping("/projectAssignees")
+    private String projectAssignees(HttpSession session, Model model, @RequestParam int projectId) {
+        if (isloggedIn(session)) return "redirect:";
+        Project parentProject = projectService.getProject(projectId);
+        List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
+        List<User> availableUsers = userService.getEmployeesNotAssignedToProject(assignedUsers);
+        boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
+        UserToProjectDto dto = new UserToProjectDto();
+        dto.setProjectId(projectId);
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("newJunction", dto);
+        model.addAttribute("projectName", parentProject.getProjectName());
+        model.addAttribute("role", authority);
+        model.addAttribute("availableUsers", availableUsers);
+        model.addAttribute("assignedUsers", assignedUsers);
+        return "project-assignees";
+    }
+
+    @PostMapping("assignEmployee")
+    private String assignEmployee(HttpSession session, HttpServletRequest request, @ModelAttribute UserToProjectDto newJunction, @ModelAttribute int chosenEmployee) {
+        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
+            return "redirect:";
+
+        newJunction.setUserId(chosenEmployee);
+        projectService.assignUserToProject(newJunction);
+
+        String referer = request.getHeader("referer");
+        return "redirect:" + referer;
+    }
+
+    @PostMapping("unAssignEmployee")
+    private String unAssignEmployee(HttpServletRequest request, HttpSession session, @ModelAttribute UserToProjectDto newJunction, @RequestParam("userId") int junctionUser){
+        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), junctionUser))
+            return "redirect:";
+
+        projectService.unassignUserFromProject(newJunction);
+
+        String referer = request.getHeader("referer");
+        return "redirect:" + referer;
     }
 
 

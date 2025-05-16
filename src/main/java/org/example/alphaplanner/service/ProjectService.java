@@ -1,11 +1,13 @@
 package org.example.alphaplanner.service;
 
+import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.ProjectRepository;
 import org.example.alphaplanner.repository.SubProjectRepository;
+import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +18,15 @@ public class ProjectService {
 
     private final UserService userService;
     private final SubProjectRepository subProjectRepository;
+    private final UserRepository userRepository;
     ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository projectRepository, UserService userService, SubProjectRepository subProjectRepository)
+    public ProjectService(ProjectRepository projectRepository, UserService userService, SubProjectRepository subProjectRepository, UserRepository userRepository)
     {
         this.projectRepository = projectRepository;
         this.userService = userService;
         this.subProjectRepository = subProjectRepository;
+        this.userRepository = userRepository;
     }
 
     public Project getProject(int id) {
@@ -73,6 +77,16 @@ public class ProjectService {
     }
 
 
+    public List<User> getUsersByProjectId(int id) {
+        return userRepository.getUsersByProjectId(id);
+    }
 
+    public void assignUserToProject(UserToProjectDto newJunction) {
+        projectRepository.assignUser(newJunction);
+    }
 
+    public void unassignUserFromProject(UserToProjectDto oldJunction)
+    {
+        projectRepository.UnassignUser(oldJunction);
+    }
 }

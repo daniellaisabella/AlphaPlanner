@@ -1,6 +1,6 @@
 package org.example.alphaplanner.service;
 
-import org.example.alphaplanner.models.UserDto;
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 

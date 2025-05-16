@@ -72,7 +72,6 @@ public class SubProjectController {
         subProjectService.deleteSubProject(subId);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
-
     }
 
     @GetMapping("/showSub")

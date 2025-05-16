@@ -1,5 +1,6 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.rowmappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
@@ -236,4 +237,14 @@ public class UserRepository {
             }
         }
 }
+
+    public List<User> getUsersByProjectId(int projectId) {
+        String query = """
+                SELECT u.*
+                FROM users u
+                JOIN users_projects up ON u.user_id = up.user_id
+                WHERE up.project_id = ?
+                """;
+        return jdbcTemplate.query(query, new UserRowMapper(), projectId);
+    }
 }
