@@ -1,12 +1,10 @@
 package org.example.alphaplanner.repository;
 
-import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.SubProjectRowMApper;
+import org.example.alphaplanner.repository.rowmappers.SubProjectRowMApper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -56,5 +54,31 @@ public class SubProjectRepository {
                 SELECT * FROM subprojects WHERE project_id = ?
                 """;
         return jdbcTemplate.query(query, rowMapper, id);
+    }
+
+    public int getSumDedicatedHours(int projectID)
+    {
+        String query = """
+                SELECT SUM(sub_dedicatedHours) FROM subprojects WHERE project_id = ?;
+                """;
+        try {
+            return jdbcTemplate.queryForObject(query, Integer.class, projectID);
+        } catch (NullPointerException e)
+        {
+            return 0;
+        }
+    }
+
+    public int getSumEstimatedHours(int projectID)
+    {
+        String query = """
+                SELECT SUM(sub_timeEstimate) FROM subprojects WHERE project_id = ?;
+                """;
+        try {
+            return jdbcTemplate.queryForObject(query, Integer.class, projectID);
+        } catch (NullPointerException e)
+        {
+            return 0;
+        }
     }
 }

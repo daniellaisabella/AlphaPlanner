@@ -58,7 +58,7 @@
             >
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
-            <a style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
+            <a onclick="return confirm('Er du sikker på du vil slette dette projekt')" style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
         </td>
     <tr>
         <td>
@@ -75,7 +75,7 @@
         <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
 
-    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container">
+    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container" >
 
         <div class="form-row">
             <label for="newProjectName">Project Name:</label>
@@ -92,16 +92,6 @@
             <label for="newProjectDeadline" th:field="*{projectDeadline}"></label><input type="date"
                                                                                          id="newProjectDeadline"/>
         </div>
-
-        <div class="form-row">
-            <label for="newEstimatedHours">Estimated Hours:</label>
-            <input type="number" id="newEstimatedHours" th:field="*{estimatedHours}"/>
-        </div>
-
-        <div class="form-row">
-            <label for="newDedicatedHours">Dedicated Hours:</label>
-            <input type="number" id="newDedicatedHours" th:field="*{dedicatedHours}"/>
-        </div>
         <div>
             <button type="submit">Save</button>
         </div>
@@ -112,9 +102,12 @@
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Rediger Projekt</b>
-        <a onclick="closeModal();" class="close-button">Luk</A>
+        <a onclick="
+            if(confirm('Hvis du trykker ok vil dine ændringer ikke blive gemt')){
+            closeModal();
+        } " class="close-button">Luk</A>
     </div>
-    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container">
+    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{id}"/>
         </label>
@@ -133,16 +126,6 @@
             <label for="projectDeadline">Project Deadline:</label>
             <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
         </div>
-
-        <div class="form-row">
-            <label for="estimatedHours">Estimated Hours:</label>
-            <input type="number" id="estimatedHours" th:field="*{estimatedHours}"/>
-        </div>
-
-        <div class="form-row">
-            <label for="dedicatedHours">Dedicated Hours:</label>
-            <input type="number" id="dedicatedHours" th:field="*{dedicatedHours}"/>
-        </div>
         <div>
             <button type="submit">Save</button>
         </div>
@@ -158,19 +141,13 @@
     function openModal(link) {
         // Get values from data- attributes
         const id = link.getAttribute("data-id");
-        const name = link.getAttribute("data-name");
-        const desc = link.getAttribute("data-desc");
-        const deadline = link.getAttribute("data-deadline");
-        const estimated = link.getAttribute("data-estimated");
-        const dedicated = link.getAttribute("data-dedicated");
 
         // Set values in modal form
         document.getElementById("id").value = id;
-        document.getElementById("projectName").value = name;
-        document.getElementById("projectDesc").value = desc;
-        document.getElementById("projectDeadline").value = deadline;
-        document.getElementById("estimatedHours").value = estimated;
-        document.getElementById("dedicatedHours").value = dedicated;
+        document.getElementById("projectName").value = link.getAttribute("data-name");
+        document.getElementById("projectDesc").value = link.getAttribute("data-desc");
+        document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
+
 
         // Optional: add hidden input for project ID
         let hidden = document.getElementById("projectId");

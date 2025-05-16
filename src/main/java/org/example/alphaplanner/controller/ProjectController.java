@@ -77,7 +77,7 @@ public class ProjectController {
     {
 
         if (isloggedIn(session)) return "redirect:";
-
+        session.setAttribute("projectId", id);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
         Project parentProject = projectService.getProject(id);
         SubProject freshSubProject = new SubProject();

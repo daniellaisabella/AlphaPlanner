@@ -47,7 +47,9 @@ public class SubProjectController {
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isloggedIn(session)) return "redirect:";
+        freshSubProject.setProjectId((Integer) session.getAttribute("projectId"));
         subProjectService.updateSubProject(freshSubProject);
+
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
     }
