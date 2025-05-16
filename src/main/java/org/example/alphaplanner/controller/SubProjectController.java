@@ -3,10 +3,8 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,14 @@ public class SubProjectController {
     private final TaskService taskService;
     private final SubProjectService subProjectService;
     private final UserService userService;
+    private final AuthorizationService authorizationService;
 
-    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService) {
+    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService, AuthorizationService authorizationService) {
         this.labelService = labelService;
         this.taskService = taskService;
         this.subProjectService = subProjectService;
         this.userService = userService;
+        this.authorizationService = authorizationService;
     }
 
     private boolean isloggedIn(HttpSession session) {
@@ -66,7 +66,8 @@ public class SubProjectController {
 
     @PostMapping("/delete")
     private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId) {
-        if (isloggedIn(session)) return "redirect:";
+        int pId = subProjectService.getSubProject(subId).getProjectId();
+        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), pId)) return "redirect:";
         subProjectService.deleteSubProject(subId);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;

@@ -7,15 +7,12 @@ import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -23,43 +20,10 @@ public class TaskRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    //DUMMY REMOVE LATER
-    private final SubRowMapper subRowMapper = new SubRowMapper();
-
 //---------------------------------CONSTRUCTOR--------------------------------------------------------------------------
 
     public TaskRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-//--------------------------------TASK METHODS--------------------------------------------------------------------------
-
-    //dummy method to get a subproject DELETE LATER===============================================================================
-
-    public class SubRowMapper implements RowMapper<SubProject> {
-        @Override
-        public SubProject mapRow(ResultSet rs, int rowNum) throws SQLException {
-            int id = rs.getInt("sub_id");
-            String name = rs.getString("sub_name");
-            String desc = rs.getString("sub_desc");
-            LocalDate deadline = rs.getDate("sub_deadLine").toLocalDate();
-            int projectID = rs.getInt("project_id");
-
-
-            return new SubProject(id, name, desc, deadline, projectID);
-        }
-    }
-
-    public SubProject getSubdummy(int sub_id) {
-        try {
-            String sql = "SELECT sP.sub_id, sP.sub_name, sP.sub_desc, sP.sub_deadLine " +
-                    "FROM SubProjects sP WHERE sP.sub_id = ? ";
-            return jdbcTemplate.queryForObject(sql, subRowMapper, sub_id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("Subproject not found with id: " + sub_id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while retrieving subproject.", e);
-        }
     }
 
 //============================================TASK METHODS==============================================================
@@ -104,7 +68,7 @@ public class TaskRepository {
             jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0, false);
 
             String getTaskId = "SELECT t.task_id FROM Tasks t WHERE task_name = ? AND task_desc = ?";
-            int task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
+            Integer task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
 
             String labelSql = "INSERT INTO tasks_labels (label_id, task_id) VALUES (?, ?)";
             for (Integer l : labels_id) {
@@ -138,12 +102,8 @@ public class TaskRepository {
         String query = """
                 SELECT SUM(tasks.task_dedicatedHours) FROM tasks WHERE tasks.sub_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, subId);
-        } catch (NullPointerException e)
-        {
-         return 0;
-        }
+            Integer i = jdbcTemplate.queryForObject(query, Integer.class, subId);
+        return Objects.requireNonNullElse(i, 0);
     }
 
     public int getSumEstimatedHours(int subId)
@@ -151,12 +111,8 @@ public class TaskRepository {
         String query = """
                 SELECT SUM(tasks.task_timeEstimate) FROM tasks WHERE tasks.sub_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, subId);
-        } catch (NullPointerException e)
-        {
-            return 0;
-        }
+        Integer i = jdbcTemplate.queryForObject(query, Integer.class, subId);
+        return Objects.requireNonNullElse(i, 0);
     }
 
 //======================================LABEL METHODS===================================================================
@@ -219,13 +175,14 @@ public class TaskRepository {
 
             for (Integer l : labels) {
                 try {
-                    int labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+                    Integer labelId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, l);
+                    assert (labelId != null);
                     jdbcTemplate.update(sql, task_id, labelId);
                 } catch (EmptyResultDataAccessException ex) {
                     throw new IllegalArgumentException("Label not found: " + l);
                 }
             }
-        } catch (DataAccessException e) {
+        } catch (AssertionError e) {
             throw new IllegalStateException("Database error while adding labels to the task.", e);
         }
     }
@@ -294,4 +251,6 @@ public class TaskRepository {
             throw new IllegalStateException("Database error while removing assignee from task.", e);
         }
     }
+
+
 }

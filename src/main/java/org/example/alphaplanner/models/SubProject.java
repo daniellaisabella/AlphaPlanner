@@ -1,7 +1,5 @@
 package org.example.alphaplanner.models;
 
-import org.yaml.snakeyaml.events.Event;
-
 import java.time.LocalDate;
 
 public class SubProject {

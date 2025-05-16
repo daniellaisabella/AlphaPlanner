@@ -61,12 +61,10 @@ public class SubProjectRepository {
         String query = """
                 SELECT SUM(sub_dedicatedHours) FROM subprojects WHERE project_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, projectID);
-        } catch (NullPointerException e)
-        {
+        Integer i = jdbcTemplate.queryForObject(query, Integer.class, projectID);
+        if(i == null){
             return 0;
-        }
+        }return i;
     }
 
     public int getSumEstimatedHours(int projectID)
@@ -74,11 +72,9 @@ public class SubProjectRepository {
         String query = """
                 SELECT SUM(sub_timeEstimate) FROM subprojects WHERE project_id = ?;
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, projectID);
-        } catch (NullPointerException e)
-        {
+        Integer i = jdbcTemplate.queryForObject(query, Integer.class, projectID);
+        if(i == null){
             return 0;
-        }
+        }return i;
     }
 }
