@@ -47,10 +47,8 @@
             </ul>
         </td>
         <td>
-            <form th:action="@{/projects/unAssignEmployee(employeeId=${employee.userId})}" method="post" th:object="${newJunction}"
+            <form th:action="@{/projects/unAssignEmployee(employeeId=${employee.userId})}" method="post"
                   onsubmit="return confirm('Er du sikker på du vil fjerne denne ansatte fra projektet');">
-                <input type="hidden" th:field="*{userId}" th:value="${employee.userId}">
-                <input type="hidden" th:field="${newJunction.projectId}">
                 <button type="submit" style="color: indianred;  margin-left: 40px;">X</button>
             </form>
         </td>
