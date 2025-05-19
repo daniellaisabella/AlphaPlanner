@@ -20,192 +20,196 @@
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 </div>
-    <div class="centerX" th:text="${projectName}"></div>
-    <div class="space">
-        <a href="/projects" class="btn-link">Tilbage</a>
-        <a th:href="@{/projects/projectOverview(projectId=${projectId})}" class="active">Underprojekter</a>
-        <a th:href="@{/projects/projectAssignees(projectId=${projectId})}">Arbejdere</a>
-    </div>
+<div class="centerX" th:text="${projectName}"></div>
+<div class="space">
+    <a href="/projects" class="btn-link">Tilbage</a>
+    <a th:href="@{/projects/projectOverview(projectId=${projectId})}" class="active">Underprojekter</a>
+    <a th:href="@{/projects/projectAssignees(projectId=${projectId})}">Arbejdere</a>
+</div>
 
-    <table>
-        <thead>
-        <tr>
-            <th><b>&#10004;</b></th>
-            <th><b>Navn</b></th>
-            <th><b>Beskrivelse</b></th>
-            <th><b>Forfald</b></th>
-            <th><b>Estimerede timer</b></th>
-            <th><b>Dedikerede timer</b></th>
-        </tr>
-        </thead>
-        <tbody>
+<table>
+    <thead>
+    <tr>
+        <th><b>&#10004;</b></th>
+        <th><b>Navn</b></th>
+        <th><b>Beskrivelse</b></th>
+        <th><b>Forfald</b></th>
+        <th><b>Estimerede timer</b></th>
+        <th><b>Dedikerede timer</b></th>
+    </tr>
+    </thead>
+    <tbody>
 
-        <tr th:each="subProject : ${subProjects}">
-            <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
-            <td>
-                <a th:text="${subProject.subProjectName}"
-                   th:href="@{/subProjects/showSub(subId=${subProject.subId})}"></a>
-            </td>
-            <td th:text="${subProject.getSubProjectDesc()}"></td>
-            <td th:text="${subProject.getSubProjectDeadline()}"></td>
-            <td th:text="${subProject.getSubEstimatedHours()}"></td>
-            <td th:text="${subProject.getSubDedicatedHours()}"></td>
-            <td th:if="${role}">
-                <a style="color: indianred"
-                   onclick="openModal(this)"
-                   th:attr="data-id=${subProject.subId},
+    <tr th:each="subProject : ${subProjects}">
+        <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
+        <td>
+            <a th:text="${subProject.subProjectName}"
+               th:href="@{/subProjects/showSub(subId=${subProject.subId})}"></a>
+        </td>
+        <td th:text="${subProject.getSubProjectDesc()}"></td>
+        <td th:text="${subProject.getSubProjectDeadline()}"></td>
+        <td th:text="${subProject.getSubEstimatedHours()}"></td>
+        <td th:text="${subProject.getSubDedicatedHours()}"></td>
+        <td th:if="${role}">
+            <a style="color: indianred"
+               onclick="openModal(this)"
+               th:attr="data-id=${subProject.subId},
            data-name=${subProject.subProjectName},
            data-desc=${subProject.subProjectDesc},
            data-deadline=${subProject.subProjectDeadline}"
-                >
-                    <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
-                </a>
-                <a style="color: indianred;  margin-left: 40px; "
-                   onclick="return confirm('Er du sikker på du vil slette dette subprojekt')"
-                   th:href="@{/subProjects/delete(subId=${subProject.subId})}" class="space"> X </a>
-            </td>
-        <tr>
-            <td>
-                <a onclick="openModalBlanc()" th:if="${role}">+</a>
-            </td>
-        </tr>
+            >
+                <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
+            </a>
+        </td>
+        <td th:if="${role}">
+            <form th:action="@{/subProjects/delete}" method="post"
+                  onsubmit="return confirm('Er du sikker på du vil slette dette subprojekt?');">
+                <input type="hidden" name="subId" th:value="${subProject.subId}"/>
+                <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;">X</button>
+            </form>
+        </td>
+    <tr>
+        <td>
+            <a onclick="openModalBlanc()" th:if="${role}">+</a>
+        </td>
+    </tr>
 
 
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
 
-    <div id="NewProject" class="modal" style="background-color:#f8f8f8">
-        <div class="modal-header">
-            <b>Tilføj subprojekt</b>
-            <a onclick="closeNewModal()" class="close-button">Close</A>
-        </div>
-        <form th:action="@{/subProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
-
-            <div class="form-row" hidden="hidden">
-                <label for="ProjectId" hidden="hidden">Project id:</label>
-                <input type="text" id="ProjectId" th:field="*{projectId}" hidden="hidden"/>
-            </div>
-
-            <div class="form-row">
-                <label for="newProjectName">Project Name:</label>
-                <input type="text" id="newProjectName" th:field="*{subProjectName}"/>
-            </div>
-
-            <div class="form-row">
-                <label for="newProjectDesc">Project Description:</label>
-                <textarea id="newProjectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
-            </div>
-
-            <div class="form-row">
-                <label for="newProjectDeadline">Project Deadline:</label>
-                <label for="newProjectDeadline" th:field="*{subProjectDeadline}"></label><input type="date"
-                                                                                                id="newProjectDeadline"/>
-            </div>
-            <div>
-                <button type="submit">Save</button>
-            </div>
-
-        </form>
+<div id="NewProject" class="modal" style="background-color:#f8f8f8">
+    <div class="modal-header">
+        <b>Tilføj subprojekt</b>
+        <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
+    <form th:action="@{/subProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
 
-    <div id="modalForm" class="modal" style="background-color:#f8f8f8">
-        <div class="modal-header">
-            <b>Rediger subProjekt</b>
-            <a onclick="
+        <div class="form-row" hidden="hidden">
+            <label for="ProjectId" hidden="hidden">Project id:</label>
+            <input type="text" id="ProjectId" th:field="*{projectId}" hidden="hidden"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newProjectName">Project Name:</label>
+            <input type="text" id="newProjectName" th:field="*{subProjectName}"/>
+        </div>
+
+        <div class="form-row">
+            <label for="newProjectDesc">Project Description:</label>
+            <textarea id="newProjectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="newProjectDeadline">Project Deadline:</label>
+            <label for="newProjectDeadline" th:field="*{subProjectDeadline}"></label><input type="date"
+                                                                                            id="newProjectDeadline"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
+</div>
+
+<div id="modalForm" class="modal" style="background-color:#f8f8f8">
+    <div class="modal-header">
+        <b>Rediger subProjekt</b>
+        <a onclick="
             if(confirm('Hvis du trykker ok vil dine ændringer ikke blive gemt')){
             closeModal();
         } " class="close-button">Close</A>
-        </div>
-        <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
-              onsubmit="return confirm('Er alle ændringer tilpas?');">
-            <label hidden="hidden">
-                <input type="number" th:field="*{subId}" id="subId"/>
-            </label>
-
-            <div class="form-row">
-                <label for="projectName">Project Name:</label>
-                <input type="text" th:field="*{subProjectName}" id="projectName"/>
-            </div>
-
-            <div class="form-row">
-                <label for="projectDesc">Project Description:</label>
-                <textarea id="projectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
-            </div>
-
-            <div class="form-row">
-                <label for="projectDeadline">Project Deadline:</label>
-                <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
-            </div>
-            <div>
-                <button type="submit">Save</button>
-            </div>
-
-        </form>
     </div>
+    <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
+          onsubmit="return confirm('Er alle ændringer tilpas?');">
+        <label hidden="hidden">
+            <input type="number" th:field="*{subId}" id="subId"/>
+        </label>
 
-    <script>
-        function openModalBlanc() {
-            document.getElementById("NewProject").classList.add("active");
+        <div class="form-row">
+            <label for="projectName">Project Name:</label>
+            <input type="text" th:field="*{subProjectName}" id="projectName"/>
+        </div>
 
-            let hidden = document.getElementById("projectId");
-            if (!hidden) {
-                hidden = document.createElement("input");
-                hidden.type = "hidden";
-                hidden.id = "projectId";
-                hidden.name = "id";
-                document.querySelector("#modalForm form").appendChild(hidden);
-            }
-            hidden.value = id;
+        <div class="form-row">
+            <label for="projectDesc">Project Description:</label>
+            <textarea id="projectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="projectDeadline">Project Deadline:</label>
+            <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    function openModalBlanc() {
+        document.getElementById("NewProject").classList.add("active");
+
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
         }
+        hidden.value = id;
+    }
 
-        function openModal(link) {
-            // Get values from data- attributes
-            const id = link.getAttribute("data-id");
+    function openModal(link) {
+        // Get values from data- attributes
+        const id = link.getAttribute("data-id");
 
-            // Set values in modal form
-            document.getElementById("subId").value = id;
-            document.getElementById("projectName").value = link.getAttribute("data-name");
-            document.getElementById("projectDesc").value = link.getAttribute("data-desc");
-            document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
+        // Set values in modal form
+        document.getElementById("subId").value = id;
+        document.getElementById("projectName").value = link.getAttribute("data-name");
+        document.getElementById("projectDesc").value = link.getAttribute("data-desc");
+        document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
 
-            // Optional: add hidden input for subProject ID
-            let hidden = document.getElementById("projectId");
-            if (!hidden) {
-                hidden = document.createElement("input");
-                hidden.type = "hidden";
-                hidden.id = "projectId";
-                hidden.name = "id";
-                document.querySelector("#modalForm form").appendChild(hidden);
-            }
-            hidden.value = id;
-
-            // Show modal
-            document.getElementById("modalForm").classList.add("active");
+        // Optional: add hidden input for subProject ID
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
         }
+        hidden.value = id;
 
-        function closeModal() {
-            // Hide modal
-            document.getElementById('modalForm').classList.remove('active');
-            // Hide overlay
-            document.getElementById('overlay').classList.remove('active');
-        }
+        // Show modal
+        document.getElementById("modalForm").classList.add("active");
+    }
 
-        function closeNewModal() {
-            // Hide modal
-            document.getElementById('NewProject').classList.remove('active');
-            // Hide overlay
-            document.getElementById('overlay').classList.remove('active');
-        }
+    function closeModal() {
+        // Hide modal
+        document.getElementById('modalForm').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
 
-        // Click outside the modal to close it
-        window.onclick = function (event) {
-            const modal = document.getElementById('modalForm');
-            if (event.target === modal || event.target === document.getElementById('overlay')) {
-                closeModal();
-            }
+    function closeNewModal() {
+        // Hide modal
+        document.getElementById('NewProject').classList.remove('active');
+        // Hide overlay
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Click outside the modal to close it
+    window.onclick = function (event) {
+        const modal = document.getElementById('modalForm');
+        if (event.target === modal || event.target === document.getElementById('overlay')) {
+            closeModal();
         }
-    </script>
+    }
+</script>
 </body>
 
 </html>

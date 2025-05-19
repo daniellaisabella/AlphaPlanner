@@ -58,7 +58,13 @@
             >
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
-            <a onclick="return confirm('Er du sikker på du vil slette dette projekt')" style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(projectId=${project.id})}" class="space"> X </a>
+        </td>
+        <td th:if="${role}">
+            <form th:action="@{/projects/delete}" method="post"
+                  onsubmit="return confirm('Er du sikker på du vil slette dette subprojekt?');">
+                <input type="hidden" name="subId" th:value="${project.id}"/>
+                <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;">X</button>
+            </form>
         </td>
     <tr>
         <td>

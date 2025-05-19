@@ -66,7 +66,7 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     private String deleteProject(HttpSession session, @RequestParam int id) {
         int userId = (int) session.getAttribute("userId");
         if (!authorizationService.authProjectManager(userId, id)) return "redirect:";

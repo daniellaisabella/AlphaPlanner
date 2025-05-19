@@ -143,7 +143,7 @@ class SubProjectControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(get("/subProjects/delete")
+        mockMvc.perform(post("/subProjects/delete")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra
