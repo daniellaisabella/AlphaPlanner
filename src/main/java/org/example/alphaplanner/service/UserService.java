@@ -13,12 +13,10 @@ import java.util.Objects;
 @Service
 public class UserService {
 
-    private final ProjectRepository projectRepository;
     public UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, ProjectRepository projectRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.projectRepository = projectRepository;
     }
 
     public boolean login(User user) {
@@ -66,21 +64,9 @@ public class UserService {
         userRepository.updateUser(user);
     }
 
-    public List<User> getEmployeesNotAssignedToProject(List<User> usersAssignedToProject)
+    public List<User> getEmployeesNotAssignedToProject(int projectId)
         {
-        List<User> availableUsers = userRepository.getUsersByRole("employee");
-        List<User> finalUser = new ArrayList<>();
-            System.out.println(availableUsers);
-        for (User u : availableUsers) {
-            for (User u2 : usersAssignedToProject) {
-                if (u2.getUserId() == u.getUserId()) {
-                    availableUsers.remove(u);
-                    break;
-                }
-            }
-        }
-
-
+        List<User> availableUsers = userRepository.getAvailableUsers(projectId);
         return availableUsers;
     }
 

@@ -94,30 +94,43 @@ public class ProjectController {
         return "project";
     }
 
+
     @GetMapping("/projectAssignees")
     private String projectAssignees(HttpSession session, Model model, @RequestParam int projectId) {
         if (isloggedIn(session)) return "redirect:";
         session.setAttribute("project", projectId);
         Project parentProject = projectService.getProject(projectId);
         List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
-        List<User> availableUsers = userService.getEmployeesNotAssignedToProject(assignedUsers);
+        List<User> availableUsers = userService.getEmployeesNotAssignedToProject(projectId);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
         model.addAttribute("projectId", projectId);
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("role", authority);
         model.addAttribute("availableUsers", availableUsers);
+        for (User u : availableUsers)
+        {
+            System.out.println(u.getName());
+        }
         model.addAttribute("assignedUsers", assignedUsers);
         return "project-assignees";
     }
 
     @PostMapping("assignEmployee")
     private String assignEmployee(HttpSession session, HttpServletRequest request, @RequestParam("employeeId") int employeeId) {
-        UserToProjectDto newJunction = new UserToProjectDto(employeeId, (Integer) session.getAttribute("projectId"));
+        int projectId = (int) session.getAttribute("projectId");
+        String referer = request.getHeader("referer");
+        UserToProjectDto newJunction = new UserToProjectDto(employeeId,projectId);
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
             return "redirect:";
+
+        List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
+
+        for (User user : assignedUsers) {
+            if (user.getUserId() == newJunction.getUserId())
+                return "redirect:" + referer;
+        }
         projectService.assignUserToProject(newJunction);
 
-        String referer = request.getHeader("referer");
         return "redirect:" + referer;
     }
 

@@ -253,4 +253,30 @@ public class UserRepository {
 
         return userList;
     }
+
+    public List<User> getAvailableUsers(int id) {
+        String query = """
+            SELECT\s
+              u.user_id,
+              u.user_name,
+              u.email,
+              u.role,
+              u.password
+            FROM users u
+            LEFT JOIN users_projects up ON u.user_id = up.user_id
+            WHERE NOT EXISTS (
+              SELECT 1
+              FROM users_projects
+              WHERE project_id = ?
+              AND user_id = u.user_id
+            ) AND u.role != ? AND u.role != ?
+           \s""";
+        List<User> userList = jdbcTemplate.query(query, new UserRowMapper(), id, "project manager", "admin");
+        for (User u : userList) {
+            List<String> skills = getUserSKills(u.getUserId());
+            u.setSkills(skills);
+        }
+
+        return userList;
+    }
 }

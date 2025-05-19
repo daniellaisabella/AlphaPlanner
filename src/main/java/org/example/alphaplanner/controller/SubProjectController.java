@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/subprojects")
+@RequestMapping("/subProjects")
 public class SubProjectController {
 
     private final LabelService labelService;
@@ -33,7 +33,7 @@ public class SubProjectController {
         return (session.getAttribute("userId") == null);
     }
 
-    @GetMapping("/showsub")
+    @GetMapping("/showSub")
     public String showSub(HttpSession session, Model model, @RequestParam int subId) {
         if (isNotLoggedIn(session)) return "redirect:";
         SubProject subProject = subProjectService.getSubProject(subId);

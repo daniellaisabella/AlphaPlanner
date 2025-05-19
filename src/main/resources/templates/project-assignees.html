@@ -50,20 +50,20 @@
             <form th:action="@{/projects/unAssignEmployee}" method="post"
                   onsubmit="return confirm('Er du sikker på du vil fjerne denne ansatte fra projektet');">
                 <input type="hidden" name="employeeId" th:value="${employee.userId}">
-                <button type="submit" style="color: indianred; margin-left: 40px;">X</button>
+                <button type="submit" style="color: indianred; margin-left: 40px;" th:if="${role}">X</button>
             </form>
         </td>
     </tr>
     <tr>
         <td>
-            <form action="/projects/assignEmployee" method="post">
+            <form action="/projects/assignEmployee" method="post" th:if="${role}">
                 <label>Tilføj arbejder
-                    <input list="availableEmployees" name="employeeId" id="finalUserId">
-                </label>
-                <datalist id="availableEmployees">
+                <select  name="employeeId" id="finalUserId">
                     <option th:each="employee : ${availableUsers}" th:value="${employee.userId}"
                             th:text="${employee.name}"></option>
-                </datalist>
+                </select>
+                </label>
+
                 <br>
                 <button type="submit">Tilføj</button>
             </form>
