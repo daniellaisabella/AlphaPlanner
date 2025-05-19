@@ -28,14 +28,14 @@ public class SubProjectRepository {
         jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getProjectId());
     }
 
-    public void DeleteProjectSQL(int id) {
+    public void deleteProjectSQL(int id) {
         String query = """
                 DELETE FROM subprojects WHERE sub_id = ?;
                 """;
         jdbcTemplate.update(query, id);
     }
 
-    public void UpdateSQL(SubProject project) {
+    public void updateSQL(SubProject project) {
         String query = """
                         UPDATE subprojects
                         SET sub_name = ?, sub_desc = ?, sub_deadline = ?, sub_status = ?, sub_dedicatedHours = ?, sub_timeEstimate = ?, project_id = ?
