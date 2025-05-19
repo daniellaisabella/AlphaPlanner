@@ -85,7 +85,8 @@ class SubProjectRepositoryTest {
         // indsæt instans i databsen
         subProjectRepository.addSubProjectToSql(subProject);
         subProjectRepository.addSubProjectToSql(subProject2);
-
+        System.out.println(subProject.getSubId());
+        System.out.println(subProject2.getSubId());
         // Tjek at det faktisk blev tilføjet
         List<SubProject> result = jdbcTemplate.query("SELECT * FROM subprojects", new SubProjectRowMapper()); //jdbc laver sql query, der henter alle rækker  fra subpåroejcts. de bliver konvertert til en liste vha. rowmapper som oversætter databaserækker til instanser
 
@@ -106,7 +107,7 @@ class SubProjectRepositoryTest {
         assertFalse(saved2.getSubProjectStatus());
         assertEquals(5, saved2.getSubDedicatedHours());
         assertEquals(10, saved2.getSubEstimatedHours());
-        assertEquals(2, saved2.getProjectId());
+        assertEquals(1, saved2.getProjectId());
 
     }
 

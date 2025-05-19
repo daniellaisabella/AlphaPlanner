@@ -3,8 +3,12 @@ package org.example.alphaplanner.repository;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.repository.rowmappers.SubProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -25,7 +29,25 @@ public class SubProjectRepository {
                 INSERT INTO subprojects(sub_name, sub_desc, sub_deadline, sub_status, sub_dedicatedHours, sub_timeEstimate, project_id)
                 values(?,?,?,?,?,?,?)
                 """;
-        jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getProjectId());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, project.getSubProjectName());
+            ps.setString(2, project.getSubProjectDesc());
+            ps.setDate(3, java.sql.Date.valueOf(project.getSubProjectDeadline()));
+            ps.setBoolean(4, project.getSubProjectStatus());
+            ps.setDouble(5, project.getSubDedicatedHours());
+            ps.setDouble(6, project.getSubEstimatedHours());
+            ps.setInt(7, project.getProjectId());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            project.setSubId(key.intValue());
+        }
     }
 
     public void deleteProjectSQL(int id) {
