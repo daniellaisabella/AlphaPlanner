@@ -35,17 +35,7 @@ public class SubProjectController {
         return (session.getAttribute("userId") == null);
     }
 
-    @GetMapping("/showsub")
-    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
-        if (isNotLoggedIn(session)) return "redirect:";
-        SubProject subProject = subProjectService.getSubProject(subId);
-        model.addAttribute("sub", subProject);
-        List<Task> tasks = taskService.showAllTasksFromSub(subId);
-        model.addAttribute("tasks", tasks);
-        String labels = labelService.getLabelsInString(labelService.getAllLabels());
-        model.addAttribute("labels", labels);
-        return "subProject";
-    }
+
 
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
