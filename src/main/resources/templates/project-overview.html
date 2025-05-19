@@ -40,7 +40,7 @@
     <tr th:each="subProject : ${subProjects}">
         <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
         <td>
-            <a th:text="${subProject.subProjectName}" th:href="@{/SubProjects/showSub(subId=${subProject.subId})}"></a>
+            <a th:text="${subProject.subProjectName}" th:href="@{/subprojects/showSub(subId=${subProject.subId})}"></a>
         </td>
         <td th:text="${subProject.getSubProjectDesc()}"></td>
         <td th:text="${subProject.getSubProjectDeadline()}"></td>
@@ -58,7 +58,7 @@
             </a>
             <a style="color: indianred;  margin-left: 40px; "
                onclick="return confirm('Er du sikker på du vil slette dette subprojekt')"
-               th:href="@{/SubProjects/delete(subId=${subProject.subId})}" class="space"> X </a>
+               th:href="@{/subprojects/delete(subId=${subProject.subId})}" class="space"> X </a>
         </td>
     <tr>
         <td>
@@ -76,7 +76,7 @@
         <b>Tilføj subprojekt</b>
         <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
-    <form th:action="@{/SubProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container" >
+    <form th:action="@{/subprojects/add}" th:object="${freshSubProject}" method="post" class="modal-form container" >
 
         <div class="form-row" hidden="hidden">
             <label for="ProjectId" hidden="hidden">Project id:</label>
@@ -112,7 +112,7 @@
             closeModal();
         } " class="close-button">Close</A>
     </div>
-    <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
+    <form th:action="@{/subprojects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{subId}" id="subId"/>
         </label>

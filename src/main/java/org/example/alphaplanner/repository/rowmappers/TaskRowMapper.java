@@ -18,7 +18,8 @@ public class TaskRowMapper implements RowMapper<Task> {
         double estimatedHours = rs.getDouble("task_timeEstimate");
         double dedicatedHours = rs.getDouble("task_dedicatedHours");
         int subId = rs.getInt("sub_id");
+        boolean status = rs.getBoolean("task_status");
 
-        return new Task(id, name, desc, deadLine, estimatedHours, dedicatedHours, subId);
+        return new Task(id, name, desc, deadLine, estimatedHours, dedicatedHours, subId, status);
     }
 }

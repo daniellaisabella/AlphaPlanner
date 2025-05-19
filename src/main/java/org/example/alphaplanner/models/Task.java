@@ -21,7 +21,7 @@ public class Task {
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
 
     // to retrieve from sql
-    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, double taskDedicatedHours, int subId){
+    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, double taskDedicatedHours, int subId, boolean taskStatus){
         this.taskId=taskId;
         this.taskName=taskName;
         this.taskDesc = taskDesc;

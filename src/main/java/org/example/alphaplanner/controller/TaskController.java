@@ -28,13 +28,11 @@ public class TaskController {
 
     private final LabelService labelService;
     private final TaskService taskService;
-    private final SubProjectService subProjectService;
     private final AssigneesService assigneesService;
 
-    public TaskController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, AssigneesService assigneesService) {
+    public TaskController(LabelService labelService, TaskService taskService, AssigneesService assigneesService) {
         this.labelService = labelService;
         this.taskService = taskService;
-        this.subProjectService = subProjectService;
         this.assigneesService = assigneesService;
     }
 
@@ -70,7 +68,7 @@ public class TaskController {
                 labelsResult = labels_id;
             }
             taskService.createTask(subId, name, desc, deadline, estimatedHours, labelsResult);
-            return "redirect:/SubProjects/showSub?subId=" + subId   ;
+            return "redirect:/subprojects/showSub?subId=" + subId   ;
         } else {
             return "redirect:/login";
         }
