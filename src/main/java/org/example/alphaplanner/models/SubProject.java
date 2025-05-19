@@ -105,7 +105,7 @@ public class SubProject {
         this.subEstimatedHours = subEstimatedHours;
     }
 
-    public Object getprojectID() {
+    public Object getprojectid() {
         return projectId;
     }
     public void setProjectId(int id) {

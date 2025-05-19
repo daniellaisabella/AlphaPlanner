@@ -78,7 +78,7 @@ class SubProjectControllerTest {
     void testShowSub_NotLoggedIn() throws Exception {
         MockHttpSession emptySession = new MockHttpSession(); // uden userId sat
         mockMvc.perform(get("/subprojects/showsub")
-                        .param("subId", "1")
+                        .param("subId", "1")//simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(emptySession))
                 .andExpect(status().is3xxRedirection())  // redirect expected
                 .andExpect(redirectedUrl("")); // redirect til rod
