@@ -20,7 +20,7 @@ public class SubProjectRepository {
 
     public void addSubProjectToSql(SubProject project) {
 
-        System.out.println("Indsætter subDedicatedHours: " + project.getSubDedicatedHours());
+
         String query = """
                 INSERT INTO subprojects(sub_name, sub_desc, sub_deadline, sub_status, sub_dedicatedHours, sub_timeEstimate, project_id)
                 values(?,?,?,?,?,?,?)

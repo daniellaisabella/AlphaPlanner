@@ -72,7 +72,7 @@ class SubProjectRepositoryTest {
     //Test om metoden tilføjer et subprojekt til databsen
     @Test
     void testAddSubProjectToSql() {
-        System.out.println("Test SubDedicatedHours før indsættelse: " + subProject.getSubDedicatedHours());
+
         // indsæt instans i databsen
         subProjectRepository.addSubProjectToSql(subProject);
 
