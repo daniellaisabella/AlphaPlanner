@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class SubProjectRowMApper implements RowMapper<SubProject> {
+public class SubProjectRowMapper implements RowMapper<SubProject> {
     @Override
     public SubProject mapRow(ResultSet rs, int rowNum) throws SQLException {
         int subID = rs.getInt("sub_id");

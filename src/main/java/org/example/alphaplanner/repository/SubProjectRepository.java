@@ -1,7 +1,7 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.repository.rowmappers.SubProjectRowMApper;
+import org.example.alphaplanner.repository.rowmappers.SubProjectRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class SubProjectRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SubProjectRowMApper rowMapper = new SubProjectRowMApper();
+    private final SubProjectRowMapper rowMapper = new SubProjectRowMapper();
 
     public SubProjectRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -19,11 +19,13 @@ public class SubProjectRepository {
 
 
     public void addSubProjectToSql(SubProject project) {
+
+        System.out.println("Indsætter subDedicatedHours: " + project.getSubDedicatedHours());
         String query = """
                 INSERT INTO subprojects(sub_name, sub_desc, sub_deadline, sub_status, sub_dedicatedHours, sub_timeEstimate, project_id)
                 values(?,?,?,?,?,?,?)
                 """;
-        jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getprojectid());
+        jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getProjectId());
     }
 
     public void DeleteProjectSQL(int id) {
@@ -39,7 +41,7 @@ public class SubProjectRepository {
                         SET sub_name = ?, sub_desc = ?, sub_deadline = ?, sub_status = ?, sub_dedicatedHours = ?, sub_timeEstimate = ?, project_id = ?
                         WHERE sub_id = ?
                 """;
-        jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getprojectid(), project.getSubId());
+        jdbcTemplate.update(query, project.getSubProjectName(), project.getSubProjectDesc(), project.getSubProjectDeadline(), project.getSubProjectStatus(), project.getSubDedicatedHours(), project.getSubEstimatedHours(), project.getProjectId(), project.getSubId());
     }
 
     public SubProject getSubProject(int id) {
@@ -59,22 +61,25 @@ public class SubProjectRepository {
     public double getSumDedicatedHours(int projectID)
     {
         String query = """
-                SELECT SUM(sub_dedicatedHours) FROM subprojects WHERE project_id = ?;
-                """;
-        Integer i = jdbcTemplate.queryForObject(query, Integer.class, projectID);
-        if(i == null){
+            SELECT SUM(sub_dedicatedHours) FROM subprojects WHERE project_id = ?;
+            """;
+        Double d = jdbcTemplate.queryForObject(query, Double.class, projectID);
+        if(d == null){
             return 0;
-        }return i;
+        }
+        return d;
     }
 
     public double getSumEstimatedHours(int projectID)
     {
         String query = """
-                SELECT SUM(sub_timeEstimate) FROM subprojects WHERE project_id = ?;
-                """;
-        Integer i = jdbcTemplate.queryForObject(query, Integer.class, projectID);
-        if(i == null){
+            SELECT SUM(sub_timeEstimate) FROM subprojects WHERE project_id = ?;
+            """;
+        Double d = jdbcTemplate.queryForObject(query, Double.class, projectID);
+        if(d == null){
             return 0;
-        }return i;
+        }
+        return d;
     }
+
 }

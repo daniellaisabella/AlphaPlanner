@@ -1,7 +1,7 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.repository.rowmappers.SubProjectRowMApper;
+import org.example.alphaplanner.repository.rowmappers.SubProjectRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.nio.file.attribute.AclEntryPermission.DELETE;
-import static org.h2.util.ParserUtil.FROM;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -50,6 +48,7 @@ class SubProjectRepositoryTest {
         jdbcTemplate.update("DELETE FROM subprojects");
         jdbcTemplate.update("DELETE FROM users_projects");
 
+
         //Indsæt et projekt så databsen har et id at tilknytte subprojekt
 
         jdbcTemplate.update("""
@@ -73,11 +72,13 @@ class SubProjectRepositoryTest {
     //Test om metoden tilføjer et subprojekt til databsen
     @Test
     void testAddSubProjectToSql() {
+        System.out.println("Test SubDedicatedHours før indsættelse: " + subProject.getSubDedicatedHours());
         // indsæt instans i databsen
         subProjectRepository.addSubProjectToSql(subProject);
 
         // Tjek at det faktisk blev tilføjet
-        List<SubProject> result = jdbcTemplate.query("SELECT * FROM subprojects", new SubProjectRowMApper()); //jdbc laver sql query, der henter alle rækker  fra subpåroejcts. de bliver konvertert til en liste vha. rowmapper som oversætter databaserækker til instanser
+        List<SubProject> result = jdbcTemplate.query("SELECT * FROM subprojects", new SubProjectRowMapper()); //jdbc laver sql query, der henter alle rækker  fra subpåroejcts. de bliver konvertert til en liste vha. rowmapper som oversætter databaserækker til instanser
+        System.out.println("Database subDedicatedHours: " + result.get(0).getSubDedicatedHours());
         assertEquals(1, result.size()); //tjekker at den liste indeholder 1 instans
 
         SubProject saved = result.get(0); //henter subprojekt fra listen plads 0 og gemmer i variablen saved
