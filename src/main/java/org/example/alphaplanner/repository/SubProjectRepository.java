@@ -30,10 +30,13 @@ public class SubProjectRepository {
                 values(?,?,?,?,?,?,?)
                 """;
 
+
+        //Keyholder to hold the auto-incremented ID (the primary key) and put oin the object in Java
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        //lambda modtager connection og forbereder PreparedStatement
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);//database returns Id
             ps.setString(1, project.getSubProjectName());
             ps.setString(2, project.getSubProjectDesc());
             ps.setDate(3, java.sql.Date.valueOf(project.getSubProjectDeadline()));
@@ -44,7 +47,7 @@ public class SubProjectRepository {
             return ps;
         }, keyHolder);
 
-        Number key = keyHolder.getKey();
+        Number key = keyHolder.getKey();//Get the id via Number,
         if (key != null) {
             project.setSubId(key.intValue());
         }

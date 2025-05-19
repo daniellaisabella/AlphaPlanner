@@ -1,5 +1,6 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.repository.rowmappers.SubProjectRowMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,7 +61,7 @@ class SubProjectRepositoryTest {
 
 
         //instans af subproject
-       subProject = new SubProject();
+        subProject = new SubProject();
         subProject.setSubProjectName("Test Sub");
         subProject.setSubProjectDesc("En testbeskrivelse");
         subProject.setSubProjectDeadline(LocalDate.of(2025, 11, 30));
@@ -82,11 +84,10 @@ class SubProjectRepositoryTest {
     @Test
     void testAddSubProjectToSql() {
 
-        // indsæt instans i databsen
+        // indsæt instans i databasen
         subProjectRepository.addSubProjectToSql(subProject);
         subProjectRepository.addSubProjectToSql(subProject2);
-        System.out.println(subProject.getSubId());
-        System.out.println(subProject2.getSubId());
+
         // Tjek at det faktisk blev tilføjet
         List<SubProject> result = jdbcTemplate.query("SELECT * FROM subprojects", new SubProjectRowMapper()); //jdbc laver sql query, der henter alle rækker  fra subpåroejcts. de bliver konvertert til en liste vha. rowmapper som oversætter databaserækker til instanser
 
@@ -136,14 +137,51 @@ class SubProjectRepositoryTest {
 
     @Test
     void updateSQL() {
+        subProjectRepository.addSubProjectToSql(subProject);//insert subPÅroject to h2 in memory databse
+        subProject.setSubProjectName("Updated name");// update name af status to the test
+        subProject.setSubProjectStatus(true);
+        subProjectRepository.updateSQL(subProject);//then run updateSQL method
+
+        SubProject updatedProject = subProjectRepository.getSubProject(subProject.getSubId()); //get he instance from databse based on the id afdter update
+
+        assertEquals("Updated name", updatedProject.getSubProjectName()); //JUnit assert, testing if the expected values equals the actual values
+        assertTrue(updatedProject.getSubProjectStatus());
+
     }
 
     @Test
     void getSubProject() {
+        subProjectRepository.addSubProjectToSql(subProject);
+        SubProject testSub = subProjectRepository.getSubProject(subProject.getSubId());
+
+        assertEquals("Test Sub", testSub.getSubProjectName());
+        assertEquals("En testbeskrivelse", testSub.getSubProjectDesc());
+        assertEquals(LocalDate.of(2025, 11, 30), testSub.getSubProjectDeadline());
+        assertFalse(testSub.getSubProjectStatus());
+        assertEquals(10.5, testSub.getSubDedicatedHours());
+        assertEquals(15.0, testSub.getSubEstimatedHours());
+        assertEquals(1, testSub.getProjectId());
+
     }
 
     @Test
     void getSubProjectAttachedToProject() {
+        subProjectRepository.addSubProjectToSql(subProject);
+        subProjectRepository.addSubProjectToSql(subProject2);
+
+        List<SubProject> subProjects = subProjectRepository.getSubProjectAttachedToProject(1); // Act - run method
+
+        //Assert
+        assertNotNull(subProjects);
+        assertEquals(2,subProjects.size());
+        List<String> names = subProjects.stream() //make a String list from the objects names
+                .map(SubProject::getSubProjectName)
+                .collect(Collectors.toList()); //collects all names in a String List
+        assertTrue(names.contains(subProject.getSubProjectName()));
+        assertTrue(names.contains(subProject2.getSubProjectName()));
+
+
+
     }
 
     @Test
