@@ -60,11 +60,9 @@
                 >
                     <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
                 </a>
-                <form style="color: indianred;  margin-left: 40px;"
-                      onsubmit="return confirm('Er alle ændringer tilpas?');"
-                   th:href="@{/subProjects/delete(subId=${subProject.subId})}" class="space">
-                    <a type="submit">X</a>
-                </form>
+                <a style="color: indianred;  margin-left: 40px; "
+                   onclick="return confirm('Er du sikker på du vil slette dette subprojekt')"
+                   th:href="@{/subProjects/delete(subId=${subProject.subId})}" class="space"> X </a>
             </td>
         <tr>
             <td>
@@ -119,7 +117,7 @@
             closeModal();
         } " class="close-button">Close</A>
         </div>
-        <form th:action="@{/subProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
+        <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
               onsubmit="return confirm('Er alle ændringer tilpas?');">
             <label hidden="hidden">
                 <input type="number" th:field="*{subId}" id="subId"/>
