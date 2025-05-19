@@ -59,7 +59,7 @@ CREATE TABLE Tasks (
                        task_desc VARCHAR(100),
                        task_deadline DATE NOT NULL,
                        task_timeEstimate INT NOT NULL,
-                       task_dedicatedHours INT,
+                       task_dedicatedHours INT DEFAULT 0,
                        task_status BOOLEAN,
                        FOREIGN KEY (sub_id) REFERENCES SubProjects(sub_id) ON DELETE CASCADE
 );

@@ -18,13 +18,18 @@
         <a th:href="@{/profil}">Min Profil</a>
         <a th:href="@{/login}" class="logout-button">Log ud</a>
     </div>
-</div >
+</div>
 
-<h1 align="center" th:text="${sub.getSubProjectName()}"></h1>
+
+<div class="centerX" th:text="${sub.subProjectName}">Sub-Projekt</div>
+
+<a href="javascript:history.back()" class="btn-link">Tilbage</a>
+
+<br>
 <h2> Opgaver: </h2>
 <table class="tasks">
     <thead>
-    <tr >
+    <tr>
         <th>Status</th>
         <th>Navn</th>
         <th>forventede timer</th>
@@ -43,21 +48,21 @@
         th:data-all-labels="${labels}"
         th:data-task-labels="${task.labels}"
         th:data-task-assignees="${task.assignees}"
+        th:data-all-employees="${allEmployees}"
         onclick="openModalWithData(this)">
         <td th:text="${task.taskStatus} ? 'Færdig' : 'Ikke færdig'">Status</td>
         <td th:text="${task.taskName}">Name</td>
         <td th:text="${task.taskEstimatedHours} + ' Timer'">Estimated Hours</td>
         <td th:text="${task.taskDeadline}">Date</td>
     </tr>
+    <tr>
+        <td>
+            <a th:href="@{/tasks/createTask(subId=${sub.subId})}" class="btn-link">+</a>
+        </td>
+    </tr>
     </tbody>
 </table>
 
-<form action="/tasks/createTask" method="get">
-    <input type="hidden" name="sub_id" th:value="${sub.subId}">
-    <button class="btn-link" type="submit">Opret ny opgave</button>
-</form>
-
-<br>
 
 <!-- THIS IS FOR THE MODAL/POP-UP SO YOU CAN SEE/EDIT EXTRA INFORMATION ABOUT THE TASK -->
 <div class="modal" id="base_modal">
@@ -66,12 +71,9 @@
         <button data-close-button class="close-button">&times;</button>
     </div>
     <div class="modal-body">
-
     </div>
+    <div class="modal-footer"></div>
 </div>
-
-
-<a href="javascript:history.back()" class="btn-link">Tilbage</a>
 
 
 <div id="overlay"></div>
@@ -100,7 +102,7 @@
         const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
         const taskAssignees = row.dataset.taskAssignees ? parseLabels(row.dataset.taskAssignees) : '';
 
-
+        console.log(taskAssignees)
         console.log(taskLabels);
         // Get the modal element and overlay
         const modal = document.getElementById('base_modal');
@@ -120,7 +122,7 @@
     <p><strong>Dedikerede timer: </strong> <span id="taskDedicatedHours">${taskDedicatedhours}</span></p>
     <p>
   <strong>Etiketter:</strong>
-  <span id="taskLabels">${taskLabels}</span>
+    <span id="taskLabels" >${taskLabels}</span>
   <button class="btn-link" id="editLabelsBtn" onclick="editLabels()" >
         <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
     </button>
@@ -140,25 +142,38 @@
 
     <!-- Save Button (Initially Hidden) -->
     <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Gem ændringer</button>
+</div>
 
+`;
+        document.querySelector('.modal .modal-footer').innerHTML = `
+        </div>
 <form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
 <input type="hidden" name="task_id" value="${taskId}">
 <button class="btn-link" > Slet opgave </button>
 </form>
 </div>
-<br>
-`;
+        `;
+
 
         const labelSpan = document.getElementById("taskLabels");
         if (labelSpan) {
-            labelSpan.innerHTML = taskLabels && taskLabels.length > 0
+            labelSpan.innerHTML = (taskLabels && taskLabels.length > 0)
                 ? taskLabels
                 : "No labels assigned";
-
-            // Open the modal by adding the 'active' class
-            modal.classList.add('active');
-            overlay.classList.add('active');
         }
+
+        const assigneeSpan = document.getElementById("taskAssignees");
+        if (assigneeSpan) {
+            assigneeSpan.innerHTML = (taskAssignees && taskAssignees.length > 0)
+                ? taskAssignees
+                : "No assignees assigned";
+        }
+
+
+        // Open the modal by adding the 'active' class
+        modal.classList.add('active');
+        overlay.classList.add('active');
+
     }
 
     function enableEditing() {
@@ -230,25 +245,57 @@
     }
 
     function editAssignees() {
-        document.querySelector('.modal .modal-header .title').innerText = 'Tildel medarbejder';
+
+        const assignees = parseIdNameList(selectedRow.dataset.taskAssignees || "");
+        const allEmployees = parseIdNameList(selectedRow.dataset.allEmployees || "");
+
+        const assigneesCheckboxes = allEmployees.map(employee => {
+            const isChecked = assignees.some(sel => sel.id === employee.id);
+            return `
+        <label>
+            <input type="checkbox" name="assignees" value="${employee.id}" ${isChecked ? 'checked' : ''}>
+            ${employee.name}
+        </label><br>`;
+        }).join('');
+
+        document.querySelector('.modal .modal-header .title').innerText = 'Rediger tildelte medarbejdere';
         document.querySelector('.modal .modal-body').innerHTML = `
         <div>
-        <label>
-            <input type="checkbox"
-            name="assignees_id"
-                   id="assignees_id"
-            > A list of all employees from the project (Need to wait for xanders part)
-        </label>
-    </div>
-    <button id="saveAssignButton" onclick="saveAssigenees()">Gem</button>
-        `;
+            <div id="labelCheckboxList">
+                ${assigneesCheckboxes}
+            </div>
+        </div>
+        <div>
+            <button class="btn-link" id="saveAssignButton" onclick="saveAssignees()">Gem</button>
+
+        </div>
+
+`;
     }
 
-    function saveAssigenees() {
+    function saveAssignees() {
+        const checkboxes = document.querySelectorAll('input[name="assignees"]:checked');
+        const selectedAssigneesIds = Array.from(checkboxes).map(cb => cb.value);
 
+        const formData = new FormData();
+        formData.append("taskId", selectedRow.dataset.taskId);
+        selectedAssigneesIds.forEach(id => formData.append("assignees", id)); // send IDs
+
+        console.log("new assigned: ", selectedAssigneesIds);
+
+        fetch("/tasks/updateAssigneesFromTask", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (response.redirected) window.location.href = response.url;
+                else if (response.ok) window.location.reload();
+                else alert("Kunne ikke opdatere etiketter.");
+            })
+            .catch(console.error);
     }
 
-    function editLabels(){
+    function editLabels() {
 
         const selectedLabels = parseIdNameList(selectedRow.dataset.taskLabels || "");
         const allLabels = parseIdNameList(selectedRow.dataset.allLabels || "");
@@ -285,7 +332,7 @@
         formData.append("taskId", selectedRow.dataset.taskId);
         selectedLabelIds.forEach(id => formData.append("labels", id)); // send IDs
 
-        console.log("new tasks: ", selectedLabelIds );
+        console.log("new tasks: ", selectedLabelIds);
 
         fetch("/tasks/updateLabelsFromTask", {
             method: "POST",
@@ -304,7 +351,7 @@
 
         return dataString.split(',').map(item => {
             const [id, name] = item.split(':');
-            return { id: parseInt(id), name: name };
+            return {id: parseInt(id), name: name};
         });
     }
 

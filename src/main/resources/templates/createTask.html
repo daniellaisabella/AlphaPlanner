@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
     <link th:href="@{/modal.css}" rel="stylesheet">
     <link th:href="@{/base.css}" rel="stylesheet">
     <link th:href="@{/buttons.css}" rel="stylesheet">
@@ -19,50 +20,49 @@
     </div>
 </div>
 
-<h1 align="center">Opret en opgave</h1>
+<a href="javascript:history.back()" class="btn-link">Tilbage</a>
+
 
 <form action="/tasks/saveTask" method="post">
-    <input type="hidden" name="sub_id" th:value="${sub_id}">
+    <input type="hidden" name="subId" th:value="${subId}">
 
-    <div class="form-group">
-        <label for="name">Opgavens navn:
+    <div class="form-row">
+        <label for="name">Navn </label>
             <input type="text" maxlength="15" name="name" id="name" required placeholder="Maks 15 tegn">
-        </label>
     </div>
 
-    <div class="form-group">
-        <label for="desc">Beskrivelse:
+    <div class="form-row">
+        <label for="desc">Beskrivelse </label>
             <textarea name="desc" id="desc" cols="40" rows="5" placeholder="Skriv beskrivelsen her..."></textarea>
-        </label>
     </div>
 
-    <div class="form-group">
-    <label for="deadline">Deadline:
+    <div class="form-row">
+    <label for="deadline">Deadline </label>
         <input type="date" id="deadline" name="deadline">
-    </label>
     </div>
 
-    <div class="form-group">
-    <label for="estimatedHours"> Forventede timer:
+    <div class="form-row">
+    <label for="estimatedHours"> Forventede timer </label>
         <input type="number" name="estimatedHours" id="estimatedHours" min="0" step="0.1" required>
-    </label>
+
     </div>
-    <div class="form-group">
-    <h3>Vælg etiketter: </h3>
+    <div class="form-row">
+    <label>Vælg etiketter </label>
+        <div class="checkbox-group">
     <div th:each="label : ${labels}">
-        <label>
             <input type="checkbox"
                    name="labels_id"
                    th:value="${label.labelId}">
-            <span th:text="${label.labelName}"></span>
-        </label><br>
+            <label th:text="${label.labelName}"></label>
+        </div>
+        </div>
     </div>
+        <br>
+    <div class="form-row">
+    <button type="submit" class="btn-link">Opret Opgave</button>
     </div>
-    <button type="submit" class="btn-link">Gem Opgave</button>
 </form>
 
-
-<a class="btn-link" href="/tasks/showSub">Tilbage</a>
 
 <script>
     // Set default value to today

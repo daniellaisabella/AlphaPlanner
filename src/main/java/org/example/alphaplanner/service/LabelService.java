@@ -22,9 +22,7 @@ public class LabelService {
         taskRepository.addLabelsToTask(task_id, labels);
     }
 
-    public void removeLabelFromTask(int task_id, int label_id){
-        taskRepository.removeLabelFromTask(task_id, label_id);
-    }
+
 
     public void createLabel(String name){
         taskRepository.createLabel(name);

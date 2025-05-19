@@ -3,10 +3,8 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,14 @@ public class SubProjectController {
     private final TaskService taskService;
     private final SubProjectService subProjectService;
     private final UserService userService;
+    private final AssigneesService assigneesService;
 
-    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService) {
+    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService, AssigneesService assigneesService) {
         this.labelService = labelService;
         this.taskService = taskService;
         this.subProjectService = subProjectService;
         this.userService = userService;
+        this.assigneesService = assigneesService;
     }
 
     private boolean isloggedIn(HttpSession session) {
@@ -42,7 +42,7 @@ public class SubProjectController {
         model.addAttribute("freshSubProject", new SubProject());
         model.addAttribute("projects", subProjects);
         model.addAttribute("role", authority);
-        return "subProject";
+        return "viewTasks";
     }
 
     @PostMapping("/edit")
@@ -83,7 +83,9 @@ public class SubProjectController {
         model.addAttribute("tasks", tasks);
         String labels = labelService.getLabelsInString(labelService.getAllLabels());
         model.addAttribute("labels", labels);
-        return "subProject";
+        String allEmployeesFromProject = assigneesService.getEmployeesFromProjectInString(assigneesService.getEmployeesFromProject(subProject.getProjectId()));
+        model.addAttribute("allEmployees", allEmployeesFromProject);
+        return "viewTasks";
     }
 
 }
