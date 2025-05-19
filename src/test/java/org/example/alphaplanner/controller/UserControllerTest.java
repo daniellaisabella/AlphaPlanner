@@ -24,9 +24,10 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
 
+    private UserService userService;
     private User user;
+
     private MockHttpSession session;
 
     @BeforeEach
@@ -110,9 +111,11 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/save")
                         .param("email", "alice@alpha.com")
-                        .param("role", "admin"))
+                        .param("role", "admin")
+                        .param("name", "Alice")
+                        .param("password", "123"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/createUser"))
+                .andExpect(view().name("createUser"))
                 .andExpect(model().attributeExists("duplicate"));
     }
 
@@ -122,20 +125,34 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/save")
                         .param("email", "bob@alpha.com")
-                        .param("role", "employee"))
+                        .param("role", "employee")
+                        .param("name", "Bob")
+                        .param("password", "pass123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin2"));
     }
 
-//    @Test
-//    void testEditUser() throws Exception {
-//
-//    }
+    @Test
+    void testEditUser() throws Exception {
+        User mockUser = new User("Alice", "alice@alpha.com", "123", "admin");
+
+        Mockito.when(userService.getUserRole(1)).thenReturn("admin");
+        Mockito.when(userService.getUserById(1)).thenReturn(mockUser);
+        Mockito.when(userService.getRoles()).thenReturn(Collections.singletonList("admin"));
+        Mockito.when(userService.getSkills()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/edit/1").session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("editUser"))
+                .andExpect(model().attributeExists("user", "role", "roles", "enumSkills", "userEmail"));
+    }
 
     @Test
     void testUpdateUser() throws Exception {
         mockMvc.perform(post("/update")
                         .param("emailPrefix", "bob")
+                        .param("name", "Bob")
+                        .param("password", "secret")
                         .param("role", "employee"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin2"));
@@ -149,4 +166,6 @@ public class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin2"));
     }
+
+
 }

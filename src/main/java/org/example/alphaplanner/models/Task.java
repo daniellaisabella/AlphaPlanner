@@ -27,10 +27,10 @@ public class Task {
         this.taskDesc = taskDesc;
         this.taskDeadline = taskDeadline;
         this.subId = subId;
-        this.taskStatus = false;
         this.taskDedicatedHours = taskDedicatedHours;
         this.taskEstimatedHours = taskEstimatedHours;
         this.labels = "";
+        this.taskStatus = taskStatus;
     }
 
     // To create new task

@@ -46,8 +46,7 @@ public class ProjectRepository {
         jdbcTemplate.update(query, project.getProjectName(), project.getProjectDesc(), project.getProjectDeadline(), project.getProjectStatus(), project.getDedicatedHours(), project.getEstimatedHours(), project.getId());
     }
 
-    public Project getProject(int id)
-    {
+    public Project getProject(int id) {
         String query = """
                 SELECT * FROM projects WHERE project_id = ?
                 """;
@@ -62,8 +61,7 @@ public class ProjectRepository {
         return jdbcTemplate.query(query, rowMapper, userid);
     }
 
-    public List<Project> getProjectsAttachedToEmployee(int userid)
-    {
+    public List<Project> getProjectsAttachedToEmployee(int userid) {
         String query = """
                 SELECT p.*
                 FROM projects p
@@ -73,16 +71,15 @@ public class ProjectRepository {
         return jdbcTemplate.query(query, rowMapper, userid);
     }
 
-    public int getPm_id(int projectId)
-    {
+    public int getPm_id(int projectId) {
         String query = """
                 SELECT projects.pm_id FROM projects WHERE project_Id = ?
                 """;
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class, projectId);
-        } catch (DataAccessException d) {
-            throw new RuntimeException("Error getting user_id ", d);
+        Integer i = jdbcTemplate.queryForObject(query, Integer.class, projectId);
+        if (i != null) {
+            return i;
         }
+        return 0;
     }
 
 

@@ -19,7 +19,7 @@ public class AssigneesService {
     }
 
     public List<UserDto> getAssigneesFromTask(int task_id){
-        return getAssigneesFromTask(task_id);
+        return taskRepository.getAssigneesFromTask(task_id);
     }
 
     public String getAssigneesInString(List<UserDto> users) {
