@@ -60,9 +60,9 @@
                 >
                     <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
                 </a>
-                <a style="color: indianred;  margin-left: 40px; "
+                <form style="color: indianred;  margin-left: 40px;"
                    onclick="return confirm('Er du sikker på du vil slette dette subprojekt')"
-                   th:href="@{/subProjects/delete(subId=${subProject.subId})}" class="space"> X </a>
+                   th:href="@{/subProjects/delete(subId=${subProject.subId})}" class="space"> X </form>
             </td>
         <tr>
             <td>
