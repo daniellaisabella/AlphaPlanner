@@ -1,5 +1,7 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.repository.rowmappers.SubProjectRowMApper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.nio.file.attribute.AclEntryPermission.DELETE;
 import static org.h2.util.ParserUtil.FROM;
@@ -35,21 +38,56 @@ class SubProjectRepositoryTest {
     @Autowired
     private SubProjectRepository subProjectRepository;
 
-@BeforeEach
-void setUpdatabase(){
-    // starter databasen frisk hver gang - ryd subproject tabellen
-    jdbcTemplate.execute("DELETE FROM subprojects");
-    jdbcTemplate.execute("DELETE FROM projects");
 
-    //Indsæt et projekt
-    jdbcTemplate.update("""
-            INSERT INTO projects(project_id, project_name, project_description, project_deadline, project_status)
-            VALUES (?, ?, ?, ?, ?)
-        """, 1, "Testprojekt", "Testbeskrivelse", LocalDate.of(2025, 12, 31), false);
-}
+    private SubProject subProject;
+
+    @BeforeEach
+    void setUpdatabase() {
+        // starter databasen frisk hver gang - ryd subproject tabellen
+        jdbcTemplate.update("DELETE FROM tasks_labels");
+        jdbcTemplate.update("DELETE FROM users_tasks");
+        jdbcTemplate.update("DELETE FROM tasks");
+        jdbcTemplate.update("DELETE FROM subprojects");
+        jdbcTemplate.update("DELETE FROM users_projects");
+
+        //Indsæt et projekt så databsen har et id at tilknytte subprojekt
+
+        jdbcTemplate.update("""
+                    INSERT INTO projects(project_name, project_desc, project_deadline, project_status, project_dedicatedHours, project_timeEstimate)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, "Testprojekt", "Testbeskrivelse", LocalDate.of(2025, 12, 31), false, 100, 120);
+
+
+        //instans af subproject
+       subProject = new SubProject();
+        subProject.setSubProjectName("Test Sub");
+        subProject.setSubProjectDesc("En testbeskrivelse");
+        subProject.setSubProjectDeadline(LocalDate.of(2025, 11, 30));
+        subProject.setSubProjectStatus(false);
+        subProject.setSubDedicatedHours(10);
+        subProject.setSubEstimatedHours(15.0);
+        subProject.setProjectId(1);
+    }
+
+
     //Test om metoden tilføjer et subprojekt til databsen
     @Test
     void testAddSubProjectToSql() {
+        // indsæt instans i databsen
+        subProjectRepository.addSubProjectToSql(subProject);
+
+        // Tjek at det faktisk blev tilføjet
+        List<SubProject> result = jdbcTemplate.query("SELECT * FROM subprojects", new SubProjectRowMApper()); //jdbc laver sql query, der henter alle rækker  fra subpåroejcts. de bliver konvertert til en liste vha. rowmapper som oversætter databaserækker til instanser
+        assertEquals(1, result.size()); //tjekker at den liste indeholder 1 instans
+
+        SubProject saved = result.get(0); //henter subprojekt fra listen plads 0 og gemmer i variablen saved
+        assertEquals("Test Sub", saved.getSubProjectName()); //sikrer følgende attributter er gemt med de ønskede værdier
+        assertEquals("En testbeskrivelse", saved.getSubProjectDesc());
+        assertEquals(LocalDate.of(2025, 11, 30), saved.getSubProjectDeadline());
+        assertFalse(saved.getSubProjectStatus());
+        assertEquals(10, saved.getSubDedicatedHours());
+        assertEquals(15.0, saved.getSubEstimatedHours());
+        assertEquals(1, saved.getProjectId());
 
     }
 

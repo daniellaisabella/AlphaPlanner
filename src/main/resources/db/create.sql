@@ -45,8 +45,8 @@ CREATE TABLE SubProjects (
                              sub_desc VARCHAR(100),
                              sub_deadline DATE NOT NULL,
                              sub_status BOOLEAN,
-                             sub_dedicatedHours INT,
-                             sub_timeEstimate INT,
+                             sub_dedicatedHours DOUBLE,
+                             sub_timeEstimate DOUBLE,
                              FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE CASCADE
 );
 
