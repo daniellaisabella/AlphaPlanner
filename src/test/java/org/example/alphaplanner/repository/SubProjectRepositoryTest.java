@@ -186,9 +186,32 @@ class SubProjectRepositoryTest {
 
     @Test
     void getSumDedicatedHours() {
+
+        //Arrange
+        subProjectRepository.addSubProjectToSql(subProject);
+        subProjectRepository.addSubProjectToSql(subProject2);
+
+
+        //Act
+        double sum = subProjectRepository.getSumDedicatedHours(1);
+
+        //ASSERT
+        assertEquals(15.5,sum);
     }
 
     @Test
     void getSumEstimatedHours() {
+        //Arrange
+        subProjectRepository.addSubProjectToSql(subProject);
+        subProjectRepository.addSubProjectToSql(subProject2);
+
+
+        //Act
+        double sum = subProjectRepository.getSumEstimatedHours(1);
+
+        //ASSERT
+        assertEquals(25,sum);
+
+
     }
 }
