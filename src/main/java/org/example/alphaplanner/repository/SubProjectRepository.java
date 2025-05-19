@@ -56,7 +56,7 @@ public class SubProjectRepository {
         return jdbcTemplate.query(query, rowMapper, id);
     }
 
-    public int getSumDedicatedHours(int projectID)
+    public double getSumDedicatedHours(int projectID)
     {
         String query = """
                 SELECT SUM(sub_dedicatedHours) FROM subprojects WHERE project_id = ?;
@@ -67,7 +67,7 @@ public class SubProjectRepository {
         }return i;
     }
 
-    public int getSumEstimatedHours(int projectID)
+    public double getSumEstimatedHours(int projectID)
     {
         String query = """
                 SELECT SUM(sub_timeEstimate) FROM subprojects WHERE project_id = ?;

@@ -21,8 +21,8 @@ CREATE TABLE Projects (
                           project_desc VARCHAR(100) NOT NULL,
                           project_deadline DATE NOT NULL,
                           project_status BOOLEAN,
-                          project_dedicatedHours INT NOT NULL,
-                          project_timeEstimate INT NOT NULL,
+                          project_dedicatedHours DOUBLE NOT NULL,
+                          project_timeEstimate DOUBLE NOT NULL,
                           FOREIGN KEY (pm_id) REFERENCES Users(user_id) ON DELETE SET NULL
 );
 
@@ -58,8 +58,8 @@ CREATE TABLE Tasks (
                        task_name VARCHAR(100) NOT NULL,
                        task_desc VARCHAR(100),
                        task_deadline DATE NOT NULL,
-                       task_timeEstimate INT NOT NULL,
-                       task_dedicatedHours INT,
+                       task_timeEstimate DOUBLE NOT NULL,
+                       task_dedicatedHours DOUBLE,
                        task_status BOOLEAN,
                        FOREIGN KEY (sub_id) REFERENCES SubProjects(sub_id) ON DELETE CASCADE
 );

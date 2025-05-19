@@ -64,7 +64,7 @@ class SubProjectRepositoryTest {
         subProject.setSubProjectDesc("En testbeskrivelse");
         subProject.setSubProjectDeadline(LocalDate.of(2025, 11, 30));
         subProject.setSubProjectStatus(false);
-        subProject.setSubDedicatedHours(10);
+        subProject.setSubDedicatedHours(10.5);
         subProject.setSubEstimatedHours(15.0);
         subProject.setProjectId(1);
     }
@@ -85,7 +85,7 @@ class SubProjectRepositoryTest {
         assertEquals("En testbeskrivelse", saved.getSubProjectDesc());
         assertEquals(LocalDate.of(2025, 11, 30), saved.getSubProjectDeadline());
         assertFalse(saved.getSubProjectStatus());
-        assertEquals(10, saved.getSubDedicatedHours());
+        assertEquals(10.5, saved.getSubDedicatedHours());
         assertEquals(15.0, saved.getSubEstimatedHours());
         assertEquals(1, saved.getProjectId());
 
