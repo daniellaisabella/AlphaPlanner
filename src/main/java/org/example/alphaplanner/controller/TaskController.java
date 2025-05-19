@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +102,7 @@ public class TaskController {
                 result = labels;
             }
             labelService.addLabelsToTask(taskId, result);
-            return "redirect:" + request.getHeader("referer");
+            return "redirect:/tasks/showSub";
         } else {
             return "redirect:/login";
         }
