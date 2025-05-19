@@ -65,7 +65,7 @@ public class SubProjectController {
     }
 
     @PostMapping("/delete")
-    private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam int subId) {
+    private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam("subId") int subId) {
         int pId = subProjectService.getSubProject(subId).getProjectId();
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), pId)) return "redirect:";
         subProjectService.deleteSubProject(subId);

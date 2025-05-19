@@ -34,13 +34,13 @@ public class ProjectController {
         this.authorizationService = authorizationService;
     }
 
-    private boolean isloggedIn(HttpSession session) {
+    private boolean isNotloggedIn(HttpSession session) {
         return (session.getAttribute("userId") == null);
     }
 
     @GetMapping("")
     private String usersProjectsPage(HttpSession session, Model model) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotloggedIn(session)) return "redirect:";
         int userID = (int) session.getAttribute("userId");
         boolean authority = userService.getUserRole(userID).equals("project manager");
         List<Project> projects = projectService.getProjects(userID);
@@ -52,14 +52,14 @@ public class ProjectController {
 
     @PostMapping("/edit")
     private String edit(HttpSession session, @ModelAttribute Project freshProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotloggedIn(session)) return "redirect:";
         projectService.updateProject(freshProject);
         return "redirect:/projects";
     }
 
     @PostMapping("/add")
     private String AddProject(HttpSession session, @ModelAttribute Project freshProject) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotloggedIn(session)) return "redirect:";
         int userId = (int) session.getAttribute("userId");
         freshProject.setPm_id(userId);
         projectService.newProject(freshProject);
@@ -67,10 +67,10 @@ public class ProjectController {
     }
 
     @PostMapping("/delete")
-    private String deleteProject(HttpSession session, @RequestParam int id) {
+    private String deleteProject(HttpSession session, @RequestParam("projectId") int projectId) {
         int userId = (int) session.getAttribute("userId");
-        if (!authorizationService.authProjectManager(userId, id)) return "redirect:";
-        projectService.deleteProject(id);
+        if (!authorizationService.authProjectManager(userId, projectId)) return "redirect:";
+        projectService.deleteProject(projectId);
         return "redirect:/projects";
 
     }
@@ -78,7 +78,7 @@ public class ProjectController {
     @GetMapping("/projectOverview")
     private String projectOverview(HttpSession session, Model model, @RequestParam int projectId) {
 
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotloggedIn(session)) return "redirect:";
         session.setAttribute("projectId", projectId);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
         Project parentProject = projectService.getProject(projectId);
@@ -97,7 +97,7 @@ public class ProjectController {
 
     @GetMapping("/projectAssignees")
     private String projectAssignees(HttpSession session, Model model, @RequestParam int projectId) {
-        if (isloggedIn(session)) return "redirect:";
+        if (isNotloggedIn(session)) return "redirect:";
         session.setAttribute("project", projectId);
         Project parentProject = projectService.getProject(projectId);
         List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
