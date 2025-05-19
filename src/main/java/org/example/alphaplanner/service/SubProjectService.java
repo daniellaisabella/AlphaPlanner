@@ -22,7 +22,7 @@ public class SubProjectService {
     }
 
     public void updateSubProject(SubProject freshSubProject) {
-        subProjectRepository.UpdateSQL(freshSubProject);
+        subProjectRepository.updateSQL(freshSubProject);
     }
 
     public void newSubProject(SubProject freshSubProject) {
@@ -30,7 +30,7 @@ public class SubProjectService {
     }
 
     public void deleteSubProject(int id) {
-        subProjectRepository.DeleteProjectSQL(id);
+        subProjectRepository.deleteProjectSQL(id);
     }
 
     public List<SubProject> getSubProjects(int projectId) {
