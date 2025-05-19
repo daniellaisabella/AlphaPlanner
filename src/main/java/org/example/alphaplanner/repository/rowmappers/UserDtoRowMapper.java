@@ -1,6 +1,6 @@
 package org.example.alphaplanner.repository.rowmappers;
 
-import org.example.alphaplanner.models.UserDto;
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

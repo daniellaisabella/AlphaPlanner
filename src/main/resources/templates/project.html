@@ -19,11 +19,14 @@
         <a th:href="@{/myProfile}">Min Profil</a>
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
+</div>
+<div class="centerX" th:text="${projectName}"></div>
+<div class="space">
+    <a href="/projects" class="btn-link">Tilbage</a>
+    <a th:href="@{/projects/projectOverview(projectId=${projectId})}" class="active">Underprojekter</a>
+    <a th:href="@{/projects/projectAssignees(projectId=${projectId})}">Arbejdere</a>
+</div>
 
-</div>
-<div class="centerX">
-    Dine Projekter
-</div>
 <table>
     <thead>
     <tr>
@@ -37,60 +40,71 @@
     </thead>
     <tbody>
 
-    <tr th:each="project : ${projects}">
-        <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
+    <tr th:each="subProject : ${subProjects}">
+        <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
         <td>
-            <a th:href="@{/projects/projectOverview(id=${project.id})}" th:text="${project.projectName}"></a>
+            <a th:text="${subProject.subProjectName}"
+               th:href="@{/subProjects/showSub(subId=${subProject.subId})}"></a>
         </td>
-        <td th:text="${project.getProjectDesc()}"></td>
-        <td th:text="${project.getProjectDeadline()}"></td>
-        <td th:text="${project.getEstimatedHours()}"></td>
-        <td th:text="${project.getDedicatedHours()}"></td>
+        <td th:text="${subProject.getSubProjectDesc()}"></td>
+        <td th:text="${subProject.getSubProjectDeadline()}"></td>
+        <td th:text="${subProject.getSubEstimatedHours()}"></td>
+        <td th:text="${subProject.getSubDedicatedHours()}"></td>
         <td th:if="${role}">
             <a style="color: indianred"
-                    onclick="openModal(this)"
-                    th:attr="data-id=${project.id},
-           data-name=${project.projectName},
-           data-desc=${project.projectDesc},
-           data-deadline=${project.projectDeadline},
-           data-estimated=${project.estimatedHours},
-           data-dedicated=${project.dedicatedHours}"
+               onclick="openModal(this)"
+               th:attr="data-id=${subProject.subId},
+           data-name=${subProject.subProjectName},
+           data-desc=${subProject.subProjectDesc},
+           data-deadline=${subProject.subProjectDeadline}"
             >
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
-            <a onclick="return confirm('Er du sikker på du vil slette dette projekt')" style="color: indianred;  margin-left: 40px; " th:href="@{projects/delete(id=${project.id})}" class="space"> X </a>
+        </td>
+        <td th:if="${role}">
+            <form th:action="@{/subProjects/delete}" method="post"
+                  onsubmit="return confirm('Er du sikker på du vil slette dette subprojekt?');">
+                <input type="hidden" name="subId" th:value="${subProject.subId}"/>
+                <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;">X</button>
+            </form>
         </td>
     <tr>
         <td>
-            <a onclick="openModalBlanc() " th:if="${role}">+</a>
+            <a onclick="openModalBlanc()" th:if="${role}">+</a>
         </td>
     </tr>
+
+
     </tbody>
 </table>
 
 
 <div id="NewProject" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
-        <b>Nyt Projekt</b>
-        <a onclick="closeNewModal()" class="close-button"> Luk </A>
+        <b>Tilføj subprojekt</b>
+        <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
+    <form th:action="@{/subProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
 
-    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container" >
+        <div class="form-row" hidden="hidden">
+            <label for="ProjectId" hidden="hidden">Project id:</label>
+            <input type="text" id="ProjectId" th:field="*{projectId}" hidden="hidden"/>
+        </div>
 
         <div class="form-row">
             <label for="newProjectName">Project Name:</label>
-            <input type="text" id="newProjectName" th:field="*{projectName}"/>
+            <input type="text" id="newProjectName" th:field="*{subProjectName}"/>
         </div>
 
         <div class="form-row">
             <label for="newProjectDesc">Project Description:</label>
-            <textarea id="newProjectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
+            <textarea id="newProjectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
         </div>
 
         <div class="form-row">
             <label for="newProjectDeadline">Project Deadline:</label>
-            <label for="newProjectDeadline" th:field="*{projectDeadline}"></label><input type="date"
-                                                                                         id="newProjectDeadline"/>
+            <label for="newProjectDeadline" th:field="*{subProjectDeadline}"></label><input type="date"
+                                                                                            id="newProjectDeadline"/>
         </div>
         <div>
             <button type="submit">Save</button>
@@ -101,30 +115,31 @@
 
 <div id="modalForm" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
-        <b>Rediger Projekt</b>
+        <b>Rediger subProjekt</b>
         <a onclick="
             if(confirm('Hvis du trykker ok vil dine ændringer ikke blive gemt')){
             closeModal();
-        } " class="close-button">Luk</A>
+        } " class="close-button">Close</A>
     </div>
-    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
+    <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
+          onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
-            <input type="number" th:field="*{id}"/>
+            <input type="number" th:field="*{subId}" id="subId"/>
         </label>
 
         <div class="form-row">
             <label for="projectName">Project Name:</label>
-            <input type="text" th:field="*{projectName}" id="projectName"/>
+            <input type="text" th:field="*{subProjectName}" id="projectName"/>
         </div>
 
         <div class="form-row">
             <label for="projectDesc">Project Description:</label>
-            <textarea id="projectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
+            <textarea id="projectDesc" style="resize: none" th:field="*{subProjectDesc}"></textarea>
         </div>
 
         <div class="form-row">
             <label for="projectDeadline">Project Deadline:</label>
-            <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
+            <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
         </div>
         <div>
             <button type="submit">Save</button>
@@ -136,6 +151,16 @@
 <script>
     function openModalBlanc() {
         document.getElementById("NewProject").classList.add("active");
+
+        let hidden = document.getElementById("projectId");
+        if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.id = "projectId";
+            hidden.name = "id";
+            document.querySelector("#modalForm form").appendChild(hidden);
+        }
+        hidden.value = id;
     }
 
     function openModal(link) {
@@ -143,13 +168,12 @@
         const id = link.getAttribute("data-id");
 
         // Set values in modal form
-        document.getElementById("id").value = id;
+        document.getElementById("subId").value = id;
         document.getElementById("projectName").value = link.getAttribute("data-name");
         document.getElementById("projectDesc").value = link.getAttribute("data-desc");
         document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
 
-
-        // Optional: add hidden input for project ID
+        // Optional: add hidden input for subProject ID
         let hidden = document.getElementById("projectId");
         if (!hidden) {
             hidden = document.createElement("input");

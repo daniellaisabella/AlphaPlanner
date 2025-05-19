@@ -1,10 +1,14 @@
 package org.example.alphaplanner.service;
 
+import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.repository.ProjectRepository;
 import org.example.alphaplanner.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -59,4 +63,11 @@ public class UserService {
     public void updateUser(User user) {
         userRepository.updateUser(user);
     }
+
+    public List<User> getEmployeesNotAssignedToProject(int projectId)
+        {
+        List<User> availableUsers = userRepository.getAvailableUsers(projectId);
+        return availableUsers;
+    }
+
 }
