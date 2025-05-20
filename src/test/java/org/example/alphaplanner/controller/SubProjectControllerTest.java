@@ -77,8 +77,8 @@ class SubProjectControllerTest {
     @Test
     void testShowSub_NotLoggedIn() throws Exception {
         MockHttpSession emptySession = new MockHttpSession(); // uden userId sat
-        mockMvc.perform(get("/subprojects/showsub")
-                        .param("subId", "1")
+        mockMvc.perform(get("/subProjects/showSub")
+                        .param("subId", "1")//simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(emptySession))
                 .andExpect(status().is3xxRedirection())  // redirect expected
                 .andExpect(redirectedUrl("")); // redirect til rod
@@ -86,7 +86,7 @@ class SubProjectControllerTest {
 
     @Test
     void testShowSub() throws Exception {
-        mockMvc.perform(get("/subprojects/showsub") //Mocker en HTTP GET request til controllerens endpoint
+        mockMvc.perform(get("/subProjects/showSub") //Mocker en HTTP GET request til controllerens endpoint
                         .param("subId", "1") //simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(session)) //tilføjer en mocket session, for at tjekke status
                 .andExpect(status().isOk()) //forventer en logget bruger
@@ -105,7 +105,7 @@ class SubProjectControllerTest {
 
     @Test
     void testEdit() throws Exception {
-        mockMvc.perform(post("/subprojects/edit") //Mocker en HTTP POST request til controllerens endpoint
+        mockMvc.perform(post("/subProjects/edit") //Mocker en HTTP POST request til controllerens endpoint
                         .session(session) //simulerer en mocket session, for at tjekke status
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .param("subProjectName", "UI Design")
@@ -125,7 +125,7 @@ class SubProjectControllerTest {
 
     @Test
     void testAdd() throws Exception {
-        mockMvc.perform(post("/subprojects/add")
+        mockMvc.perform(post("/subProjects/add")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .param("subProjectName", "UI Design")
@@ -143,7 +143,7 @@ class SubProjectControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(post("/subprojects/delete")
+        mockMvc.perform(post("/subProjects/delete")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra

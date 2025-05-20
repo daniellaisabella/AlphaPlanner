@@ -1,5 +1,6 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.rowmappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
@@ -44,7 +45,7 @@ public class UserRepository {
         String sql = "SELECT USER_ID FROM USERS WHERE EMAIL = ?";
         try {
             Integer i = jdbcTemplate.queryForObject(sql, Integer.class, user.getEmail());
-            assert i!=null;
+            assert i != null;
             return i;
         } catch (DataAccessException d) {
             throw new RuntimeException("Error getting user_id ", d);
@@ -73,9 +74,9 @@ public class UserRepository {
 
     public List<String> getUserSKills(int userId) {
         String sql = "SELECT SKILL_NAME " +
-                "FROM SKILLS S " +
-                "JOIN USERS_SKILLS US ON S.SKILL_ID = US.SKILL_ID " +
-                "WHERE US.USER_ID = ?";
+                     "FROM SKILLS S " +
+                     "JOIN USERS_SKILLS US ON S.SKILL_ID = US.SKILL_ID " +
+                     "WHERE US.USER_ID = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("skill_name"), userId);
     }
@@ -90,7 +91,7 @@ public class UserRepository {
         try {
             jdbcTemplate.update(insertUserSql, user.getName(), user.getEmail(), user.getRole(), user.getPassword());
             Integer userId = jdbcTemplate.queryForObject(getUserIdSql, Integer.class, user.getEmail());
-            assert(userId != null);
+            assert (userId != null);
             saveSkills(user, userId);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Fejl ved oprettelse af bruger" + e);
@@ -103,9 +104,9 @@ public class UserRepository {
             for (String s : user.getSkills()) {
                 String getSkillIdSql = "SELECT SKILL_ID FROM SKILLS WHERE SKILL_NAME = ?";
                 String insertUserSkill = """
-                         INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
-                         VALUES(?, ?)
-                    """;
+                             INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
+                             VALUES(?, ?)
+                        """;
                 try {
                     Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
                     assert (skillId != null);
@@ -222,9 +223,9 @@ public class UserRepository {
                 for (String s : user.getSkills()) {
                     String getSkillIdSql = "SELECT SKILL_ID FROM SKILLS WHERE SKILL_NAME = ?";
                     String insertUserSkill = """
-                         INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
-                         VALUES(?, ?)
-                    """;
+                                 INSERT INTO USERS_SKILLS (USER_ID,SKILL_ID)
+                                 VALUES(?, ?)
+                            """;
                     try {
                         Integer skillId = jdbcTemplate.queryForObject(getSkillIdSql, Integer.class, s);
                         assert (skillId != null);
@@ -235,5 +236,47 @@ public class UserRepository {
                 }
             }
         }
-}
+    }
+
+    public List<User> getUsersByProjectId(int projectId) {
+        String query = """
+                SELECT u.*
+                FROM users u
+                JOIN users_projects up ON u.user_id = up.user_id
+                WHERE up.project_id = ?
+                """;
+        List<User> userList = jdbcTemplate.query(query, new UserRowMapper(), projectId);
+        for (User u : userList) {
+            List<String> skills = getUserSKills(u.getUserId());
+            u.setSkills(skills);
+        }
+
+        return userList;
+    }
+
+    public List<User> getAvailableUsers(int id) {
+        String query = """
+            SELECT\s
+              u.user_id,
+              u.user_name,
+              u.email,
+              u.role,
+              u.password
+            FROM users u
+            LEFT JOIN users_projects up ON u.user_id = up.user_id
+            WHERE NOT EXISTS (
+              SELECT 1
+              FROM users_projects
+              WHERE project_id = ?
+              AND user_id = u.user_id
+            ) AND u.role != ? AND u.role != ?
+           \s""";
+        List<User> userList = jdbcTemplate.query(query, new UserRowMapper(), id, "project manager", "admin");
+        for (User u : userList) {
+            List<String> skills = getUserSKills(u.getUserId());
+            u.setSkills(skills);
+        }
+
+        return userList;
+    }
 }

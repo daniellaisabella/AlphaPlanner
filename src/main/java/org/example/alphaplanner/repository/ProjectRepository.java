@@ -1,5 +1,6 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.models.UserDto;
@@ -82,6 +83,19 @@ public class ProjectRepository {
         return 0;
     }
 
+    public void assignUser(UserToProjectDto newJunction) {
+        String query = """
+                INSERT INTO users_projects(user_id, project_id)
+                values(?,?)
+                """;
+        jdbcTemplate.update(query, newJunction.getUserId(), newJunction.getProjectId());
+    }
+    public void UnassignUser(UserToProjectDto newJunction) {
+        String query = """
+                DELETE FROM users_projects WHERE user_id = ? AND project_id = ? ;
+                """;
+        jdbcTemplate.update(query, newJunction.getUserId(), newJunction.getProjectId());
+    }
 
     public List<UserDto> getEmployeesFromProject (int projectId){
 

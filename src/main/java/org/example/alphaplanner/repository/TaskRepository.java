@@ -1,6 +1,7 @@
 package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.*;
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.repository.rowmappers.LabelRowMapper;
 import org.example.alphaplanner.repository.rowmappers.TaskRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
