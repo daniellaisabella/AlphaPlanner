@@ -60,7 +60,6 @@ public class TaskController {
                            @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id,
                            HttpSession session, Model model) {
 
-        System.out.println(subId);
         List<Integer> labelsResult = new ArrayList<>();
 
         if (isLoggedIn(session)) {
@@ -85,9 +84,7 @@ public class TaskController {
                            HttpServletRequest request,
                            HttpSession session) {
 
-        System.out.println(">>> Received updateTask POST request <<<");
-        System.out.println("estimated: " + estimatedHours);
-        System.out.println("dedicated " + dedicatedHours);
+
 
         if (isLoggedIn(session)) {
             taskService.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
@@ -173,8 +170,7 @@ public class TaskController {
                                           @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                           HttpSession session){
 
-        System.out.println(">>> Received updateTask POST request <<<");
-        System.out.println("Received label IDs: " + assignees);
+
         ArrayList<Integer> result = new ArrayList<>();
         if (isLoggedIn(session)) {
             if (assignees != null) {
