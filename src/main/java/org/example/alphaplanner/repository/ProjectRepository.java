@@ -2,11 +2,16 @@ package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
+import org.example.alphaplanner.models.User;
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.repository.rowmappers.ProjectRowMapper;
+import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProjectRepository {
@@ -90,5 +95,24 @@ public class ProjectRepository {
                 DELETE FROM users_projects WHERE user_id = ? AND project_id = ? ;
                 """;
         jdbcTemplate.update(query, newJunction.getUserId(), newJunction.getProjectId());
+    }
+
+    public List<UserDto> getEmployeesFromProject (int projectId){
+
+        try {
+            String sql = "SELECT u.user_id, u.user_name, u.role FROM Users u JOIN users_projects uP ON u.user_id = uP.user_id WHERE uP.project_id = ?";
+            return jdbcTemplate.query(sql, new UserDtoRowMapper(), projectId);
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("Database error while retrieving assignees from task.", e);
+        }
+
+
+    }
+
+    public String getEmployeesFromProjectInString (List<UserDto> users){
+        return users == null ? "" :
+                users.stream()
+                        .map(l -> l.getId() + ":" + l.getName())
+                        .collect(Collectors.joining(","));
     }
 }

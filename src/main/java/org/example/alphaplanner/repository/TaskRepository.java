@@ -8,10 +8,14 @@ import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -21,11 +25,16 @@ public class TaskRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+
 //---------------------------------CONSTRUCTOR--------------------------------------------------------------------------
 
     public TaskRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+//--------------------------------TASK METHODS--------------------------------------------------------------------------
+
+
 
 //============================================TASK METHODS==============================================================
 
@@ -69,7 +78,7 @@ public class TaskRepository {
             jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0, false);
 
             String getTaskId = "SELECT t.task_id FROM Tasks t WHERE task_name = ? AND task_desc = ?";
-            Integer task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
+            int task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
 
             String labelSql = "INSERT INTO tasks_labels (label_id, task_id) VALUES (?, ?)";
             for (Integer l : labels_id) {
@@ -82,6 +91,7 @@ public class TaskRepository {
 
     public void editTask(int task_id, String name, String desc, LocalDate deadline, double estimatedHours, double dedicatedHours, boolean status) {
         try {
+            System.out.println(dedicatedHours);
             String sql = "UPDATE Tasks SET task_name = ?, task_desc = ?, task_deadline = ?, task_timeEstimate = ?,  task_dedicatedHours = ?, task_status = ? WHERE task_id = ?";
             jdbcTemplate.update(sql, name, desc, deadline, estimatedHours, dedicatedHours, status, task_id);
         } catch (DataAccessException e) {
@@ -188,14 +198,6 @@ public class TaskRepository {
         }
     }
 
-    public void removeLabelFromTask(int task_id, int label_id) {
-        try {
-            String sql = "DELETE FROM tasks_labels WHERE task_id = ? AND label_id = ?";
-            jdbcTemplate.update(sql, task_id, label_id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while removing label from task.", e);
-        }
-    }
 
     //-------------------------------CRUD METHODS LABELS--------------------------------------------------------------------
 
@@ -235,21 +237,24 @@ public class TaskRepository {
                         .collect(Collectors.joining(","));
     }
 
-    public void addAssigneesToTask(int task_id, int user_id) {
+    public void addAssigneesToTask(int task_id, List<Integer> assignees) {
         try {
-            String sql = "INSERT INTO users_tasks (user_id, task_id) VALUES (?, ?)";
-            jdbcTemplate.update(sql, user_id, task_id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while adding assignee to task.", e);
-        }
-    }
+            String refreshSql = "DELETE FROM users_tasks WHERE task_id = ?";
+            jdbcTemplate.update(refreshSql, task_id);
 
-    public void removeAssigneesFromTask(int task_id, int user_id) {
-        try {
-            String sql = "DELETE FROM users_tasks WHERE task_id = ? AND user_id = ?";
-            jdbcTemplate.update(sql, task_id, user_id);
+            String labelIdSql = "SELECT user_id FROM users WHERE user_id = ?";
+            String sql = "INSERT INTO users_tasks (task_id, user_id) VALUES (?, ?)";
+
+            for (Integer a : assignees) {
+                try {
+                    int assigneeId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, a);
+                    jdbcTemplate.update(sql, task_id, assigneeId);
+                } catch (EmptyResultDataAccessException ex) {
+                    throw new IllegalArgumentException("assignee not found: " + a);
+                }
+            }
         } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while removing assignee from task.", e);
+            throw new IllegalStateException("Database error while adding assignee to the task.", e);
         }
     }
 

@@ -4,7 +4,10 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
+import org.example.alphaplanner.models.SubProject;
+import org.example.alphaplanner.service.AssigneesService;
 import org.example.alphaplanner.service.LabelService;
+import org.example.alphaplanner.service.SubProjectService;
 import org.example.alphaplanner.service.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +28,12 @@ public class TaskController {
 
     private final LabelService labelService;
     private final TaskService taskService;
+    private final AssigneesService assigneesService;
 
-    public TaskController(LabelService labelService, TaskService taskService) {
+    public TaskController(LabelService labelService, TaskService taskService, AssigneesService assigneesService) {
         this.labelService = labelService;
         this.taskService = taskService;
+        this.assigneesService = assigneesService;
     }
 
     //------------------------HELPER METHOD TO CHECK IF USER IS LOGGED IN------------------------------------
@@ -35,42 +41,40 @@ public class TaskController {
         return session.getAttribute("userId") != null;
     }
 
-    // dummy method to get into the task of a specific subproject=============================================
-//===========================================================
 
 
     @GetMapping("/createTask")
-    public String createTask(Model model, int sub_id, HttpSession session) {
-        model.addAttribute("sub_id", sub_id);
+    public String createTask(Model model, @RequestParam("subId") int subId, HttpSession session) {
+        model.addAttribute("subId", subId);
         List<Label> labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
         return isLoggedIn(session) ? "createTask" : "redirect:/login";
     }
 
     @PostMapping("/saveTask")
-    public String saveTask(int sub_id,
+    public String saveTask(@RequestParam("subId") int subId,
                            String name,
                            String desc,
                            LocalDate deadline,
                            double estimatedHours,
-                           @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id, HttpSession session,  HttpServletRequest request) {
+                           @RequestParam(name = "labels_id", required = false) ArrayList<Integer> labels_id,
+                           HttpSession session, Model model) {
 
         List<Integer> labelsResult = new ArrayList<>();
-
 
         if (isLoggedIn(session)) {
             if (labels_id != null) {
                 labelsResult = labels_id;
             }
-            taskService.createTask(sub_id, name, desc, deadline, estimatedHours, labelsResult);
-            return "redirect:" + request.getHeader("referer");
+            taskService.createTask(subId, name, desc, deadline, estimatedHours, labelsResult);
+            return "redirect:/subprojects/showSub?subId=" + subId   ;
         } else {
             return "redirect:/login";
         }
     }
 
     @PostMapping("/updateTask")
-    public String saveTask(@RequestParam("taskId") int taskId,
+    public String updateTask(@RequestParam("taskId") int taskId,
                            @RequestParam("taskName") String name,
                            @RequestParam("description") String desc,
                            @RequestParam("deadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate deadline,
@@ -80,8 +84,8 @@ public class TaskController {
                            HttpServletRequest request,
                            HttpSession session) {
 
-        System.out.println(">>> Received updateTask POST request <<<");
-        System.out.println(status);
+
+
         if (isLoggedIn(session)) {
             taskService.editTask(taskId, name, desc, deadline, estimatedHours, dedicatedHours, status);
             return "redirect:" + request.getHeader("referer");
@@ -102,7 +106,7 @@ public class TaskController {
                 result = labels;
             }
             labelService.addLabelsToTask(taskId, result);
-            return "redirect:/tasks/showSub";
+            return "redirect:" + request.getHeader("referer");
         } else {
             return "redirect:/login";
         }
@@ -159,5 +163,24 @@ public class TaskController {
         } else {
             return "redirect:/login";
         }
+    }
+
+    @PostMapping("/updateAssigneesFromTask")
+    public String updateAssigneesFromTask(@RequestParam(name = "assignees", required = false) ArrayList<Integer> assignees,
+                                          @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
+                                          HttpSession session){
+
+
+        ArrayList<Integer> result = new ArrayList<>();
+        if (isLoggedIn(session)) {
+            if (assignees != null) {
+                result = assignees;
+            }
+            assigneesService.addAssigneesToTask(taskId, result);
+            return "redirect:" + request.getHeader("referer");
+        } else {
+            return "redirect:/login";
+        }
+
     }
 }

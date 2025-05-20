@@ -20,12 +20,14 @@ public class SubProjectController {
     private final SubProjectService subProjectService;
     private final UserService userService;
     private final AuthorizationService authorizationService;
+    private final AssigneesService assigneesService;
 
-    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService, AuthorizationService authorizationService) {
+    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService, AuthorizationService authorizationService, AssigneesService assigneesService) {
         this.labelService = labelService;
         this.taskService = taskService;
         this.subProjectService = subProjectService;
         this.userService = userService;
+        this.assigneesService = assigneesService;
         this.authorizationService = authorizationService;
     }
 
@@ -33,17 +35,8 @@ public class SubProjectController {
         return (session.getAttribute("userId") == null);
     }
 
-    @GetMapping("/showSub")
-    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
-        if (isNotLoggedIn(session)) return "redirect:";
-        SubProject subProject = subProjectService.getSubProject(subId);
-        model.addAttribute("sub", subProject);
-        List<Task> tasks = taskService.showAllTasksFromSub(subId);
-        model.addAttribute("tasks", tasks);
-        String labels = labelService.getLabelsInString(labelService.getAllLabels());
-        model.addAttribute("labels", labels);
-        return "subProject";
-    }
+
+
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isNotLoggedIn(session)) return "redirect:";
@@ -71,8 +64,21 @@ public class SubProjectController {
         subProjectService.deleteSubProject(subId);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
+
     }
 
-
+    @GetMapping("/showSub")
+    public String showSub(HttpSession session, Model model, @RequestParam int subId) {
+        if (isNotLoggedIn(session)) return "redirect:";
+        SubProject subProject = subProjectService.getSubProject(subId);
+        model.addAttribute("sub", subProject);
+        List<Task> tasks = taskService.showAllTasksFromSub(subId);
+        model.addAttribute("tasks", tasks);
+        String labels = labelService.getLabelsInString(labelService.getAllLabels());
+        model.addAttribute("labels", labels);
+        String allEmployeesFromProject = assigneesService.getEmployeesFromProjectInString(assigneesService.getEmployeesFromProject(subProject.getProjectId()));
+        model.addAttribute("allEmployees", allEmployeesFromProject);
+        return "viewTasks";
+    }
 
 }

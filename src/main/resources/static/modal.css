@@ -7,9 +7,16 @@
     border: 1px solid black;
     border-radius: 10px;
     background-color: white;
-    max-width: 80%;
+    width: 90vw;
+    max-width: 1000px;
+
+    height: 90vh;         /* responsive height */
+    max-height: 800px;    /* optional: prevent growing too tall */
+
+    overflow: auto;       /* allow scrolling if content exceeds */
     z-index: 10;
-    width: 1000px;
+
+
 }
 
 .modal.active {
@@ -40,6 +47,9 @@
 
 .modal-body {
     padding: 10px 15px;
+}
+.modal-footer {
+    align-items: center;
 }
 
 

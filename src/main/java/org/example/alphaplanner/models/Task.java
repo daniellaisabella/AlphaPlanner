@@ -1,6 +1,8 @@
 package org.example.alphaplanner.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Task {
 
@@ -12,21 +14,20 @@ public class Task {
     private double taskDedicatedHours;
     private double taskEstimatedHours;
     private String labels;
-    private String assignees; //might change to a list of users later
+    private String assignees;
     private final int subId;
 
 
 //-----------------------------CONSTRUCTORS--------------------------------------------------------------------
 
     // to retrieve from sql
-    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, int subId, boolean taskStatus){
+    public Task(int taskId, String taskName, String taskDesc, LocalDate taskDeadline, double taskEstimatedHours, double taskDedicatedHours, int subId, boolean taskStatus){
         this.taskId=taskId;
         this.taskName=taskName;
         this.taskDesc = taskDesc;
         this.taskDeadline = taskDeadline;
         this.subId = subId;
-        this.taskStatus = false;
-        this.taskDedicatedHours = 0;
+        this.taskDedicatedHours = taskDedicatedHours;
         this.taskEstimatedHours = taskEstimatedHours;
         this.labels = "";
         this.taskStatus = taskStatus;

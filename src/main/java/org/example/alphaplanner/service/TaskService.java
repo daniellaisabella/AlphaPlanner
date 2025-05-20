@@ -25,9 +25,7 @@ public class TaskService {
         return taskRepository.showAllTasksFromSub(sub_id);
     }
 
-    public Task getTaskById(int task_id){
-        return taskRepository.getTaskById(task_id);
-    }
+
 
     public void createTask(int sub_id, String name, String desc, LocalDate deadline, double estimatedHours, List<Integer> labels_id){
         taskRepository.createTask(sub_id, name, desc, deadline, estimatedHours, labels_id);
