@@ -40,6 +40,7 @@ class SubProjectControllerTest {
     private MockHttpSession session;
     @MockitoBean
     private AuthorizationService authorizationService;
+
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
@@ -64,10 +65,11 @@ class SubProjectControllerTest {
         when(labelService.getLabelsInString(any())).thenReturn("Label1, Label2"); // Return mock labels
         when(authorizationService.authProjectManager(anyInt(), anyInt())).thenReturn(true);
     }
+
     @Test
     void testShowSub_NotLoggedIn() throws Exception {
         MockHttpSession emptySession = new MockHttpSession(); // uden userId sat
-        mockMvc.perform(get("/subProjects/showSub")
+        mockMvc.perform(get("/subprojects/showsub")
                         .param("subId", "1")//simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(emptySession))
                 .andExpect(status().is3xxRedirection())  // redirect expected
@@ -76,7 +78,7 @@ class SubProjectControllerTest {
 
     @Test
     void testShowSub() throws Exception {
-        mockMvc.perform(get("/subProjects/showSub") //Mocker en HTTP GET request til controllerens endpoint
+        mockMvc.perform(get("/subprojects/showsub") //Mocker en HTTP GET request til controllerens endpoint
                         .param("subId", "1") //simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(session)) //tilføjer en mocket session, for at tjekke status
                 .andExpect(status().isOk()) //forventer en logget bruger
@@ -95,7 +97,7 @@ class SubProjectControllerTest {
 
     @Test
     void testEdit() throws Exception {
-        mockMvc.perform(post("/subProjects/edit") //Mocker en HTTP POST request til controllerens endpoint
+        mockMvc.perform(post("/subprojects/edit") //Mocker en HTTP POST request til controllerens endpoint
                         .session(session) //simulerer en mocket session, for at tjekke status
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .param("subProjectName", "UI Design")
@@ -115,7 +117,7 @@ class SubProjectControllerTest {
 
     @Test
     void testAdd() throws Exception {
-        mockMvc.perform(post("/subProjects/add")
+        mockMvc.perform(post("/subprojects/add")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .param("subProjectName", "UI Design")
@@ -133,7 +135,7 @@ class SubProjectControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(post("/subProjects/delete")
+        mockMvc.perform(post("/subprojects/delete")
                         .session(session)//Mocker en HTTP POST request til Controllerens endpoint
                         .param("subId", "1") //Simulerer følgende form felter, som i HTML form
                         .header("referer", "/")) //simulerer en header til serveren som hjælper den med at forstå ekstra oplysnigner. Her, hvilken sidebrugeren kom fra

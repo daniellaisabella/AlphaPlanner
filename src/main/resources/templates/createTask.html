@@ -12,7 +12,7 @@
 
 <div class="topbar">
     <div class="logo">
-        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        <a href="/projects/"><img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo"></a>
     </div>
     <div class="space">
         <a th:href="@{/profil}">Min Profil</a>
@@ -23,7 +23,7 @@
 <a href="javascript:history.back()" class="btn-link">Tilbage</a>
 
 
-<form action="/tasks/saveTask" method="post">
+<form action="/tasks/savetask" method="post">
     <input type="hidden" name="subId" th:value="${subId}">
 
     <div class="form-row">

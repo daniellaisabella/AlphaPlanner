@@ -13,18 +13,20 @@
 
 <div class="topbar">
     <div class="logo">
+        <a href="/projects" >
         <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
     </div>
     <div class="space">
-        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/myprofile}">Min Profil</a>
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 </div>
 <div class="centerX" th:text="${projectName}"></div>
 <div class="space">
     <a href="/projects" class="btn-link">Tilbage</a>
-    <a th:href="@{/projects/projectOverview(projectId=${projectId})}" class="active">Underprojekter</a>
-    <a th:href="@{/projects/projectAssignees(projectId=${projectId})}">Arbejdere</a>
+    <a th:href="@{/projects/projectoverview(projectId=${projectId})}" class="active">Underprojekter</a>
+    <a th:href="@{/projects/projectassignees(projectId=${projectId})}">Tildelte medarbejdere</a>
 </div>
 
 <table>
@@ -44,7 +46,7 @@
         <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
         <td>
             <a th:text="${subProject.subProjectName}"
-               th:href="@{/subProjects/showSub(subId=${subProject.subId})}"></a>
+               th:href="@{/subprojects/showsub(subId=${subProject.subId})}"></a>
         </td>
         <td th:text="${subProject.getSubProjectDesc()}"></td>
         <td th:text="${subProject.getSubProjectDeadline()}"></td>
@@ -62,7 +64,7 @@
             </a>
         </td>
         <td th:if="${role}">
-            <form th:action="@{/subProjects/delete}" method="post"
+            <form th:action="@{/subprojects/delete}" method="post"
                   onsubmit="return confirm('Er du sikker på du vil slette dette subprojekt?');">
                 <input type="hidden" name="subId" th:value="${subProject.subId}"/>
                 <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;">X</button>
@@ -84,7 +86,7 @@
         <b>Tilføj subprojekt</b>
         <a onclick="closeNewModal()" class="close-button">Close</A>
     </div>
-    <form th:action="@{/subProjects/add}" th:object="${freshSubProject}" method="post" class="modal-form container">
+    <form th:action="@{/subprojects/add}" th:object="${freshSubProject}" method="post" class="modal-form container" style="height: 50%">
 
         <div class="form-row" hidden="hidden">
             <label for="ProjectId" hidden="hidden">Project id:</label>
@@ -121,7 +123,7 @@
             closeModal();
         } " class="close-button">Close</A>
     </div>
-    <form th:action="@{/SubProjects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container"
+    <form th:action="@{/subprojects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" style="height: 50%"
           onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{subId}" id="subId"/>

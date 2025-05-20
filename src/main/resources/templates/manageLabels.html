@@ -37,7 +37,7 @@
         <td th:text="${label.labelName}">Etikettens navn</td>
         <td>
             <!-- Delete Button -->
-            <form action="/tasks/deleteLabel" method="post">
+            <form action="/tasks/deletelabel" method="post">
                 <input type="hidden" name="label_id" th:value="${label.labelId}">
                 <button class="btn-link" >Slet</button>
             </form>
@@ -46,7 +46,7 @@
 
     <!-- I want to have this to the side instead -->
     <tr>
-        <form action="/tasks/createLabel" method="post">
+        <form action="/tasks/createlabel" method="post">
             <td>
                 <strong for="labelName">Opret ny etiket</strong>
             </td>
