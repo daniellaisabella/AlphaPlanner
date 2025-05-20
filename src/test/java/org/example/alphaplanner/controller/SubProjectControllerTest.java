@@ -1,9 +1,5 @@
 package org.example.alphaplanner.controller;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,19 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDate;
 import java.util.List;
-
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.text.IsEmptyString.emptyString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,7 +25,6 @@ class SubProjectControllerTest {
     @Autowired
     private MockMvc mockMvc;
     private SubProject subProject;
-
     @MockitoBean
     private LabelService labelService;
     @MockitoBean
@@ -47,6 +34,9 @@ class SubProjectControllerTest {
     @MockitoBean
     private UserService userService;
     @MockitoBean
+    private AssigneesService assigneesService;
+
+
     private MockHttpSession session;
     @MockitoBean
     private AuthorizationService authorizationService;
@@ -90,7 +80,7 @@ class SubProjectControllerTest {
                         .param("subId", "1") //simulerer en GET request med sub id 1 til controlleren - Vis / GET subprojekt med id 1
                         .session(session)) //tilføjer en mocket session, for at tjekke status
                 .andExpect(status().isOk()) //forventer en logget bruger
-                .andExpect(view().name("subProject")) //forventer view HTML "subproject"
+                .andExpect(view().name("viewTasks")) //forventer view HTML "subproject"
                 .andExpect(model().attributeExists("sub")) //forventer følgende attributter som Model har (subProject objekt)
                 .andExpect(model().attributeExists("tasks"))
                 .andExpect(model().attribute("labels", notNullValue())) //forventer at labels ikke er null og ikke er en tom String
