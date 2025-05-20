@@ -72,8 +72,7 @@
     </div>
     <div class="modal-body">
     </div>
-    <div class="modal-footer"></div>
-</div>
+
 
 
 <div id="overlay"></div>
@@ -144,15 +143,15 @@
     <button class="btn-link" id="saveButton" onclick="saveChanges()" style="display: none;">Gem ændringer</button>
 </div>
 
-`;
-        document.querySelector('.modal .modal-footer').innerHTML = `
-        </div>
+</div>
 <form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
 <input type="hidden" name="task_id" value="${taskId}">
 <button class="btn-link" > Slet opgave </button>
 </form>
 </div>
-        `;
+
+`;
+
 
 
         const labelSpan = document.getElementById("taskLabels");
