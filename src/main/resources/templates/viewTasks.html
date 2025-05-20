@@ -12,10 +12,12 @@
 
 <div class="topbar">
     <div class="logo">
-        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        <a href="/projects" >
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
     </div>
     <div class="space">
-        <a th:href="@{/profil}">Min Profil</a>
+        <a th:href="@{/myprofile}">Min Profil</a>
         <a th:href="@{/login}" class="logout-button">Log ud</a>
     </div>
 </div>
@@ -57,7 +59,7 @@
     </tr>
     <tr>
         <td>
-            <a th:href="@{/tasks/createTask(subId=${sub.subId})}" class="btn-link">+</a>
+            <a th:href="@{/tasks/createtask(subId=${sub.subId})}" class="btn-link">+</a>
         </td>
     </tr>
     </tbody>
@@ -143,7 +145,7 @@
 </div>
 
 </div>
-<form action="/tasks/deleteTask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
+<form action="/tasks/deletetask" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne opgave?');">
 <input type="hidden" name="task_id" value="${taskId}">
 <button class="btn-link" > Slet opgave </button>
 </form>
@@ -223,7 +225,7 @@
         console.log("estimatedHours", updatedEstimatedHours);
         console.log("dedicatedHours", updatedDedicatedHours);
 
-        fetch("/tasks/updateTask", {
+        fetch("/tasks/updatetask", {
             method: 'POST',
             body: formData
         })
@@ -281,7 +283,7 @@
 
         console.log("new assigned: ", selectedAssigneesIds);
 
-        fetch("/tasks/updateAssigneesFromTask", {
+        fetch("/tasks/updateassigneesfromtask", {
             method: "POST",
             body: formData
         })
@@ -316,7 +318,7 @@
         </div>
         <div>
             <button class="btn-link" id="saveAssignButton" onclick="saveLabels()">Gem</button>
-                <a class="btn-link" href="/tasks/manageLabels">Administrer etiketter</a>
+                <a class="btn-link" href="/tasks/managelabels">Administrer etiketter</a>
         </div>
 
 `;
@@ -332,7 +334,7 @@
 
         console.log("new tasks: ", selectedLabelIds);
 
-        fetch("/tasks/updateLabelsFromTask", {
+        fetch("/tasks/updatelabelsfromTask", {
             method: "POST",
             body: formData
         })

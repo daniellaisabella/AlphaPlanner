@@ -13,10 +13,12 @@
 
 <div class="topbar">
     <div class="logo">
-        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        <a href="/projects" >
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
     </div>
     <div class="space">
-        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/myprofile}">Min Profil</a>
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 
@@ -40,7 +42,7 @@
     <tr th:each="project : ${projects}">
         <td><input type="checkbox" th:checked="${project.getProjectStatus()}" disabled></td>
         <td>
-            <a th:href="@{/projects/projectOverview(projectId=${project.id})}" th:text="${project.projectName}"></a>
+            <a th:href="@{/projects/projectoverview(projectId=${project.id})}" th:text="${project.projectName}"></a>
         </td>
         <td th:text="${project.getProjectDesc()}"></td>
         <td th:text="${project.getProjectDeadline()}"></td>
@@ -81,11 +83,11 @@
         <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
 
-    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container" >
+    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container"  style="height: 50%">
 
         <div class="form-row">
             <label for="newProjectName">Project Name:</label>
-            <input type="text" id="newProjectName" th:field="*{projectName}"/>
+            <input type="text" maxlength="15" id="newProjectName" th:field="*{projectName}"/>
         </div>
 
         <div class="form-row">
@@ -113,7 +115,7 @@
             closeModal();
         } " class="close-button">Luk</A>
     </div>
-    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
+    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');" style="height: 50%">
         <label hidden="hidden">
             <input type="number" th:field="*{id}"/>
         </label>

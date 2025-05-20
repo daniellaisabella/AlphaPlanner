@@ -13,18 +13,20 @@
 
 <div class="topbar">
     <div class="logo">
-        <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        <a href="/projects" >
+            <img src="/images/alpha-planner-logo.png" alt="Alpha Planner Logo">
+        </a>
     </div>
     <div class="space">
-        <a th:href="@{/myProfile}">Min Profil</a>
+        <a th:href="@{/myprofile}">Min Profil</a>
         <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 </div>
 <div class="centerX" th:text="${projectName}"></div>
 <div class="space">
     <a href="/projects" class="btn-link">Tilbage</a>
-    <a th:href="@{/projects/projectOverview(projectId=${projectId})}">Underprojekter</a>
-    <a th:href="@{/projects/projectAssignees(projectId=${projectId})}" class="active">Arbejdere</a>
+    <a th:href="@{/projects/projectoverview(projectId=${projectId})}">Underprojekter</a>
+    <a th:href="@{/projects/projectassignees(projectId=${projectId})}" class="active">Tildelte medarbejdere</a>
 </div>
 <table>
     <thead>
@@ -47,7 +49,7 @@
             </ul>
         </td>
         <td>
-            <form th:action="@{/projects/unAssignEmployee}" method="post"
+            <form th:action="@{/projects/unassignemployee}" method="post"
                   onsubmit="return confirm('Er du sikker på du vil fjerne denne ansatte fra projektet');">
                 <input type="hidden" name="employeeId" th:value="${employee.userId}">
                 <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;" th:if="${role}">X</button>
@@ -56,18 +58,19 @@
     </tr>
     <tr>
         <td>
-            <form action="/projects/assignEmployee" method="post" th:if="${role}">
-                <label>Tilføj arbejder
+            <form action="/projects/assignemployee" method="post" th:if="${role}">
+                <label for="finalUserId">Vælg medarbejder
+                </label>
+                <br>
                 <select  name="employeeId" id="finalUserId">
                     <option th:each="employee : ${availableUsers}" th:value="${employee.userId}"
                             th:text="${employee.name}"></option>
                 </select>
-                </label>
-
                 <br>
-                <button type="submit">Tilføj</button>
+                <button type="submit">Tildel medarbejder</button>
             </form>
         </td>
+
     </tr>
     </tbody>
 </table>

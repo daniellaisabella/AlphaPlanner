@@ -4,10 +4,8 @@ package org.example.alphaplanner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.alphaplanner.models.Label;
-import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.service.AssigneesService;
 import org.example.alphaplanner.service.LabelService;
-import org.example.alphaplanner.service.SubProjectService;
 import org.example.alphaplanner.service.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -43,15 +41,15 @@ public class TaskController {
 
 
 
-    @GetMapping("/createTask")
+    @GetMapping("/createtask")
     public String createTask(Model model, @RequestParam("subId") int subId, HttpSession session) {
         model.addAttribute("subId", subId);
         List<Label> labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
-        return isLoggedIn(session) ? "createTask" : "redirect:/login";
+        return isLoggedIn(session) ? "createtask" : "redirect:/login";
     }
 
-    @PostMapping("/saveTask")
+    @PostMapping("/savetask")
     public String saveTask(@RequestParam("subId") int subId,
                            String name,
                            String desc,
@@ -67,13 +65,13 @@ public class TaskController {
                 labelsResult = labels_id;
             }
             taskService.createTask(subId, name, desc, deadline, estimatedHours, labelsResult);
-            return "redirect:/subprojects/showSub?subId=" + subId   ;
+            return "redirect:/subprojects/showsub?subId=" + subId   ;
         } else {
             return "redirect:/login";
         }
     }
 
-    @PostMapping("/updateTask")
+    @PostMapping("/updatetask")
     public String updateTask(@RequestParam("taskId") int taskId,
                            @RequestParam("taskName") String name,
                            @RequestParam("description") String desc,
@@ -94,7 +92,7 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/updateLabelsFromTask")
+    @PostMapping("/updatelabelsfromTask")
     public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<Integer> labels,
                                      @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                      HttpSession session) {
@@ -112,30 +110,30 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/manageLabels")
+    @GetMapping("/managelabels")
     public String manageLabels(Model model, HttpSession session) {
         if (isLoggedIn(session)) {
             List<Label> labels = labelService.getAllLabels();
             model.addAttribute("labels", labels);
-            return "manageLabels";
+            return "managelabels";
         } else {
             return "redirect:/login";
         }
     }
 
-    @PostMapping("/deleteLabel")
+    @PostMapping("/deletelabel")
     public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session) {
 
         if (isLoggedIn(session)) {
             labelService.deleteLabel(label_id);
-            return "redirect:/tasks/manageLabels";
+            return "redirect:/tasks/managelabels";
         } else {
             return "redirect:/login";
         }
 
     }
 
-    @PostMapping("/deleteTask")
+    @PostMapping("/deletetask")
     public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session,  HttpServletRequest request) {
 
         if (isLoggedIn(session)) {
@@ -147,7 +145,7 @@ public class TaskController {
 
     }
 
-    @PostMapping("/createLabel")
+    @PostMapping("/createlabel")
     public String createLabel(@RequestParam(name = "labelName") String labelName,
                               Model model,
                               HttpSession session) {
@@ -159,13 +157,13 @@ public class TaskController {
         }
         if (isLoggedIn(session)) {
             labelService.createLabel(labelName);
-            return "redirect:/tasks/manageLabels";
+            return "redirect:/tasks/managelabels";
         } else {
             return "redirect:/login";
         }
     }
 
-    @PostMapping("/updateAssigneesFromTask")
+    @PostMapping("/updateassigneesfromtask")
     public String updateAssigneesFromTask(@RequestParam(name = "assignees", required = false) ArrayList<Integer> assignees,
                                           @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                           HttpSession session){
