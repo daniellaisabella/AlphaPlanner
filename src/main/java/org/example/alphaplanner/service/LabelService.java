@@ -40,9 +40,7 @@ public class LabelService {
         return taskRepository.getAllLabels();
     }
 
-    public String getLabelsInString(int task_id){
-        return taskRepository.getLabelsInString(task_id);
-    }
+
 
 
 }
