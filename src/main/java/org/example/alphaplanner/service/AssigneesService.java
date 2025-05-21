@@ -18,13 +18,6 @@ public class AssigneesService {
         this.projectRepository = projectRepository;
     }
 
-    public List<UserDto> getAssigneesFromTask(int task_id){
-        return taskRepository.getAssigneesFromTask(task_id);
-    }
-
-    public String getAssigneesInString(List<UserDto> users) {
-        return taskRepository.getAssigneesInString(users);
-    }
 
     public void addAssigneesToTask(int task_id, List<Integer> assignees){
         taskRepository.addAssigneesToTask(task_id, assignees);

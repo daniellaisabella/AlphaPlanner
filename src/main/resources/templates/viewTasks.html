@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>All task From bob</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link th:href="@{/modal.css}" rel="stylesheet">
     <link th:href="@{/base.css}" rel="stylesheet">
     <link th:href="@{/buttons.css}" rel="stylesheet">
@@ -159,14 +160,14 @@
         if (labelSpan) {
             labelSpan.innerHTML = (taskLabels && taskLabels.length > 0)
                 ? taskLabels
-                : "No labels assigned";
+                : "Ingen etiketter tildelt";
         }
 
         const assigneeSpan = document.getElementById("taskAssignees");
         if (assigneeSpan) {
             assigneeSpan.innerHTML = (taskAssignees && taskAssignees.length > 0)
                 ? taskAssignees
-                : "No assignees assigned";
+                : "ingen medarbejdere tildelt";
         }
 
 

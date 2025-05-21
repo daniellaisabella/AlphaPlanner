@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/tasks")
@@ -44,7 +46,7 @@ public class TaskController {
     @GetMapping("/createtask")
     public String createTask(Model model, @RequestParam("subId") int subId, HttpSession session) {
         model.addAttribute("subId", subId);
-        List<Label> labels = labelService.getAllLabels();
+        String labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
         return isLoggedIn(session) ? "createtask" : "redirect:/login";
     }
@@ -113,8 +115,13 @@ public class TaskController {
     @GetMapping("/managelabels")
     public String manageLabels(Model model, HttpSession session) {
         if (isLoggedIn(session)) {
-            List<Label> labels = labelService.getAllLabels();
-            model.addAttribute("labels", labels);
+            String labelsRaw = labelService.getAllLabels(); // e.g. "1:Bug,2:UI,3:Urgent"
+
+            List<String[]> labels = Arrays.stream(labelsRaw.split(","))
+                    .map(entry -> entry.split(":", 2)) // Ensure splitting only on the first colon
+                    .collect(Collectors.toList());
+
+            model.addAttribute("labels", labels); // Now a List<String[]>
             return "managelabels";
         } else {
             return "redirect:/login";
@@ -150,7 +157,7 @@ public class TaskController {
                               Model model,
                               HttpSession session) {
         if (labelService.checkIfLabelNameExist(labelName)) {
-            List<Label> labels = labelService.getAllLabels();
+            String labels = labelService.getAllLabels();
             model.addAttribute("labels", labels);
             model.addAttribute("nameExists", true);
             return "manageLabels";
