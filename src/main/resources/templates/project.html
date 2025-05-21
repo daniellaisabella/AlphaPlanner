@@ -84,7 +84,7 @@
 <div id="NewProject" class="modal" style="background-color:#f8f8f8">
     <div class="modal-header">
         <b>Tilføj subprojekt</b>
-        <a onclick="closeNewModal()" class="close-button">Close</A>
+        <a onclick="closeNewModal()" class="close-button">Luk</A>
     </div>
     <form th:action="@{/subprojects/add}" th:object="${freshSubProject}" method="post" class="modal-form container" style="height: 50%">
 
@@ -109,7 +109,7 @@
                                                                                             id="newProjectDeadline"/>
         </div>
         <div>
-            <button type="submit">Save</button>
+            <button type="submit">Gem</button>
         </div>
 
     </form>
@@ -121,9 +121,9 @@
         <a onclick="
             if(confirm('Hvis du trykker ok vil dine ændringer ikke blive gemt')){
             closeModal();
-        } " class="close-button">Close</A>
+        } " class="close-button">Luk</A>
     </div>
-    <form th:action="@{/subprojects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container" style="height: 50%"
+    <form th:action="@{/subprojects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container conform" style="height: 50%"
           onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{subId}" id="subId"/>
@@ -144,7 +144,7 @@
             <input type="date" id="projectDeadline" th:field="*{subProjectDeadline}"/>
         </div>
         <div>
-            <button type="submit">Save</button>
+            <button type="submit">Gem</button>
         </div>
 
     </form>
