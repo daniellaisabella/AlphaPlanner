@@ -62,7 +62,7 @@ class SubProjectControllerTest {
         when(subProjectService.getSubProjects(1)).thenReturn(List.of(sub));
         when(subProjectService.getSubProject(1)).thenReturn(sub);
         when(taskService.showAllTasksFromSub(1)).thenReturn(List.of());
-        when(labelService.getLabelsInString(any())).thenReturn("Label1, Label2"); // Return mock labels
+        when(labelService.getAllLabels()).thenReturn("1:Label1,2:Label2");
         when(authorizationService.authProjectManager(anyInt(), anyInt())).thenReturn(true);
     }
 
@@ -88,11 +88,11 @@ class SubProjectControllerTest {
                 .andExpect(model().attribute("labels", notNullValue())) //forventer at labels ikke er null og ikke er en tom String
                 .andExpect(model().attribute("labels", not(emptyString())));
 
+
 //Berkræfter at service metoder bliver kaldt
         verify(subProjectService, times(1)).getSubProject(1);
         verify(taskService, times(1)).showAllTasksFromSub(1);
         verify(labelService, times(1)).getAllLabels();
-        verify(labelService, times(1)).getLabelsInString(any());
     }
 
     @Test
