@@ -9,11 +9,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,15 +75,34 @@ public class TaskRepository {
             String sql = "INSERT INTO Tasks (sub_id, task_name, task_desc, task_deadline, task_timeEstimate, task_dedicatedHours, task_status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            jdbcTemplate.update(sql, sub_id, name, desc, sqlDeadline, estimatedHours, 0, false);
+            KeyHolder keyHolder = new GeneratedKeyHolder();
 
-            String getTaskId = "SELECT t.task_id FROM Tasks t WHERE task_name = ? AND task_desc = ?";
-            int task_id = jdbcTemplate.queryForObject(getTaskId, Integer.class, name, desc);
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, sub_id);
+                ps.setString(2, name);
+                ps.setString(3, desc);
+                ps.setDate(4, sqlDeadline);
+                ps.setDouble(5, estimatedHours);
+                ps.setDouble(6, 0); // task_dedicatedHours
+                ps.setBoolean(7, false); // task_status
+                return ps;
+            }, keyHolder);
 
+            // Retrieve the generated task_id
+            Number key = keyHolder.getKey();
+            if (key == null) {
+                throw new IllegalStateException("Failed to retrieve generated task ID.");
+            }
+
+            int task_id = key.intValue();
+
+            // Insert into tasks_labels
             String labelSql = "INSERT INTO tasks_labels (label_id, task_id) VALUES (?, ?)";
             for (Integer l : labels_id) {
                 jdbcTemplate.update(labelSql, l, task_id);
             }
+
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while creating task.", e);
         }
