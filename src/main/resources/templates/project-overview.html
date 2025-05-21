@@ -81,7 +81,7 @@
         <a onclick="closeNewModal()" class="close-button"> Luk </A>
     </div>
 
-    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container" >
+    <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container conform" >
 
         <div class="form-row">
             <label for="newProjectName">Project Name:</label>
@@ -99,7 +99,7 @@
                                                                                          id="newProjectDeadline"/>
         </div>
         <div>
-            <button type="submit">Save</button>
+            <button type="submit">Gem</button>
         </div>
 
     </form>
@@ -113,7 +113,7 @@
             closeModal();
         } " class="close-button">Luk</A>
     </div>
-    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container" onsubmit="return confirm('Er alle ændringer tilpas?');">
+    <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container conform" onsubmit="return confirm('Er alle ændringer tilpas?');">
         <label hidden="hidden">
             <input type="number" th:field="*{id}"/>
         </label>
@@ -133,7 +133,7 @@
             <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
         </div>
         <div>
-            <button type="submit">Save</button>
+            <button type="submit">Gem</button>
         </div>
 
     </form>
