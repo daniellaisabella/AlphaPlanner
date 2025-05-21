@@ -2,20 +2,17 @@ package org.example.alphaplanner.repository;
 
 import org.example.alphaplanner.models.*;
 import org.example.alphaplanner.models.Dto.UserDto;
-import org.example.alphaplanner.repository.rowmappers.LabelRowMapper;
 import org.example.alphaplanner.repository.rowmappers.TaskRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,8 +43,8 @@ public class TaskRepository {
             List<Task> tasks = jdbcTemplate.query(sql, new TaskRowMapper(), sub_id);
 
             for (Task t : tasks) {
-                List<Label> labels = getLabelsFromTask(t.getTaskId());
-                t.setLabels(getLabelsInString(labels));
+                String labels = getLabelsInString(t.getTaskId());
+                t.setLabels(labels);
                 List<UserDto> users = getAssigneesFromTask(t.getTaskId());
                 t.setAssignees(getAssigneesInString(users));
             }
@@ -147,31 +144,26 @@ public class TaskRepository {
 
 //======================================LABEL METHODS===================================================================
 
-    public List<Label> getAllLabels() {
+    public String getAllLabels() {
         try {
             String sql = "SELECT l.label_id, l.label_name FROM Labels l";
-            return jdbcTemplate.query(sql, new LabelRowMapper());
+            List<String> labelStrings = jdbcTemplate.query(sql, (rs, rowNum) ->
+                    rs.getInt("label_id") + ":" + rs.getString("label_name"));
+
+            return String.join(",", labelStrings);
+
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while retrieving all labels.", e);
         }
     }
 
-    public Label getLabelById(int label_id) {
-        try {
-            String sql = "SELECT l.label_id, l.label_name FROM Labels l WHERE l.label_id = ?";
-            return jdbcTemplate.queryForObject(sql, new LabelRowMapper(), label_id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("Label not found with id: " + label_id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("Database error while retrieving label by id.", e);
-        }
-    }
+
 
     public boolean checkIfLabelNameExist(String name) {
         try {
-            String sql = "SELECT l.label_id, l.label_name FROM Labels l WHERE l.label_name = ?";
-            List<Label> labels = jdbcTemplate.query(sql, new LabelRowMapper(), name);
-            return !labels.isEmpty();
+            String sql = "SELECT COUNT(*) FROM Labels WHERE label_name = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, name);
+            return count != null && count > 0;
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while checking label name existence.", e);
         }
@@ -179,20 +171,18 @@ public class TaskRepository {
 
 //-------------------------INTERACTION BETWEEN LABELS AND TASKS---------------------------------------------------------
 
-    public List<Label> getLabelsFromTask(int task_id) {
+    public String getLabelsInString(int task_id) {
         try {
             String sql = "SELECT l.label_id, l.label_name FROM Labels l JOIN tasks_labels tl ON l.label_id = tl.label_id WHERE tl.task_id = ?";
-            return jdbcTemplate.query(sql, new LabelRowMapper(), task_id);
+
+            List<String> labelStrings = jdbcTemplate.query(sql, (rs, rowNum) ->
+                    rs.getInt("label_id") + ":" + rs.getString("label_name"), task_id);
+
+            return String.join(",", labelStrings);
+
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while retrieving labels for task.", e);
         }
-    }
-
-    public String getLabelsInString(List<Label> labels) {
-        return labels == null ? "" :
-                labels.stream()
-                        .map(l -> l.getLabelId() + ":" + l.getLabelName())
-                        .collect(Collectors.joining(","));
     }
 
     public void addLabelsToTask(int task_id, List<Integer> labels) {

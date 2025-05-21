@@ -36,19 +36,13 @@ public class LabelService {
         return taskRepository.checkIfLabelNameExist(name);
     }
 
-    public List<Label> getAllLabels(){
+    public String getAllLabels(){
         return taskRepository.getAllLabels();
     }
 
-    public String getLabelsInString(List<Label> labels){
-        return taskRepository.getLabelsInString(labels);
+    public String getLabelsInString(int task_id){
+        return taskRepository.getLabelsInString(task_id);
     }
 
-    public Label getLabelById(int label_id){
-        return taskRepository.getLabelById(label_id);
-    }
 
-    public List<Label>  getLabelsFromTask(int task_id){
-        return taskRepository.getLabelsFromTask(task_id);
-    }
 }

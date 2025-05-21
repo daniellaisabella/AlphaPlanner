@@ -32,20 +32,16 @@
     </tr>
     </thead>
     <tbody>
-
-    <!-- Loop through the labels and display them in rows -->
-    <tr th:each="label : ${labels}">
-        <td th:text="${label.labelName}">Etikettens navn</td>
+    <tr th:each="entry : ${labels}">
+        <td th:text="${entry[1]}">Etikettens navn</td>
         <td>
-            <!-- Delete Button -->
             <form action="/tasks/deletelabel" method="post">
-                <input type="hidden" name="label_id" th:value="${label.labelId}">
-                <button class="btn-link" >Slet</button>
+                <input type="hidden" name="label_id" th:value="${entry[0]}">
+                <button class="btn-link">Slet</button>
             </form>
         </td>
     </tr>
 
-    <!-- I want to have this to the side instead -->
     <tr>
         <form action="/tasks/createlabel" method="post">
             <td>
@@ -60,10 +56,9 @@
         </form>
     </tr>
 
-    <p th:if="${nameExists}"  style="color: red;">
-        Etiketten med det navn findes allerede.</p>
-
-
+    <p th:if="${nameExists}" style="color: red;">
+        Etiketten med det navn findes allerede.
+    </p>
     </tbody>
 </table>
 

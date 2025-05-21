@@ -74,7 +74,7 @@ public class SubProjectController {
         model.addAttribute("sub", subProject);
         List<Task> tasks = taskService.showAllTasksFromSub(subId);
         model.addAttribute("tasks", tasks);
-        String labels = labelService.getLabelsInString(labelService.getAllLabels());
+        String labels = labelService.getAllLabels();
         model.addAttribute("labels", labels);
         String allEmployeesFromProject = assigneesService.getEmployeesFromProjectInString(assigneesService.getEmployeesFromProject(subProject.getProjectId()));
         model.addAttribute("allEmployees", allEmployeesFromProject);
