@@ -58,7 +58,7 @@
     </tr>
     <tr>
         <td>
-            <form action="/projects/assignemployee" method="post" th:if="${role}">
+            <form action="/projects/assignemployee" method="post" th:if="${role} and ${!isEmpty}">
                 <label for="finalUserId">Vælg medarbejder
                 </label>
                 <br>
@@ -69,6 +69,7 @@
                 <br>
                 <button type="submit">Tildel medarbejder</button>
             </form>
+            <div th:if="${isEmpty}">Ingen tilgængelige medarbejdere til at tildele</div>
         </td>
 
     </tr>
