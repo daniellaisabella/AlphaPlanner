@@ -101,7 +101,9 @@ public class ProjectController {
         Project parentProject = projectService.getProject(projectId);
         List<User> assignedUsers = projectService.getUsersByProjectId(projectId);
         List<User> availableUsers = userService.getEmployeesNotAssignedToProject(projectId);
+        boolean isEmpty = availableUsers.isEmpty();
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");
+        model.addAttribute("isEmpty", isEmpty);
         model.addAttribute("projectId", projectId);
         model.addAttribute("projectName", parentProject.getProjectName());
         model.addAttribute("role", authority);
