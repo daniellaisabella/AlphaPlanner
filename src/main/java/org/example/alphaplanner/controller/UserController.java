@@ -73,7 +73,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/myProfile")
+    @GetMapping("/myprofile")
     public String myProfile (Model model, HttpSession session){
         int userID = (int) session.getAttribute("userId");
         boolean aut = userService.getUserRole(userID).equals("admin");

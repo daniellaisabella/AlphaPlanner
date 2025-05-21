@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -75,7 +74,7 @@ public class ProjectController {
 
     }
 
-    @GetMapping("/projectOverview")
+    @GetMapping("/projectoverview")
     private String projectOverview(HttpSession session, Model model, @RequestParam int projectId) {
 
         if (isNotloggedIn(session)) return "redirect:";
@@ -95,7 +94,7 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/projectAssignees")
+    @GetMapping("/projectassignees")
     private String projectAssignees(HttpSession session, Model model, @RequestParam int projectId) {
         if (isNotloggedIn(session)) return "redirect:";
         session.setAttribute("project", projectId);
@@ -115,7 +114,7 @@ public class ProjectController {
         return "project-assignees";
     }
 
-    @PostMapping("assignEmployee")
+    @PostMapping("assignemployee")
     private String assignEmployee(HttpSession session, HttpServletRequest request, @RequestParam("employeeId") int employeeId) {
         int projectId = (int) session.getAttribute("projectId");
         String referer = request.getHeader("referer");
@@ -134,7 +133,7 @@ public class ProjectController {
         return "redirect:" + referer;
     }
 
-    @PostMapping("unAssignEmployee")
+    @PostMapping("unassignemployee")
     private String unAssignEmployee(HttpServletRequest request, HttpSession session, @RequestParam("employeeId") int employeeId){
         UserToProjectDto newJunction = new UserToProjectDto(employeeId, (Integer) session.getAttribute("projectId"));
         if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), newJunction.getProjectId()))
