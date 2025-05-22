@@ -5,14 +5,14 @@
     padding: 20px;
 }
 
-.space {
+.sidebar {
     min-width: 200px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.space a {
+.sidebar a {
     margin-bottom: 8px;
     font-weight: 600;
     color: black;
