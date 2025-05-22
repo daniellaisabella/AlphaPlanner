@@ -1,0 +1,57 @@
+.container-flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 20px;
+}
+
+.space {
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.space a {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: black;
+    text-decoration: none;
+}
+
+
+table {
+    border-collapse: separate; /* adskil kolonner uden sammenhængende kant */
+    border-spacing: 100px 0;
+    width: auto;
+    border: none; /* fjern kant om hele tabel */
+}
+
+th, td {
+    text-align: left;
+    padding: 8px 0; /* lodret padding for luft */
+    border: none;   /* fjern alle kanter */
+}
+
+/* Fjern baggrundsfarve eller borders på th hvis der var */
+th {
+    font-weight: 700;
+}
+
+/* fortsat styling af knapper og billeder */
+.img-edit {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+}
+.btn-link:hover{
+    color: orangered;
+}

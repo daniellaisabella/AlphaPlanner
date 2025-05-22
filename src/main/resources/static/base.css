@@ -181,4 +181,9 @@ a.active::after {
     height: 50%;
 }
 
-
+.container-flex {
+    display: flex;
+    align-items: flex-start;  /* align toppen af div og tabel */
+    gap: 40px; /* afstand mellem venstre links og tabel */
+    padding: 20px;
+}
