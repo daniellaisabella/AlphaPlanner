@@ -23,7 +23,7 @@
 table {
     border-collapse: separate; /* adskil kolonner uden sammenhængende kant */
     border-spacing: 100px 0;
-    width: auto;
+    width: 2000px;
     border: none; /* fjern kant om hele tabel */
 }
 
