@@ -46,10 +46,17 @@ public class TaskController {
     @GetMapping("/createtask")
     public String createTask(Model model, @RequestParam("subId") int subId, HttpSession session) {
         model.addAttribute("subId", subId);
-        String labels = labelService.getAllLabels();
+
+        String labelsRaw = labelService.getAllLabels();
+        List<String[]> labels = Arrays.stream(labelsRaw.split(","))
+                .map(entry -> entry.split(":", 2)) // Ensure splitting only on the first colon
+                .collect(Collectors.toList());
+
         model.addAttribute("labels", labels);
         return isLoggedIn(session) ? "createtask" : "redirect:/login";
     }
+
+
 
     @PostMapping("/savetask")
     public String saveTask(@RequestParam("subId") int subId,
