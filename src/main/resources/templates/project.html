@@ -166,16 +166,13 @@
     }
 
     function openModal(link) {
-        // Get values from data- attributes
         const id = link.getAttribute("data-id");
 
-        // Set values in modal form
         document.getElementById("subId").value = id;
         document.getElementById("projectName").value = link.getAttribute("data-name");
         document.getElementById("projectDesc").value = link.getAttribute("data-desc");
         document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
 
-        // Optional: add hidden input for subProject ID
         let hidden = document.getElementById("projectId");
         if (!hidden) {
             hidden = document.createElement("input");
@@ -186,30 +183,17 @@
         }
         hidden.value = id;
 
-        // Show modal
         document.getElementById("modalForm").classList.add("active");
     }
 
     function closeModal() {
-        // Hide modal
         document.getElementById('modalForm').classList.remove('active');
-        // Hide overlay
         document.getElementById('overlay').classList.remove('active');
     }
 
     function closeNewModal() {
-        // Hide modal
         document.getElementById('NewProject').classList.remove('active');
-        // Hide overlay
         document.getElementById('overlay').classList.remove('active');
-    }
-
-    // Click outside the modal to close it
-    window.onclick = function (event) {
-        const modal = document.getElementById('modalForm');
-        if (event.target === modal || event.target === document.getElementById('overlay')) {
-            closeModal();
-        }
     }
 </script>
 </body>
