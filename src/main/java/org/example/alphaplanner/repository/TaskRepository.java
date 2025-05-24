@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -107,7 +108,6 @@ public class TaskRepository {
 
     public void editTask(int task_id, String name, String desc, LocalDate deadline, double estimatedHours, double dedicatedHours, boolean status) {
         try {
-            System.out.println(dedicatedHours);
             String sql = "UPDATE Tasks SET task_name = ?, task_desc = ?, task_deadline = ?, task_timeEstimate = ?,  task_dedicatedHours = ?, task_status = ? WHERE task_id = ?";
             jdbcTemplate.update(sql, name, desc, deadline, estimatedHours, dedicatedHours, status, task_id);
         } catch (DataAccessException e) {
@@ -231,19 +231,37 @@ public class TaskRepository {
 //==================================ASSIGNEES METHODS===================================================================
 
     public List<UserDto> getAssigneesFromTask(int task_id) {
+        List<UserDto> users = new ArrayList<>();
         try {
             String sql = "SELECT u.user_id, u.user_name, u.role FROM Users u JOIN users_tasks uT ON u.user_id = uT.user_id WHERE uT.task_id = ?";
-            return jdbcTemplate.query(sql, new UserDtoRowMapper(), task_id);
+             users = jdbcTemplate.query(sql, new UserDtoRowMapper(), task_id);
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while retrieving assignees from task.", e);
         }
+        try {
+            for (UserDto u : users) {
+                String sql = "SELECT s.skill_name FROM skills s JOIN users_skills uS ON s.skill_id = uS.skill_id WHERE uS.user_id = ?";
+                List<String> skillNames = jdbcTemplate.queryForList(sql, String.class, u.getId());
+                String skills = String.join(",", skillNames); // Combine into single string
+                u.setSkills(skills);
+
+            }
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("Error retrieving task names.", e);
+        }
+
+        return users;
     }
 
     public String getAssigneesInString(List<UserDto> assignees) {
-        return assignees == null ? "" :
-                assignees.stream()
-                        .map(a -> a.getId() + ":" + a.getName())
-                        .collect(Collectors.joining(","));
+        if (assignees == null || assignees.isEmpty()) {
+            return "";
+        }
+
+        return assignees.stream()
+                .filter(a -> a.getName() != null && a.getSkills() != null)
+                .map(a -> a.getId() + ":" + a.getName().trim() + ":" + a.getSkills().trim())
+                .collect(Collectors.joining(", "));
     }
 
     public void addAssigneesToTask(int task_id, List<Integer> assignees) {

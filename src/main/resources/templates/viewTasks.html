@@ -101,7 +101,7 @@
         const taskEstimatedhours = row.dataset.taskEstimatedhours;
         const taskDedicatedhours = row.dataset.taskDedicatedhours;
         const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
-        const taskAssignees = row.dataset.taskAssignees ? parseLabels(row.dataset.taskAssignees) : '';
+        const taskAssignees = row.dataset.taskAssignees ? parseAssigneeNames(row.dataset.taskAssignees) : '';
 
         console.log(taskAssignees)
         console.log(taskLabels);
@@ -247,16 +247,16 @@
 
     function editAssignees() {
 
-        const assignees = parseIdNameList(selectedRow.dataset.taskAssignees || "");
-        const allEmployees = parseIdNameList(selectedRow.dataset.allEmployees || "");
+        const assignees = parseIdNameListAssignees(selectedRow.dataset.taskAssignees || "");
+        const allEmployees = parseIdNameListAssignees(selectedRow.dataset.allEmployees || "");
 
         const assigneesCheckboxes = allEmployees.map(employee => {
             const isChecked = assignees.some(sel => sel.id === employee.id);
             return `
-        <label>
-            <input type="checkbox" name="assignees" value="${employee.id}" ${isChecked ? 'checked' : ''}>
-            ${employee.name}
-        </label><br>`;
+<label>
+    <input type="checkbox" name="assignees" value="${employee.id}" ${isChecked ? 'checked' : ''}>
+    ${employee.name} (${employee.skills})
+</label><br>`;
         }).join('');
 
         document.querySelector('.modal .modal-header .title').innerText = 'Rediger tildelte medarbejdere';
@@ -298,8 +298,8 @@
 
     function editLabels() {
 
-        const selectedLabels = parseIdNameList(selectedRow.dataset.taskLabels || "");
-        const allLabels = parseIdNameList(selectedRow.dataset.allLabels || "");
+        const selectedLabels = parseIdNameListLabels(selectedRow.dataset.taskLabels || "");
+        const allLabels = parseIdNameListLabels(selectedRow.dataset.allLabels || "");
 
         const labelCheckboxes = allLabels.map(label => {
             const isChecked = selectedLabels.some(sel => sel.id === label.id);
@@ -347,7 +347,7 @@
             .catch(console.error);
     }
 
-    function parseIdNameList(dataString) {
+    function parseIdNameListLabels(dataString) {
         if (!dataString) return [];
 
         return dataString.split(',').map(item => {
@@ -361,6 +361,30 @@
             const [id, name] = item.split(':');
             return name;  // Return just the name of the label
         }).join(', '); // Join all names into a comma-separated string
+    }
+
+    function parseAssigneeNames(assigneesString) {
+        if (!assigneesString) return '';
+
+        return assigneesString.split(/,\s(?=\d+:)/).map(item => {
+            const parts = item.split(':');
+            const name = parts[1] || '';
+            return name.trim();
+        }).join(', ');
+    }
+
+    function parseIdNameListAssignees(dataString) {
+        if (!dataString) return [];
+
+        return dataString
+            .split(/,\s(?=\d+:)/)  // split by comma+space before digit+colon (this is correct)
+            .map(item => {
+                const parts = item.split(':');
+                const id = parseInt(parts[0], 10);
+                const name = parts[1];
+                const skills = parts.slice(2).join(':').trim(); // join rest in case ':' in skills, then trim
+                return { id, name, skills };
+            });
     }
 
     openModalButtons.forEach(button => {

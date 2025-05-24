@@ -4,10 +4,18 @@ public class UserDto {
     private int id;
     private String name;
     private String role;
+    private String skills;
 
 
 
-    public UserDto(int id, String name, String role) {
+    public UserDto(int id, String name, String role, String skills) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.skills = skills;
+    }
+
+    public UserDto(int id, String name, String role){
         this.id = id;
         this.name = name;
         this.role = role;
@@ -35,5 +43,13 @@ public class UserDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
     }
 }

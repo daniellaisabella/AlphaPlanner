@@ -14,6 +14,7 @@ public class UserDtoRowMapper implements RowMapper<UserDto> {
                 rs.getInt("user_id"),
                 rs.getString("user_name"),
                 rs.getString("role")
+
         );
     }
 }
