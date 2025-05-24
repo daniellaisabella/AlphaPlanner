@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,21 +99,38 @@ public class ProjectRepository {
     }
 
     public List<UserDto> getEmployeesFromProject (int projectId){
-
+        List<UserDto> users = new ArrayList<>();
         try {
             String sql = "SELECT u.user_id, u.user_name, u.role FROM Users u JOIN users_projects uP ON u.user_id = uP.user_id WHERE uP.project_id = ?";
-            return jdbcTemplate.query(sql, new UserDtoRowMapper(), projectId);
+            users = jdbcTemplate.query(sql, new UserDtoRowMapper(), projectId);
         } catch (DataAccessException e) {
             throw new IllegalStateException("Database error while retrieving assignees from task.", e);
         }
+        try {
+            for (UserDto u : users) {
+                String sql = "SELECT s.skill_name FROM skills s JOIN users_skills uS ON s.skill_id = uS.skill_id WHERE uS.user_id = ?";
+                List<String> skillNames = jdbcTemplate.queryForList(sql, String.class, u.getId());
+                String skills = String.join(",", skillNames); // Combine into single string
+                u.setSkills(skills);
+
+            }
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("Error retrieving task names.", e);
+        }
+
+        return users;
 
 
     }
 
     public String getEmployeesFromProjectInString (List<UserDto> users){
-        return users == null ? "" :
-                users.stream()
-                        .map(l -> l.getId() + ":" + l.getName())
-                        .collect(Collectors.joining(","));
+        if (users == null || users.isEmpty()) {
+            return "";
+        }
+
+        return users.stream()
+                .filter(a -> a.getName() != null && a.getSkills() != null)
+                .map(a -> a.getId() + ":" + a.getName().trim() + ":" + a.getSkills().trim())
+                .collect(Collectors.joining(", "));
     }
 }

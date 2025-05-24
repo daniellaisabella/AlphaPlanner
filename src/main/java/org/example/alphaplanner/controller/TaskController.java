@@ -105,8 +105,7 @@ public class TaskController {
     public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<Integer> labels,
                                      @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                      HttpSession session) {
-        System.out.println(">>> Received updateTask POST request <<<");
-        System.out.println("Received label IDs: " + labels);
+
         ArrayList<Integer> result = new ArrayList<>();
         if (isLoggedIn(session)) {
             if (labels != null) {
