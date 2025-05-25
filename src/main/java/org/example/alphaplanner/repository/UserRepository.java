@@ -200,6 +200,7 @@ public class UserRepository {
         }
     }
 
+    //hjælpemetode
     public void updateSkills(User user) {
         String deleteSkills = "DELETE FROM USERS_SKILLS WHERE USER_ID = ?";
 
