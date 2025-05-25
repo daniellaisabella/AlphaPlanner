@@ -46,10 +46,17 @@ public class TaskController {
     @GetMapping("/createtask")
     public String createTask(Model model, @RequestParam("subId") int subId, HttpSession session) {
         model.addAttribute("subId", subId);
-        String labels = labelService.getAllLabels();
+
+        String labelsRaw = labelService.getAllLabels();
+        List<String[]> labels = Arrays.stream(labelsRaw.split(","))
+                .map(entry -> entry.split(":", 2)) // Ensure splitting only on the first colon
+                .collect(Collectors.toList());
+
         model.addAttribute("labels", labels);
         return isLoggedIn(session) ? "createtask" : "redirect:/login";
     }
+
+
 
     @PostMapping("/savetask")
     public String saveTask(@RequestParam("subId") int subId,
@@ -98,8 +105,7 @@ public class TaskController {
     public String saveLabelsFromTask(@RequestParam(name = "labels", required = false) ArrayList<Integer> labels,
                                      @RequestParam(name = "taskId") int taskId,  HttpServletRequest request,
                                      HttpSession session) {
-        System.out.println(">>> Received updateTask POST request <<<");
-        System.out.println("Received label IDs: " + labels);
+
         ArrayList<Integer> result = new ArrayList<>();
         if (isLoggedIn(session)) {
             if (labels != null) {
