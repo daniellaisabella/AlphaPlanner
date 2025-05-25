@@ -45,13 +45,3 @@ th {
     cursor: pointer;
 }
 
-.btn-link {
-    background: none;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 0;
-}
-.btn-link:hover{
-    color: orangered;
-}
