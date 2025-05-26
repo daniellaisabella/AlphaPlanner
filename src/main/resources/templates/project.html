@@ -46,7 +46,7 @@
     <tbody>
 
     <tr th:each="subProject : ${subProjects}">
-        <td><input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
+        <td> <input type="checkbox" th:checked="${subProject.getSubProjectStatus()}" disabled></td>
         <td>
             <a th:text="${subProject.subProjectName}"
                th:href="@{/subprojects/showsub(subId=${subProject.subId})}"></a>
