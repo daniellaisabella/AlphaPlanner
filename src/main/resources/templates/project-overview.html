@@ -30,9 +30,9 @@
     <thead>
     <tr>
         <th><b>&#10004;</b></th>
-        <th><b>Navn</b></th>
+        <th><b>Titel</b></th>
         <th><b>Beskrivelse</b></th>
-        <th><b>Forfald</b></th>
+        <th><b>Forfaldsdato</b></th>
         <th><b>Estimerede timer</b></th>
         <th><b>Dedikerede timer</b></th>
     </tr>
@@ -65,7 +65,7 @@
             <form th:action="@{/projects/delete}" method="post"
                   onsubmit="return confirm('Er du sikker på du vil slette dette subprojekt?');">
                 <input type="hidden" name="projectId" th:value="${project.id}"/>
-                <button type="submit" style="color: indianred; background:none; border:none; cursor:pointer;">X</button>
+                <button type="submit" style="color: orangered; background:none; border:none; cursor:pointer;">X</button>
             </form>
         </td>
     <tr>
@@ -86,17 +86,17 @@
     <form th:action="@{/projects/add}" th:object="${freshProject}" method="post" class="modal-form container conform"  style="height: 50%">
 
         <div class="form-row">
-            <label for="newProjectName">Project Name:</label>
+            <label for="newProjectName">Projektets titel:</label>
             <input type="text" maxlength="15" id="newProjectName" th:field="*{projectName}"/>
         </div>
 
         <div class="form-row">
-            <label for="newProjectDesc">Project Description:</label>
+            <label for="newProjectDesc">Beskrivelse:</label>
             <textarea id="newProjectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
         </div>
 
         <div class="form-row">
-            <label for="newProjectDeadline">Project Deadline:</label>
+            <label for="newProjectDeadline">Forfaldsdato:</label>
             <label for="newProjectDeadline" th:field="*{projectDeadline}"></label><input type="date"
                                                                                          id="newProjectDeadline"/>
         </div>
@@ -121,17 +121,17 @@
         </label>
 
         <div class="form-row">
-            <label for="projectName">Project Name:</label>
+            <label for="projectName">Projektets titel:</label>
             <input type="text" th:field="*{projectName}" id="projectName"/>
         </div>
 
         <div class="form-row">
-            <label for="projectDesc">Project Description:</label>
+            <label for="projectDesc">Beskrivelse:</label>
             <textarea id="projectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
         </div>
 
         <div class="form-row">
-            <label for="projectDeadline">Project Deadline:</label>
+            <label for="projectDeadline">Forfaldsdato:</label>
             <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
         </div>
         <div>

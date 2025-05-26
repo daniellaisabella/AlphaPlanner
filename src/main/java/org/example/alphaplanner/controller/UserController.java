@@ -104,7 +104,7 @@ public class UserController {
 
     @GetMapping("/edit/{userId}")
     public String editUser(@PathVariable int userId, HttpSession session, Model model){
-        boolean aut = userService.getUserRole(userId).equals("admin");
+        boolean aut = userService.getUserRole(userId).equals("admin"); //fordi Admin ikke har skills
         model.addAttribute("role", aut);
         User user = userService.getUserById(userId);
         model.addAttribute("user",user);

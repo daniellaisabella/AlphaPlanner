@@ -26,7 +26,10 @@
 <div>
     <a th:href="@{admin1}">Tilbage</a>
 </div>
+
 <p th:if="${duplicate}" class="error">Bruger med samme E-mail eksisterer allerede</p>
+
+
 <form method="post" th:object="${user}" th:action="@{/save}">
     <div class="form-row">
         <label for="name">Navn</label>
@@ -60,8 +63,9 @@
         <label>Færdigheder</label>
         <div class="checkbox-group">
             <div th:each="skill : ${enumSkills}">
-                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
                 <label th:for="'skill_' + ${skill}" th:text="${skill}"></label>
+                <input type="checkbox" th:id="'skill_' + ${skill}" th:name="skills" th:value="${skill}" />
+
             </div>
         </div>
     </div>
