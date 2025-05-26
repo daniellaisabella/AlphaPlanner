@@ -18,15 +18,13 @@ public class SubProjectController {
     private final LabelService labelService;
     private final TaskService taskService;
     private final SubProjectService subProjectService;
-    private final UserService userService;
     private final AuthorizationService authorizationService;
     private final AssigneesService assigneesService;
 
-    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, UserService userService, AuthorizationService authorizationService, AssigneesService assigneesService) {
+    public SubProjectController(LabelService labelService, TaskService taskService, SubProjectService subProjectService, AuthorizationService authorizationService, AssigneesService assigneesService) {
         this.labelService = labelService;
         this.taskService = taskService;
         this.subProjectService = subProjectService;
-        this.userService = userService;
         this.assigneesService = assigneesService;
         this.authorizationService = authorizationService;
     }

@@ -1,9 +1,8 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
-import org.example.alphaplanner.models.User;
-import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.repository.rowmappers.ProjectRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;

@@ -1,6 +1,5 @@
 package org.example.alphaplanner.repository;
 
-import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.rowmappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
@@ -8,7 +7,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class UserRepository {
