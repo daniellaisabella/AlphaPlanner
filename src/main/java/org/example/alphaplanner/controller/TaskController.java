@@ -3,7 +3,6 @@ package org.example.alphaplanner.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.service.AssigneesService;
 import org.example.alphaplanner.service.LabelService;
 import org.example.alphaplanner.service.TaskService;

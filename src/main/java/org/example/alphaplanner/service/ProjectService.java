@@ -3,7 +3,6 @@ package org.example.alphaplanner.service;
 import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
-import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.models.User;
 import org.example.alphaplanner.repository.ProjectRepository;
 import org.example.alphaplanner.repository.SubProjectRepository;

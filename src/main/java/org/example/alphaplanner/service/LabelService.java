@@ -1,6 +1,5 @@
 package org.example.alphaplanner.service;
 
-import org.example.alphaplanner.models.Label;
 import org.example.alphaplanner.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
