@@ -104,8 +104,7 @@
         const taskLabels = row.dataset.taskLabels ? parseLabels(row.dataset.taskLabels) : ''; // Parse labels to display names
         const taskAssignees = row.dataset.taskAssignees ? parseAssigneeNames(row.dataset.taskAssignees) : '';
 
-        console.log(taskAssignees)
-        console.log(taskLabels);
+
         // Get the modal element and overlay
         const modal = document.getElementById('base_modal');
         const overlay = document.getElementById('overlay');
@@ -219,13 +218,7 @@
         formData.append("estimatedHours", updatedEstimatedHours);
         formData.append("dedicatedHours", updatedDedicatedHours);
 
-        console.log("Deadline being sent:", updatedDeadline);
-        console.log("name: ", taskName)
-        console.log("description", updatedDescription);
-        console.log("deadline", updatedDeadline);
-        console.log("status", updatedStatus);
-        console.log("estimatedHours", updatedEstimatedHours);
-        console.log("dedicatedHours", updatedDedicatedHours);
+
 
         fetch("/tasks/updatetask", {
             method: 'POST',
@@ -283,7 +276,7 @@
         formData.append("taskId", selectedRow.dataset.taskId);
         selectedAssigneesIds.forEach(id => formData.append("assignees", id)); // send IDs
 
-        console.log("new assigned: ", selectedAssigneesIds);
+
 
         fetch("/tasks/updateassigneesfromtask", {
             method: "POST",
@@ -334,7 +327,7 @@
         formData.append("taskId", selectedRow.dataset.taskId);
         selectedLabelIds.forEach(id => formData.append("labels", id)); // send IDs
 
-        console.log("new tasks: ", selectedLabelIds);
+
 
         fetch("/tasks/updatelabelsfromTask", {
             method: "POST",

@@ -48,7 +48,7 @@ public class TaskRepository {
                 String labels = getLabelsInString(t.getTaskId());
                 t.setLabels(labels);
                 List<UserDto> users = getAssigneesFromTask(t.getTaskId());
-                t.setAssignees(getAssigneesInString(users));
+                t.setAssignees(getEmployeesInString(users));
             }
             return tasks;
         } catch (DataAccessException e) {
@@ -254,7 +254,7 @@ public class TaskRepository {
         return users;
     }
 
-    public String getAssigneesInString(List<UserDto> assignees) {
+    public String getEmployeesInString(List<UserDto> assignees) {
         if (assignees == null || assignees.isEmpty()) {
             return "";
         }
