@@ -121,14 +121,4 @@ public class ProjectRepository {
 
     }
 
-    public String getEmployeesFromProjectInString (List<UserDto> users){
-        if (users == null || users.isEmpty()) {
-            return "";
-        }
-
-        return users.stream()
-                .filter(a -> a.getName() != null && a.getSkills() != null)
-                .map(a -> a.getId() + ":" + a.getName().trim() + ":" + a.getSkills().trim())
-                .collect(Collectors.joining(", "));
-    }
 }
