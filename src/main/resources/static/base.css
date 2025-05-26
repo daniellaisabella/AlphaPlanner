@@ -51,10 +51,11 @@ input, select, textarea, button, label {
     margin: 80px;
 }
 
-/*Overskrift weight*/
+
 h1, h2, h3 {
     font-weight: 700;
     font-family: 'Montserrat', sans-serif;
+    text-align: center;
 }
 
 table {
@@ -181,4 +182,9 @@ a.active::after {
     height: 50%;
 }
 
-
+.container-flex {
+    display: flex;
+    align-items: flex-start;  /* align toppen af div og tabel */
+    gap: 40px; /* afstand mellem venstre links og tabel */
+    padding: 20px;
+}

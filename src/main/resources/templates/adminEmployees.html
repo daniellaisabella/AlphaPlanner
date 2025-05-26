@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.css">
     <link rel="stylesheet" href="/buttons.css">
+    <link rel="stylesheet" href="/grid.css">
 </head>
 <body>
 
@@ -22,57 +23,51 @@
         <a th:href="@{/}" class="logout-button">Log ud</a>
     </div>
 </div>
+<br>
+<br>
+<br>
 
-<div class="space">
-    <a th:href="@{/admin1}" th:classappend="${activePage == 'admin1' } ? 'active' : ''"> Projekt Managers</a>
-    <a th:href="@{/admin2}" th:classappend="${activePage == 'admin2' } ? 'active' : ''"> Ansatte </a>
+<div class="container-flex">
+    <div class="sidebar">
+        <a th:href="@{/create}"> + Opret ny </a>
+        <a th:href="@{/admin1}" th:classappend="${activePage == 'admin1' } ? 'active' : ''"> Projektledere</a>
+        <a th:href="@{/admin2}" th:classappend="${activePage == 'admin2' } ? 'active' : ''"> Medarbejdere </a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Email</th>
+            <th>Færdigheder</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each=" employee : ${employees}">
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.email}"></td>
+            <td>
+                <ul>
+                    <li th:each="skill : ${employee.skills}" th:text="${skill}"></li>
+                </ul>
+            </td>
+            <td>
+                <a th:href="@{/edit/{userId}(userId=${employee.userId})}">
+                    <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
+                </a>
+            </td>
+            <td>
+                <form th:action="@{/delete/{userId}(userId=${employee.userId})}" method="post"
+                      onsubmit="return confirm('Er du sikker på at du vil slette denne medarbejder ');">
+                    <button type="submit" class="btn-link"> X</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-
-<table>
-    <thead>
-    <tr>
-        <th>Navn</th>
-        <th>Rolle</th>
-        <th>Email</th>
-        <th>Færdigheder</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each=" employee : ${employees}">
-        <td th:text="${employee.name}"></td>
-        <td th:text="${employee.role}"></td>
-        <td th:text="${employee.email}"></td>
-
-        <td>
-            <ul>
-                <li th:each="skill : ${employee.skills}" th:text="${skill}"></li>
-            </ul>
-        </td>
-
-        <td>
-            <a th:href="@{/edit/{userId}(userId=${employee.userId})}">
-                <img class="img-edit" src="/images/edit-button.png" alt="Edit png" >
-            </a>
-        </td>
-        <td>
-            <form th:action="@{/delete/{userId}(userId=${employee.userId})}" method="post"
-                  onsubmit="return confirm('Er du sikker på at du vil slette denne ansatte ');">
-
-                <button type="submit" class="btn-link"> X </button>
-
-
-            </form>
-        </td>
-
-    </tr>
-    <tr>
-        <div>
-            <a th:href="@{/create}"> + </a>
-        </div>
-    </tr>
-    </tbody>
-</table>
-
 
 </body>
 </html>

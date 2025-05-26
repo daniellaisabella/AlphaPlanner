@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>All task From bob</title>
+    <title>Opgaver</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link th:href="@{/modal.css}" rel="stylesheet">
     <link th:href="@{/base.css}" rel="stylesheet">
@@ -19,14 +19,15 @@
     </div>
     <div class="space">
         <a th:href="@{/myprofile}">Min Profil</a>
-        <a th:href="@{/login}" class="logout-button">Log ud</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 </div>
 
 
 <div class="centerX" th:text="${sub.subProjectName}">Sub-Projekt</div>
 
-<a href="javascript:history.back()" class="btn-link">Tilbage</a>
+<a th:href="@{/projects/projectoverview(projectId=${sub.projectId})}" class="btn-link">Tilbage</a>
+
 
 <br>
 <h2> Opgaver: </h2>
@@ -34,9 +35,9 @@
     <thead>
     <tr>
         <th>Status</th>
-        <th>Navn</th>
-        <th>forventede timer</th>
-        <th>Deadline</th>
+        <th>Titel</th>
+        <th>Estimerede timer</th>
+        <th>Forfaldsdato</th>
     </tr>
     </thead>
     <tbody>

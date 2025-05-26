@@ -27,6 +27,8 @@
 <div>
     <a onclick="return confirm('Dine ændringer er ikke gemt, er du sikker på du vil gå tilbage?');" href="javascript:history.back()" class="btn-link">Tilbage</a>
 </div>
+
+
 <form method="post" th:object="${user}" th:action="@{/update}">
 
         <input type="hidden" th:field="*{userId}" />

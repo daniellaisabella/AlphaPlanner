@@ -161,12 +161,14 @@ public class UserRepository {
         String deleteSkills = "DELETE FROM USERS_SKILLS WHERE USER_ID = ?";
         String deleteTasks = "DELETE FROM USERS_TASKS WHERE USER_ID = ?";
         String deleteProjects = "DELETE FROM USERS_PROJECTS WHERE USER_ID = ?";
+
         String deleteUserSql = "DELETE FROM USERS WHERE USER_ID = ?";
 
         try {
             jdbcTemplate.update(deleteSkills, userId);
             jdbcTemplate.update(deleteTasks, userId);
             jdbcTemplate.update(deleteProjects, userId);
+
             jdbcTemplate.update(deleteUserSql, userId);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Fejl ved sletning af bruger" + e);
@@ -200,6 +202,7 @@ public class UserRepository {
         }
     }
 
+    //hjælpemetode
     public void updateSkills(User user) {
         String deleteSkills = "DELETE FROM USERS_SKILLS WHERE USER_ID = ?";
 
