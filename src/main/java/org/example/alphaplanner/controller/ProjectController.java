@@ -77,7 +77,6 @@ public class ProjectController {
     //project-overview meaning subprojects
     @GetMapping("/projectoverview")
     private String projectOverview(HttpSession session, Model model, @RequestParam int projectId) {
-
         if (isNotloggedIn(session)) return "redirect:";
         session.setAttribute("projectId", projectId);
         boolean authority = userService.getUserRole(session.getAttribute("userId")).equals("project manager");

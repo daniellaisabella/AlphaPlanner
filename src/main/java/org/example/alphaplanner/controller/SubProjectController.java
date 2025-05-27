@@ -48,7 +48,6 @@ public class SubProjectController {
     @PostMapping("/add")
     private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isNotLoggedIn(session)) return "redirect:";
-        System.out.println(freshSubProject.getProjectId());
         subProjectService.newSubProject(freshSubProject);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
