@@ -18,7 +18,8 @@
         <a th:href="@{/login}" class="logout-button">Log ud</a>
     </div>
 </div >
-<button onclick="history.back()" class="btn-link" >Tilbage</button>
+
+<button th:href="@{/subprojects/showsub(subId=${subProject})}" class="btn-link" >Tilbage</button>
 
 
 <h1>Etiketter: </h1>

@@ -118,7 +118,7 @@ public class TaskController {
     }
 
     @GetMapping("/managelabels")
-    public String manageLabels(Model model, HttpSession session) {
+    public String manageLabels(Model model, HttpSession session, @RequestParam(name = "subProjectId") int subProjectId) {
         if (isLoggedIn(session)) {
             String labelsRaw = labelService.getAllLabels(); // e.g. "1:Bug,2:UI,3:Urgent"
 
@@ -127,7 +127,8 @@ public class TaskController {
                     .collect(Collectors.toList());
 
             model.addAttribute("labels", labels); // Now a List<String[]>
-            return "managelabels";
+            model.addAttribute("subProject", subProjectId);
+            return "manageLabels";
         } else {
             return "redirect:/login";
         }

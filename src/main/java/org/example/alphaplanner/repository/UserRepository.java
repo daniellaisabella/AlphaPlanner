@@ -260,7 +260,7 @@ public class UserRepository {
 
     public List<User> getAvailableUsers(int id) {
         String query = """
-            SELECT\s
+            SELECT DISTINCT\s
               u.user_id,
               u.user_name,
               u.email,
