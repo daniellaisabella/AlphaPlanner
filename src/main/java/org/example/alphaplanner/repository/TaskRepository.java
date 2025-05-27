@@ -1,7 +1,7 @@
 package org.example.alphaplanner.repository;
 
-import org.example.alphaplanner.models.*;
 import org.example.alphaplanner.models.Dto.UserDto;
+import org.example.alphaplanner.models.Task;
 import org.example.alphaplanner.repository.rowmappers.TaskRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;
@@ -11,9 +11,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class TaskRepository {
                 String labels = getLabelsInString(t.getTaskId());
                 t.setLabels(labels);
                 List<UserDto> users = getAssigneesFromTask(t.getTaskId());
-                t.setAssignees(getAssigneesInString(users));
+                t.setAssignees(getEmployeesInString(users));
             }
             return tasks;
         } catch (DataAccessException e) {
@@ -231,7 +232,7 @@ public class TaskRepository {
 //==================================ASSIGNEES METHODS===================================================================
 
     public List<UserDto> getAssigneesFromTask(int task_id) {
-        List<UserDto> users = new ArrayList<>();
+        List<UserDto> users;
         try {
             String sql = "SELECT u.user_id, u.user_name, u.role FROM Users u JOIN users_tasks uT ON u.user_id = uT.user_id WHERE uT.task_id = ?";
              users = jdbcTemplate.query(sql, new UserDtoRowMapper(), task_id);
@@ -253,7 +254,7 @@ public class TaskRepository {
         return users;
     }
 
-    public String getAssigneesInString(List<UserDto> assignees) {
+    public String getEmployeesInString(List<UserDto> assignees) {
         if (assignees == null || assignees.isEmpty()) {
             return "";
         }
@@ -274,7 +275,8 @@ public class TaskRepository {
 
             for (Integer a : assignees) {
                 try {
-                    int assigneeId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, a);
+                    Integer assigneeId = jdbcTemplate.queryForObject(labelIdSql, Integer.class, a);
+                    assert(assigneeId != null);
                     jdbcTemplate.update(sql, task_id, assigneeId);
                 } catch (EmptyResultDataAccessException ex) {
                     throw new IllegalArgumentException("assignee not found: " + a);

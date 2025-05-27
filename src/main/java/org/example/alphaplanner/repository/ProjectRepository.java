@@ -1,16 +1,14 @@
 package org.example.alphaplanner.repository;
 
+import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
-import org.example.alphaplanner.models.User;
-import org.example.alphaplanner.models.Dto.UserDto;
 import org.example.alphaplanner.repository.rowmappers.ProjectRowMapper;
 import org.example.alphaplanner.repository.rowmappers.UserDtoRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,8 +96,8 @@ public class ProjectRepository {
         jdbcTemplate.update(query, newJunction.getUserId(), newJunction.getProjectId());
     }
 
-    public List<UserDto> getEmployeesFromProject (int projectId){
-        List<UserDto> users = new ArrayList<>();
+    public List<UserDto> getEmployeesFromProject(int projectId){
+        List<UserDto> users;
         try {
             String sql = "SELECT u.user_id, u.user_name, u.role FROM Users u JOIN users_projects uP ON u.user_id = uP.user_id WHERE uP.project_id = ?";
             users = jdbcTemplate.query(sql, new UserDtoRowMapper(), projectId);
@@ -123,14 +121,4 @@ public class ProjectRepository {
 
     }
 
-    public String getEmployeesFromProjectInString (List<UserDto> users){
-        if (users == null || users.isEmpty()) {
-            return "";
-        }
-
-        return users.stream()
-                .filter(a -> a.getName() != null && a.getSkills() != null)
-                .map(a -> a.getId() + ":" + a.getName().trim() + ":" + a.getSkills().trim())
-                .collect(Collectors.joining(", "));
-    }
 }

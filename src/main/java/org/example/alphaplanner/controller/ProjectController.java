@@ -2,10 +2,10 @@ package org.example.alphaplanner.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.models.Project;
 import org.example.alphaplanner.models.SubProject;
 import org.example.alphaplanner.models.User;
-import org.example.alphaplanner.models.Dto.UserToProjectDto;
 import org.example.alphaplanner.service.AuthorizationService;
 import org.example.alphaplanner.service.ProjectService;
 import org.example.alphaplanner.service.SubProjectService;
