@@ -30,8 +30,8 @@ jobs:
     - name: Build with Maven
       env:
         DATABASE_URL: ${{SECRETS.PROD_DATABASE_URL}}
-        DATABASE_USERNAME: ${{SECRETS.PROD_DATABASE_URL}}
-        DATABASE_PASSWORD: ${{SECRETS.PROD_DATABASE_URL}}
+        DATABASE_USERNAME: ${{SECRETS.PROD_DATABASE_USERNAME}}
+        DATABASE_PASSWORD: ${{SECRETS.PROD_DATABASE_PASSWORD}}
       run: mvn -B package --file pom.xml
 
   qodana:
