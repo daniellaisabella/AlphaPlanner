@@ -43,7 +43,6 @@ public class UserController {
     public String logout(HttpSession session){
         //Invalidates session
         session.removeAttribute("userId");
-
         return "redirect:/";
     }
 

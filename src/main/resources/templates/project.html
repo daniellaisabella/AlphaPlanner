@@ -56,13 +56,17 @@
         <td th:text="${subProject.getSubEstimatedHours()}"></td>
         <td th:text="${subProject.getSubDedicatedHours()}"></td>
         <td th:if="${role}">
-            <a style="color: indianred"
-               onclick="openModal(this)"
-               th:attr="data-id=${subProject.subId},
-           data-name=${subProject.subProjectName},
-           data-desc=${subProject.subProjectDesc},
-           data-deadline=${subProject.subProjectDeadline}"
-            >
+
+                <a style="color: indianred"
+                   onclick="openModal(this)"
+                   th:attr="data-id=${subProject.subId},
+            data-name=${subProject.subProjectName},
+            data-desc=${subProject.subProjectDesc},
+            data-deadline=${subProject.subProjectDeadline},
+            data-estimated=${subProject.subEstimatedHours},
+            data-dedicated=${subProject.subDedicatedHours},
+            data-status=${subProject.subProjectStatus}">
+
                 <img class="img-edit" src="/images/edit-button.png" alt="Edit png">
             </a>
         </td>
@@ -128,9 +132,12 @@
     </div>
     <form th:action="@{/subprojects/edit}" th:object="${freshSubProject}" method="post" class="modal-form container conform" style="height: 50%"
           onsubmit="return confirm('Er alle ændringer tilpas?');">
-        <label hidden="hidden">
-            <input type="number" th:field="*{subId}" id="subId"/>
-        </label>
+
+        <input type="hidden" th:field="*{subId}"/>
+        <input type="hidden" th:field="*{subProjectStatus}"/>
+        <input type="hidden" th:field="*{subEstimatedHours}"/>
+        <input type="hidden" th:field="*{subDedicatedHours}"/>
+
 
         <div class="form-row">
             <label for="projectName">Projektets titel:</label>
@@ -175,6 +182,12 @@
         document.getElementById("projectName").value = link.getAttribute("data-name");
         document.getElementById("projectDesc").value = link.getAttribute("data-desc");
         document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
+
+        document.getElementById("subProjectStatus").value = link.getAttribute("data-status");
+        document.getElementById("subEstimatedHours").value = link.getAttribute("data-estimated");
+        document.getElementById("subDedicatedHours").value = link.getAttribute("data-dedicated");
+
+        document.getElementById("modalForm").classList.add("active");
 
         let hidden = document.getElementById("projectId");
         if (!hidden) {
