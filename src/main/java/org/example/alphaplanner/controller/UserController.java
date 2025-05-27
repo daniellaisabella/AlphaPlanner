@@ -42,7 +42,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session){
         //Invalidates session
-        session.invalidate();
+        session.removeAttribute("userId");
         return "redirect:/";
     }
 

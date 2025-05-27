@@ -24,7 +24,6 @@ public class SubProjectRepository {
 
     public void addSubProjectToSql(SubProject project) {
 
-
         String query = """
                 INSERT INTO subprojects(sub_name, sub_desc, sub_deadline, sub_status, sub_dedicatedHours, sub_timeEstimate, project_id)
                 values(?,?,?,?,?,?,?)
@@ -34,7 +33,7 @@ public class SubProjectRepository {
         //Keyholder to hold the auto-incremented ID (the primary key) and put oin the object in Java
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        //lambda modtager connection og forbereder PreparedStatement
+        //lambda modtager connection og forbereder PreparedStatement - sætter værdier i sql og henter subid autoincremented i databsen
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);//database returns Id
             ps.setString(1, project.getSubProjectName());

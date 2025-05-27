@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Repository
 public class ProjectRepository {
 
@@ -121,14 +119,4 @@ public class ProjectRepository {
 
     }
 
-    public String getEmployeesFromProjectInString (List<UserDto> users){
-        if (users == null || users.isEmpty()) {
-            return "";
-        }
-
-        return users.stream()
-                .filter(a -> a.getName() != null && a.getSkills() != null)
-                .map(a -> a.getId() + ":" + a.getName().trim() + ":" + a.getSkills().trim())
-                .collect(Collectors.joining(", "));
-    }
 }

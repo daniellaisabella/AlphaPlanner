@@ -116,22 +116,25 @@
         } " class="close-button">Luk</A>
     </div>
     <form th:action="@{/projects/edit}" th:object="${freshProject}" method="post" class="modal-form container conform" onsubmit="return confirm('Er alle ændringer tilpas?');">
-        <label hidden="hidden">
-            <input type="number" th:field="*{id}"/>
-        </label>
+
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{projectStatus}"/>
+            <input type="hidden" th:field="*{estimatedHours}"/>
+            <input type="hidden" th:field="*{dedicatedHours}"/>
+
 
         <div class="form-row">
-            <label for="projectName">Projektets titel:</label>
+            <label for="projectName">Projektets titel</label>
             <input type="text" th:field="*{projectName}" id="projectName"/>
         </div>
 
         <div class="form-row">
-            <label for="projectDesc">Beskrivelse:</label>
+            <label for="projectDesc">Beskrivelse</label>
             <textarea id="projectDesc" style="resize: none" th:field="*{projectDesc}"></textarea>
         </div>
 
         <div class="form-row">
-            <label for="projectDeadline">Forfaldsdato:</label>
+            <label for="projectDeadline">Forfaldsdato</label>
             <input type="date" id="projectDeadline" th:field="*{projectDeadline}"/>
         </div>
         <div>
@@ -154,6 +157,11 @@
         document.getElementById("projectDesc").value = link.getAttribute("data-desc");
         document.getElementById("projectDeadline").value = link.getAttribute("data-deadline");
 
+        document.getElementById("projectStatus").value = link.getAttribute("data-status");
+        document.getElementById("estimatedHours").value = link.getAttribute("data-estimated");
+        document.getElementById("dedicatedHours").value = link.getAttribute("data-dedicated");
+
+        document.getElementById("modalForm").classList.add("active");
 
         let hidden = document.getElementById("projectId");
         if (!hidden) {

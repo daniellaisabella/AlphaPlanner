@@ -34,7 +34,6 @@ public class SubProjectController {
     }
 
 
-
     @PostMapping("/edit")
     private String edit(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isNotLoggedIn(session)) return "redirect:";
@@ -48,7 +47,6 @@ public class SubProjectController {
     @PostMapping("/add")
     private String AddSubProject(HttpServletRequest request, HttpSession session, @ModelAttribute SubProject freshSubProject) {
         if (isNotLoggedIn(session)) return "redirect:";
-        System.out.println(freshSubProject.getProjectId());
         subProjectService.newSubProject(freshSubProject);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;
@@ -57,8 +55,9 @@ public class SubProjectController {
 
     @PostMapping("/delete")
     private String deleteSubProject(HttpServletRequest request, HttpSession session, @RequestParam("subId") int subId) {
+        if (isNotLoggedIn(session)) return "redirect:";
         int pId = subProjectService.getSubProject(subId).getProjectId();
-        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), pId)) return "redirect:";
+        if (!authorizationService.authProjectManager((Integer) session.getAttribute("userId"), pId)) return "redirect:"; //if pm has authorization on the "mother"project
         subProjectService.deleteSubProject(subId);
         String referer = request.getHeader("referer");
         return "redirect:" + referer;

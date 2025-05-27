@@ -29,7 +29,7 @@ public class AssigneesService {
     }
 
     public String getEmployeesFromProjectInString(List<UserDto> users){
-        return projectRepository.getEmployeesFromProjectInString(users);
+        return taskRepository.getEmployeesInString(users);
     }
 
 
