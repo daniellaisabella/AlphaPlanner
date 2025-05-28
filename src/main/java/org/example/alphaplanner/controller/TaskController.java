@@ -52,7 +52,7 @@ public class TaskController {
                 .collect(Collectors.toList());
 
         model.addAttribute("labels", labels);
-        return isLoggedIn(session) ? "createtask" : "redirect:/login";
+        return isLoggedIn(session) ? "createTask" : "redirect:/login";
     }
 
 
