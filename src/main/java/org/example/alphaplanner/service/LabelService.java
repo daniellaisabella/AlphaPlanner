@@ -40,6 +40,8 @@ public class LabelService {
     }
 
 
-
+public int StringToInt(String name){
+        return Integer.parseInt(name);
+}
 
 }

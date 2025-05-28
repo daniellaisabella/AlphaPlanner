@@ -15,11 +15,11 @@
     </div>
     <div class="space">
         <a th:href="@{/profil}">Min Profil</a>
-        <a th:href="@{/login}" class="logout-button">Log ud</a>
+        <a th:href="@{/logout}" class="logout-button">Log ud</a>
     </div>
 </div >
 
-<button th:href="@{/subprojects/showsub(subId=${subProject})}" class="btn-link" >Tilbage</button>
+<a th:href="@{/subprojects/showsub(subId=${subProject})}" class="btn-link" >Tilbage</a>
 
 
 <h1>Etiketter: </h1>
@@ -38,6 +38,7 @@
         <td th:text="${entry[1]}">Etikettens navn</td>
         <td>
             <form action="/tasks/deletelabel" method="post">
+                <input type="hidden" name="subProjectId" th:value="${subProject}">
                 <input type="hidden" name="label_id" th:value="${entry[0]}">
                 <button class="btn-link">Slet</button>
             </form>
@@ -45,7 +46,7 @@
     </tr>
 
     <tr>
-        <form action="/tasks/createlabel" method="post">
+        <form th:action="@{/tasks/createlabel(subProjectId=${subProject})}" method="post">
             <td>
                 <strong for="labelName">Opret ny etiket</strong>
             </td>

@@ -42,6 +42,7 @@
     </thead>
     <tbody>
     <tr th:each="task : ${tasks}"
+        th:data-sub-id="${sub.subId}"
         th:data-task-id="${task.taskId}"
         th:data-task-name="${task.taskName}"
         th:data-task-desc="${task.taskDesc}"
@@ -294,6 +295,8 @@
 
         const selectedLabels = parseIdNameListLabels(selectedRow.dataset.taskLabels || "");
         const allLabels = parseIdNameListLabels(selectedRow.dataset.allLabels || "");
+        const subId = selectedRow.dataset.subId;
+
 
         const labelCheckboxes = allLabels.map(label => {
             const isChecked = selectedLabels.some(sel => sel.id === label.id);
@@ -313,10 +316,12 @@
         </div>
         <div>
             <button class="btn-link" id="saveAssignButton" onclick="saveLabels()">Gem</button>
-                <a class="btn-link" href="/tasks/managelabels">Administrer etiketter</a>
+                <a class="btn-link" id="manageLabelsLink" >Administrer etiketter</a>
         </div>
 
 `;
+
+        document.getElementById("manageLabelsLink").href = "/tasks/managelabels?subProjectId=" + subId;
     }
 
     function saveLabels() {

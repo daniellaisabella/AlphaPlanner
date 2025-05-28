@@ -135,11 +135,13 @@ public class TaskController {
     }
 
     @PostMapping("/deletelabel")
-    public String deleteLabel(@RequestParam(name = "label_id") int label_id, HttpSession session) {
+    public String deleteLabel(@RequestParam(name = "label_id") int label_id,
+                              @RequestParam(name = "subProjectId") int subProjectId,
+                              HttpSession session) {
 
         if (isLoggedIn(session)) {
             labelService.deleteLabel(label_id);
-            return "redirect:/tasks/managelabels";
+            return "redirect:/tasks/managelabels?subProjectId=" + subProjectId ;
         } else {
             return "redirect:/login";
         }
@@ -147,7 +149,8 @@ public class TaskController {
     }
 
     @PostMapping("/deletetask")
-    public String deleteTask(@RequestParam(name = "task_id") int task_id, HttpSession session,  HttpServletRequest request) {
+    public String deleteTask(@RequestParam(name = "task_id") int task_id,
+                             HttpSession session,  HttpServletRequest request) {
 
         if (isLoggedIn(session)) {
             taskService.deleteTask(task_id);
@@ -160,17 +163,23 @@ public class TaskController {
 
     @PostMapping("/createlabel")
     public String createLabel(@RequestParam(name = "labelName") String labelName,
+                              @RequestParam(name = "subProjectId") int subProjectId,
                               Model model,
                               HttpSession session) {
         if (labelService.checkIfLabelNameExist(labelName)) {
-            String labels = labelService.getAllLabels();
+            String labelsRaw = labelService.getAllLabels(); // e.g. "1:Bug,2:UI,3:Urgent"
+
+            List<String[]> labels = Arrays.stream(labelsRaw.split(","))
+                    .map(entry -> entry.split(":", 2)) // Ensure splitting only on the first colon
+                    .collect(Collectors.toList());
             model.addAttribute("labels", labels);
             model.addAttribute("nameExists", true);
+            model.addAttribute("subProject", subProjectId);
             return "manageLabels";
         }
         if (isLoggedIn(session)) {
             labelService.createLabel(labelName);
-            return "redirect:/tasks/managelabels";
+            return "redirect:/tasks/managelabels?subProjectId=" + subProjectId;
         } else {
             return "redirect:/login";
         }
